@@ -1,7 +1,7 @@
 ﻿using ColossalFramework.Plugins;
-using UnityEngine;
 using System;
 using System.Text;
+using UnityEngine;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -13,12 +13,13 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// The log level.
         /// </summary>
-        public PluginManager.MessageType Level = 
-            #if DEBUG
-            PluginManager.MessageType.Message;
-            #else
+        public PluginManager.MessageType Level =
+#if DEBUG
+ PluginManager.MessageType.Message;
+
+#else
             PluginManager.MessageType.Warning;
-            #endif
+#endif
 
         /// <summary>
         /// Outputs the specified message.
@@ -98,7 +99,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 {
                     try
                     {
-                        DebugOutputPanel.AddMessage(level, msg.ToString());
+                        DebugOutputPanel.AddMessage(level, msg.CleanNewLines());
                     }
                     catch { }
                 }
@@ -114,14 +115,13 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 }
                 try
                 {
-
                     switch (level)
                     {
                         case PluginManager.MessageType.Message:
                             if (level == PluginManager.MessageType.Message)
                             {
                                 msg.Insert(0, "Info: ");
-                                Debug.Log(msg.ToString());
+                                Debug.Log(msg.CleanNewLines());
                             }
                             break;
 
@@ -129,13 +129,13 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             if (level == PluginManager.MessageType.Message || level == PluginManager.MessageType.Warning)
                             {
                                 msg.Insert(0, "Warning: ");
-                                Debug.LogWarning(msg.ToString());
+                                Debug.LogWarning(msg.CleanNewLines());
                             }
                             break;
 
                         case PluginManager.MessageType.Error:
                             msg.Insert(0, "Error: ");
-                            Debug.LogError(msg.ToString());
+                            Debug.LogError(msg.CleanNewLines());
                             break;
                     }
                 }

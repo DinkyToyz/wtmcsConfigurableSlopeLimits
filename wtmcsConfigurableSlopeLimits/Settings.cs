@@ -2,34 +2,174 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization;
-using System.Xml;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Xml.Serialization;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
     /// <summary>
     /// Mod settings.
     /// </summary>
-    [DataContract]
     public class Settings
     {
         /// <summary>
+        /// Serializable settings class.
+        /// </summary>
+        [Serializable]
+        public class ConfigurableSlopeLimitsSettings
+        {
+            /// <summary>
+            /// Slope limit pair.
+            /// </summary>
+            [Serializable]
+            public class SlopeLimit
+            {
+                /// <summary>
+                /// The name.
+                /// </summary>
+                public string Name;
+
+                /// <summary>
+                /// The limit.
+                /// </summary>
+                public float Limit;
+
+                /// <summary>
+                /// Initializes a new instance of the <see cref="SlopeLimit"/> class.
+                /// </summary>
+                public SlopeLimit()
+                {
+                }
+
+                /// <summary>
+                /// Initializes a new instance of the <see cref="SlopeLimit"/> class.
+                /// </summary>
+                /// <param name="name">The name.</param>
+                /// <param name="limit">The limit.</param>
+                public SlopeLimit(string name, float limit)
+                {
+                    Name = name;
+                    Limit = limit;
+                }
+            }
+
+            /// <summary>
+            /// The save count.
+            /// </summary>
+            public uint SaveCount = 0;
+
+            /// <summary>
+            /// The slope limits.
+            /// </summary>
+            public List<SlopeLimit> SlopeLimits = new List<SlopeLimit>();
+
+            /// <summary>
+            /// Gets the slope limits dictionary.
+            /// </summary>
+            /// <value>
+            /// The slope limits dictionary.
+            /// </value>
+            public Dictionary<string, float> SlopeLimitsDictionary()
+            {
+                try
+                {
+                    return SlopeLimits.ToDictionary(l => l.Name, l => l.Limit);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(this, "SlopeLimitsDictionary", ex);
+                    return new Dictionary<string, float>();
+                }
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ConfigurableSlopeLimitsSettings"/> class.
+            /// </summary>
+            public ConfigurableSlopeLimitsSettings()
+            {
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ConfigurableSlopeLimitsSettings"/> class.
+            /// </summary>
+            /// <param name="saveCount">The save count.</param>
+            /// <param name="limits">The limits.</param>
+            public ConfigurableSlopeLimitsSettings(uint saveCount, Dictionary<string, float> limits)
+            {
+                SaveCount = saveCount;
+                SlopeLimits.AddRange(limits.ToList().ConvertAll(kvp => new SlopeLimit(kvp.Key, kvp.Value)));
+            }
+        }
+
+        /// <summary>
         /// The save count.
         /// </summary>
-        [DataMember]
         public uint SaveCount = 0;
 
         /// <summary>
         /// The slope limits.
         /// </summary>
-        [DataMember]
-        public Dictionary<string, float> SlopeLimits = new Dictionary<string, float>();
+        public Dictionary<string, float> SlopeLimits { get; private set; }
 
         /// <summary>
         /// The generic slope limits.
         /// </summary>
-        [NonSerialized]
-        public Dictionary<string, float> SlopeLimitsGeneric = new Dictionary<string, float>();
+        public Dictionary<string, float> SlopeLimitsGeneric { get; private set; }
+
+        /// <summary>
+        /// Generic net thingy name-part pair.
+        /// </summary>
+        public struct Generic
+        {
+            /// <summary>
+            /// The name.
+            /// </summary>
+            public string Name;
+
+            /// <summary>
+            /// The part.
+            /// </summary>
+            public string Part;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Generic"/> struct.
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <param name="part">The part.</param>
+            public Generic(string name, string part)
+            {
+                Name = name;
+                Part = part;
+            }
+        }
+
+        /// <summary>
+        /// The nets that should be ignored.
+        /// </summary>
+        private static Regex ignoreNets = new Regex("(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam)|(?<!Pedestrian) Path)$", RegexOptions.IgnoreCase);
+
+        /// <summary>
+        /// The generics.
+        /// </summary>
+        public static readonly List<Generic> Generics = new List<Generic>
+        {
+            new Generic("Highway", "high"),
+            new Generic("Highway Ramp", "ramp"),
+            new Generic("Large Road", "large"),
+            new Generic("Medium Road", "medium"),
+            new Generic("Small Road", "small"),
+            new Generic("Gravel Road", "gravel"),
+            new Generic("Train Track", "track"),
+            new Generic("Metro Track", "track"),
+            new Generic("Pedestrian Path", "pedestrian"),
+            new Generic("Pedestrian Path", "pedestrian")
+        };
+
+        /// <summary>
+        /// The generic names.
+        /// </summary>
+        public static readonly HashSet<String> GenericNames = new HashSet<string>(Generics.ConvertAll<string>(g => g.Name));
 
         /// <summary>
         /// The current settings.
@@ -61,6 +201,36 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                 return currentSettings;
             }
+        }
+
+        /// <summary>
+        /// Check if net should be ignored.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>True if net should be ignored.</returns>
+        public static bool IgnoreNet(string name)
+        {
+            return ignoreNets.Match(name).Success;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Settings"/> class.
+        /// </summary>
+        public Settings()
+        {
+            SlopeLimits = new Dictionary<string, float>();
+            SlopeLimitsGeneric = new Dictionary<string, float>();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Settings"/> class.
+        /// </summary>
+        /// <param name="slopeLimits">The slope limits.</param>
+        public Settings(Dictionary<string, float> slopeLimits)
+        {
+            SlopeLimits = slopeLimits;
+            SlopeLimitsGeneric = new Dictionary<string, float>();
+            InitGenerics();
         }
 
         /// <summary>
@@ -118,7 +288,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 {
                     if (SlopeLimits.ContainsKey(name))
                     {
-                        SlopeLimits[generic] = SlopeLimits[name];
+                        SlopeLimitsGeneric[generic] = SlopeLimits[name];
                     }
                     else
                     {
@@ -149,7 +319,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// Initializes the generic limits.
         /// </summary>
-        private void initGenerics()
+        private void InitGenerics()
         {
             try
             {
@@ -162,12 +332,10 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     }
                 }
 
-                InitGeneric("Highway", "high");
-                InitGeneric("LargeRoad", "large");
-                InitGeneric("MediumRoad", "medium");
-                InitGeneric("SmallRoad", "small");
-                InitGeneric("TrainTrack", "track");
-                InitGeneric("TrainTrack", "rail");
+                foreach (Generic gen in Generics)
+                {
+                    InitGeneric(gen.Name, gen.Part);
+                }
             }
             catch (Exception ex)
             {
@@ -180,7 +348,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         public void Update()
         {
-            initGenerics();
+            InitGenerics();
         }
 
         /// <summary>
@@ -193,7 +361,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             try
             {
                 Log.Info(typeof(Settings), "Load", "Begin");
-                
+
                 if (fileName == null)
                 {
                     fileName = FilePathName;
@@ -205,13 +373,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                     using (FileStream file = File.OpenRead(fileName))
                     {
-                        DataContractSerializer ser = new DataContractSerializer(typeof(Settings));
-                        Settings sets = ser.ReadObject(file) as Settings;
-
-                        if (sets != null)
+                        XmlSerializer ser = new XmlSerializer(typeof(ConfigurableSlopeLimitsSettings));
+                        ConfigurableSlopeLimitsSettings cfg = ser.Deserialize(file) as ConfigurableSlopeLimitsSettings;
+                        if (cfg != null)
                         {
-                            sets.initGenerics();
-                            sets.SaveCount = 0;
+                            Settings sets = new Settings(cfg.SlopeLimitsDictionary());
 
                             Log.Info(typeof(Settings), "Load", "End");
                             return sets;
@@ -253,8 +419,10 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 SaveCount++;
                 using (FileStream file = File.Create(fileName))
                 {
-                    DataContractSerializer ser = new DataContractSerializer(typeof(Settings));
-                    ser.WriteObject(file, this);
+                    ConfigurableSlopeLimitsSettings cfg = new ConfigurableSlopeLimitsSettings(SaveCount, SlopeLimits);
+
+                    XmlSerializer ser = new XmlSerializer(typeof(ConfigurableSlopeLimitsSettings));
+                    ser.Serialize(file, cfg);
                     file.Flush();
                     file.Close();
                 }
