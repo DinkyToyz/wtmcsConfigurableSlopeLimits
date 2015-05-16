@@ -1,5 +1,4 @@
-﻿using ColossalFramework.IO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,140 +13,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
     public class Settings
     {
         /// <summary>
-        /// Serializable settings class.
+        /// The generic names.
         /// </summary>
-        [Serializable]
-        public class ConfigurableSlopeLimitsSettings
-        {
-            /// <summary>
-            /// Slope limit pair.
-            /// </summary>
-            [Serializable]
-            public class SlopeLimit
-            {
-                /// <summary>
-                /// The name.
-                /// </summary>
-                public string Name;
-
-                /// <summary>
-                /// The limit.
-                /// </summary>
-                public float Limit;
-
-                /// <summary>
-                /// Initializes a new instance of the <see cref="SlopeLimit"/> class.
-                /// </summary>
-                public SlopeLimit()
-                {
-                }
-
-                /// <summary>
-                /// Initializes a new instance of the <see cref="SlopeLimit"/> class.
-                /// </summary>
-                /// <param name="name">The name.</param>
-                /// <param name="limit">The limit.</param>
-                public SlopeLimit(string name, float limit)
-                {
-                    Name = name;
-                    Limit = limit;
-                }
-            }
-
-            /// <summary>
-            /// The save count.
-            /// </summary>
-            public uint SaveCount = 0;
-
-            /// <summary>
-            /// The slope limits.
-            /// </summary>
-            public List<SlopeLimit> SlopeLimits = new List<SlopeLimit>();
-
-            /// <summary>
-            /// Gets the slope limits dictionary.
-            /// </summary>
-            /// <value>
-            /// The slope limits dictionary.
-            /// </value>
-            public Dictionary<string, float> SlopeLimitsDictionary()
-            {
-                try
-                {
-                    return SlopeLimits.ToDictionary(l => l.Name, l => l.Limit);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(this, "SlopeLimitsDictionary", ex);
-                    return new Dictionary<string, float>();
-                }
-            }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="ConfigurableSlopeLimitsSettings"/> class.
-            /// </summary>
-            public ConfigurableSlopeLimitsSettings()
-            {
-            }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="ConfigurableSlopeLimitsSettings"/> class.
-            /// </summary>
-            /// <param name="saveCount">The save count.</param>
-            /// <param name="limits">The limits.</param>
-            public ConfigurableSlopeLimitsSettings(uint saveCount, Dictionary<string, float> limits)
-            {
-                SaveCount = saveCount;
-                SlopeLimits.AddRange(limits.ToList().ConvertAll(kvp => new SlopeLimit(kvp.Key, kvp.Value)));
-            }
-        }
-
-        /// <summary>
-        /// The save count.
-        /// </summary>
-        public uint SaveCount = 0;
-
-        /// <summary>
-        /// The slope limits.
-        /// </summary>
-        public Dictionary<string, float> SlopeLimits { get; private set; }
-
-        /// <summary>
-        /// The generic slope limits.
-        /// </summary>
-        public Dictionary<string, float> SlopeLimitsGeneric { get; private set; }
-
-        /// <summary>
-        /// Generic net thingy name-part pair.
-        /// </summary>
-        public struct Generic
-        {
-            /// <summary>
-            /// The name.
-            /// </summary>
-            public string Name;
-
-            /// <summary>
-            /// The part.
-            /// </summary>
-            public string Part;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Generic"/> struct.
-            /// </summary>
-            /// <param name="name">The name.</param>
-            /// <param name="part">The part.</param>
-            public Generic(string name, string part)
-            {
-                Name = name;
-                Part = part;
-            }
-        }
-
-        /// <summary>
-        /// The nets that should be ignored.
-        /// </summary>
-        private static Regex ignoreNets = new Regex("(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam)|(?<!Pedestrian) Path)$", RegexOptions.IgnoreCase);
+        public static readonly HashSet<String> GenericNames;
 
         /// <summary>
         /// The generics.
@@ -167,97 +35,46 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         };
 
         /// <summary>
-        /// The generic names.
+        /// The pattern for the nets that should be ignored.
         /// </summary>
-        public static readonly HashSet<String> GenericNames = new HashSet<string>(Generics.ConvertAll<string>(g => g.Name));
+        public static readonly string ignoreNetsPattern = "(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam)|(?<!Pedestrian) Path)$";
 
         /// <summary>
-        /// The current settings.
+        /// The nets that should be ignored.
         /// </summary>
-        private static Settings currentSettings;
+        public static readonly Regex ignoreNetsRex = new Regex(ignoreNetsPattern, RegexOptions.IgnoreCase);
 
         /// <summary>
-        /// Gets the current settings.
+        /// The save count.
         /// </summary>
-        /// <value>
-        /// The current settings.
-        /// </value>
-        public static Settings Current
+        public uint SaveCount = 0;
+
+        /// <summary>
+        /// Initializes the <see cref="Settings"/> class.
+        /// </summary>
+        static Settings()
         {
-            get
-            {
-                if (currentSettings == null)
-                {
-                    currentSettings = Load();
-                    foreach (string name in currentSettings.SlopeLimits.Keys)
-                    {
-                        Log.Info("CfgLimit: " + name + "=" + currentSettings.SlopeLimits[name].ToString());
-                    }
-                    foreach (string name in currentSettings.SlopeLimits.Keys)
-                    {
-                        Log.Info("GenLimit: " + name + "=" + currentSettings.SlopeLimitsGeneric[name].ToString());
-                    }
-                }
-
-                return currentSettings;
-            }
-        }
-
-        /// <summary>
-        /// Check if net should be ignored.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns>True if net should be ignored.</returns>
-        public static bool IgnoreNet(string name)
-        {
-            return ignoreNets.Match(name).Success;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Settings"/> class.
-        /// </summary>
-        public Settings()
-        {
-            SlopeLimits = new Dictionary<string, float>();
-            SlopeLimitsGeneric = new Dictionary<string, float>();
+            GenericNames = new HashSet<string>(Generics.ConvertAll<string>(g => g.Name));
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Settings"/> class.
         /// </summary>
         /// <param name="slopeLimits">The slope limits.</param>
-        public Settings(Dictionary<string, float> slopeLimits)
+        public Settings(Dictionary<string, float> slopeLimits = null)
         {
-            SlopeLimits = slopeLimits;
             SlopeLimitsGeneric = new Dictionary<string, float>();
-            InitGenerics();
-        }
+            SlopeLimitsOriginal = new Dictionary<string, float>();
+            SlopeLimitsIgnored = new Dictionary<string, float>();
 
-        /// <summary>
-        /// Gets the file path.
-        /// </summary>
-        /// <value>
-        /// The file path.
-        /// </value>
-        public static string FilePath
-        {
-            get
+            if (slopeLimits == null)
             {
-                return Path.Combine(DataLocation.localApplicationData, "ModConfig");
+                SlopeLimits = new Dictionary<string, float>();
             }
-        }
-
-        /// <summary>
-        /// Gets the name of the file.
-        /// </summary>
-        /// <value>
-        /// The name of the file.
-        /// </value>
-        public static string FileName
-        {
-            get
+            else
             {
-                return Assembly.Name + ".xml";
+                SlopeLimits = slopeLimits;
+                InitGenerics();
             }
         }
 
@@ -271,8 +88,154 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             get
             {
-                return Path.GetFullPath(Path.Combine(FilePath, FileName));
+                return FileSystem.FilePathName(".xml");
             }
+        }
+
+        /// <summary>
+        /// The slope limits.
+        /// </summary>
+        public Dictionary<string, float> SlopeLimits { get; private set; }
+
+        /// <summary>
+        /// The generic slope limits.
+        /// </summary>
+        public Dictionary<string, float> SlopeLimitsGeneric { get; private set; }
+
+        /// <summary>
+        /// The ignored slope limits.
+        /// </summary>
+        public Dictionary<string, float> SlopeLimitsIgnored { get; private set; }
+
+        /// <summary>
+        /// The original slope limits.
+        /// </summary>
+        public Dictionary<string, float> SlopeLimitsOriginal { get; private set; }
+
+        /// <summary>
+        /// Check if net should be ignored.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>True if net should be ignored.</returns>
+        public static bool IgnoreNet(string name)
+        {
+            return ignoreNetsRex.Match(name).Success;
+        }
+
+        /// <summary>
+        /// Loads settings from the specified file name.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns>The settings.</returns>
+        public static Settings Load(string fileName = null)
+        {
+            Log.Debug(typeof(Settings), "Load", "Begin");
+
+            try
+            {
+                if (fileName == null)
+                {
+                    fileName = FilePathName;
+                }
+
+                if (File.Exists(fileName))
+                {
+                    Log.Info(typeof(Settings), "Load", fileName);
+
+                    using (FileStream file = File.OpenRead(fileName))
+                    {
+                        XmlSerializer ser = new XmlSerializer(typeof(ConfigurableSlopeLimitsSettings));
+                        ConfigurableSlopeLimitsSettings cfg = ser.Deserialize(file) as ConfigurableSlopeLimitsSettings;
+                        if (cfg != null)
+                        {
+                            Log.Debug(typeof(Settings), "Load", "Loaded");
+
+                            Settings sets = new Settings(cfg.GetSlopeLimits());
+
+                            foreach (string name in sets.SlopeLimits.Keys)
+                            {
+                                Log.Info("CfgLimit", name, sets.SlopeLimits[name]);
+                            }
+                            foreach (string name in sets.SlopeLimitsGeneric.Keys)
+                            {
+                                Log.Info("GenLimit", name, sets.SlopeLimitsGeneric[name]);
+                            }
+
+                            Log.Debug(typeof(Settings), "Load", "End");
+                            return sets;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(typeof(Settings), "Load", ex);
+            }
+
+            Log.Debug(typeof(Settings), "Load", "End");
+            return new Settings();
+        }
+
+        /// <summary>
+        /// Saves settings to the specified file name.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        public void Save(string fileName = null)
+        {
+            Log.Debug(this, "Save", "Begin");
+
+            try
+            {
+                if (SlopeLimitsOriginal == null)
+                {
+                    SlopeLimitsOriginal = new Dictionary<string, float>();
+                }
+
+                if (fileName == null)
+                {
+                    fileName = FilePathName;
+                }
+
+                string filePath = Path.GetDirectoryName(Path.GetFullPath(fileName));
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+
+                Log.Info(this, "Save", fileName);
+
+                SaveCount++;
+                using (FileStream file = File.Create(fileName))
+                {
+                    ConfigurableSlopeLimitsSettings cfg = new ConfigurableSlopeLimitsSettings();
+                    cfg.SaveCount = SaveCount;
+                    cfg.IgnoreNetInfoPattern = ignoreNetsPattern;
+                    cfg.GenericNetInfoNames = Generics;
+                    cfg.SetSlopeLimits(SlopeLimits);
+                    cfg.SetGenericSlopeLimits(SlopeLimitsGeneric);
+                    cfg.SetOriginalSlopeLimits(SlopeLimitsOriginal);
+                    cfg.SetIgnoredtSlopeLimits(SlopeLimitsIgnored);
+
+                    XmlSerializer ser = new XmlSerializer(typeof(ConfigurableSlopeLimitsSettings));
+                    ser.Serialize(file, cfg);
+                    file.Flush();
+                    file.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(this, "Save", ex);
+            }
+
+            Log.Debug(this, "Save", "End");
+        }
+
+        /// <summary>
+        /// Updates this instance.
+        /// </summary>
+        public void Update()
+        {
+            InitGenerics();
         }
 
         /// <summary>
@@ -344,94 +307,201 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
-        /// Updates this instance.
+        /// Generic net thingy name-part pair.
         /// </summary>
-        public void Update()
+        public struct Generic
         {
-            InitGenerics();
+            /// <summary>
+            /// The name.
+            /// </summary>
+            public string Name;
+
+            /// <summary>
+            /// The part.
+            /// </summary>
+            public string Part;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Generic"/> struct.
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <param name="part">The part.</param>
+            public Generic(string name, string part)
+            {
+                Name = name;
+                Part = part;
+            }
         }
 
         /// <summary>
-        /// Loads settings from the specified file name.
+        /// Serializable settings class.
         /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <returns>The settings.</returns>
-        public static Settings Load(string fileName = null)
+        [Serializable]
+        public class ConfigurableSlopeLimitsSettings
         {
-            try
+            /// <summary>
+            /// The generic net information names.
+            /// </summary>
+            public List<Generic> GenericNetInfoNames = new List<Generic>();
+
+            /// <summary>
+            /// The generic slope limits.
+            /// </summary>
+            public List<SlopeLimit> GenericSlopeLimits = new List<SlopeLimit>();
+
+            /// <summary>
+            /// The ignored net information names.
+            /// </summary>
+            public List<SlopeLimit> IgnoredSlopeLimits = new List<SlopeLimit>();
+
+            /// <summary>
+            /// The net information that is be ignored.
+            /// </summary>
+            public string IgnoreNetInfoPattern = "";
+
+            /// <summary>
+            /// The original slope limits.
+            /// </summary>
+            public List<SlopeLimit> OriginalSlopeLimits = new List<SlopeLimit>();
+
+            /// <summary>
+            /// The save count.
+            /// </summary>
+            public uint SaveCount = 0;
+
+            /// <summary>
+            /// The slope limits.
+            /// </summary>
+            public List<SlopeLimit> SlopeLimits = new List<SlopeLimit>();
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ConfigurableSlopeLimitsSettings"/> class.
+            /// </summary>
+            public ConfigurableSlopeLimitsSettings()
             {
-                Log.Info(typeof(Settings), "Load", "Begin");
+            }
 
-                if (fileName == null)
+            /// <summary>
+            /// Gets the slope limits dictionary.
+            /// </summary>
+            /// <value>
+            /// The slope limits dictionary.
+            /// </value>
+            public Dictionary<string, float> GetSlopeLimits()
+            {
+                return GetLimitsDictionary(SlopeLimits, "SlopeLimitsDictionary");
+            }
+
+            /// <summary>
+            /// Sets the generic slope limits.
+            /// </summary>
+            /// <param name="limitsDictionary">The limits dictionary.</param>
+            public void SetGenericSlopeLimits(Dictionary<string, float> limitsDictionary)
+            {
+                SetLimitsDictionary(GenericSlopeLimits, limitsDictionary, "SetSlopeLimits");
+            }
+
+            /// <summary>
+            /// Sets the ignored slope limits.
+            /// </summary>
+            /// <param name="limitsDictionary">The limits dictionary.</param>
+            public void SetIgnoredtSlopeLimits(Dictionary<string, float> limitsDictionary)
+            {
+                SetLimitsDictionary(IgnoredSlopeLimits, limitsDictionary, "SetSlopeLimits");
+            }
+
+            /// <summary>
+            /// Sets the original slope limits.
+            /// </summary>
+            /// <param name="limitsDictionary">The limits dictionary.</param>
+            public void SetOriginalSlopeLimits(Dictionary<string, float> limitsDictionary)
+            {
+                SetLimitsDictionary(OriginalSlopeLimits, limitsDictionary, "SetSlopeLimits");
+            }
+
+            /// <summary>
+            /// Sets the slope limits.
+            /// </summary>
+            /// <param name="limitsDictionary">The limits dictionary.</param>
+            public void SetSlopeLimits(Dictionary<string, float> limitsDictionary)
+            {
+                SetLimitsDictionary(SlopeLimits, limitsDictionary, "SetSlopeLimits");
+            }
+
+            /// <summary>
+            /// Gets the limits dictionary.
+            /// </summary>
+            /// <param name="limits">The limits.</param>
+            /// <param name="name">The name.</param>
+            /// <returns></returns>
+            private Dictionary<string, float> GetLimitsDictionary(List<SlopeLimit> limits, string name = null)
+            {
+                try
                 {
-                    fileName = FilePathName;
+                    return limits.ToDictionary(l => l.Name, l => l.Limit);
                 }
-
-                if (File.Exists(fileName))
+                catch (Exception ex)
                 {
-                    Log.Info(typeof(Settings), "Load", fileName);
+                    Log.Error(this, String.IsNullOrEmpty(name) ? "LimitsDictionary" : name, ex);
+                    return new Dictionary<string, float>();
+                }
+            }
 
-                    using (FileStream file = File.OpenRead(fileName))
+            /// <summary>
+            /// Sets the limits dictionary.
+            /// </summary>
+            /// <param name="limits">The limits.</param>
+            /// <param name="limitsDictionary">The limits dictionary.</param>
+            /// <param name="name">The name.</param>
+            private void SetLimitsDictionary(List<SlopeLimit> limits, Dictionary<string, float> limitsDictionary, string name = null)
+            {
+                try
+                {
+                    if (limitsDictionary != null)
                     {
-                        XmlSerializer ser = new XmlSerializer(typeof(ConfigurableSlopeLimitsSettings));
-                        ConfigurableSlopeLimitsSettings cfg = ser.Deserialize(file) as ConfigurableSlopeLimitsSettings;
-                        if (cfg != null)
-                        {
-                            Settings sets = new Settings(cfg.SlopeLimitsDictionary());
-
-                            Log.Info(typeof(Settings), "Load", "End");
-                            return sets;
-                        }
+                        limits.Clear();
+                        limits.AddRange(limitsDictionary.ToList().ConvertAll(kvp => new SlopeLimit(kvp.Key, kvp.Value)));
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(typeof(Settings), "Load", ex);
-            }
-
-            return new Settings();
-        }
-
-        /// <summary>
-        /// Saves settings to the specified file name.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        public void Save(string fileName = null)
-        {
-            try
-            {
-                Log.Info(this, "Save", "Begin");
-
-                if (fileName == null)
+                catch (Exception ex)
                 {
-                    fileName = FilePathName;
+                    Log.Error(this, String.IsNullOrEmpty(name) ? "SetLimitsDictionary" : name, ex);
+                }
+            }
+
+            /// <summary>
+            /// Slope limit pair.
+            /// </summary>
+            [Serializable]
+            public class SlopeLimit
+            {
+                /// <summary>
+                /// The limit.
+                /// </summary>
+                public float Limit;
+
+                /// <summary>
+                /// The name.
+                /// </summary>
+                public string Name;
+
+                /// <summary>
+                /// Initializes a new instance of the <see cref="SlopeLimit"/> class.
+                /// </summary>
+                public SlopeLimit()
+                {
                 }
 
-                string filePath = Path.GetDirectoryName(Path.GetFullPath(fileName));
-                if (!Directory.Exists(filePath))
+                /// <summary>
+                /// Initializes a new instance of the <see cref="SlopeLimit"/> class.
+                /// </summary>
+                /// <param name="name">The name.</param>
+                /// <param name="limit">The limit.</param>
+                public SlopeLimit(string name, float limit)
                 {
-                    Directory.CreateDirectory(filePath);
+                    Name = name;
+                    Limit = limit;
                 }
-
-                Log.Info(this, "Save", fileName);
-
-                SaveCount++;
-                using (FileStream file = File.Create(fileName))
-                {
-                    ConfigurableSlopeLimitsSettings cfg = new ConfigurableSlopeLimitsSettings(SaveCount, SlopeLimits);
-
-                    XmlSerializer ser = new XmlSerializer(typeof(ConfigurableSlopeLimitsSettings));
-                    ser.Serialize(file, cfg);
-                    file.Flush();
-                    file.Close();
-                }
-
-                Log.Info(this, "Save", "End");
-            }
-            catch (Exception ex)
-            {
-                Log.Error(this, "Save", ex);
             }
         }
     }

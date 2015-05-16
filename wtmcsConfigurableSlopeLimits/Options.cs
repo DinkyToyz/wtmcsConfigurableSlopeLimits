@@ -5,9 +5,9 @@ using System.Text;
 using ColossalFramework.UI;
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
-    class Options
+    internal class Options
     {
-        UISlider slider;
-        UITextField textField;
+        private UISlider slider;
+        private UITextField textField;
     }
 }

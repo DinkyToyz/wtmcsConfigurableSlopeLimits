@@ -8,6 +8,22 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
     public class Mod : IUserMod
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="Mod"/> class.
+        /// </summary>
+        public Mod()
+            : base()
+        {
+            if (Library.IsDebugBuild)
+            {
+                Log.LogLevel = Log.Level.All;
+            }
+            else
+            {
+                Log.LogLevel = Log.Level.Warning;
+            }
+        }
+
+        /// <summary>
         /// Gets the description.
         /// </summary>
         /// <value>
@@ -18,7 +34,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             get
             {
-                return Assembly.Description;
+                return Library.Description;
             }
         }
 
@@ -32,7 +48,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             get
             {
-                return Assembly.Title;
+                return Library.Title;
             }
         }
     }

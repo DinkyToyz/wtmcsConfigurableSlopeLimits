@@ -11,9 +11,14 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
     public class LoadingExtension : LoadingExtensionBase
     {
         /// <summary>
-        /// The original limits.
+        /// The mod is broken.
         /// </summary>
-        private Dictionary<string, float> originalLimits = null;
+        private bool isBroken = false;
+
+        /// <summary>
+        /// The mod is initialized.
+        /// </summary>
+        private bool isInitialized = false;
 
         /// <summary>
         /// The mod is loaded.
@@ -21,9 +26,138 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         private bool isLoaded = false;
 
         /// <summary>
-        /// The mod is broken.
+        /// Initializes a new instance of the <see cref="LoadingExtension"/> class.
         /// </summary>
-        private bool isBroken = false;
+        public LoadingExtension()
+            : base()
+        {
+            Log.Debug(this, "Constructing");
+        }
+
+        /// <summary>
+        /// Called when mod is created.
+        /// </summary>
+        /// <param name="loading">The loading.</param>
+        public override void OnCreated(ILoading loading)
+        {
+            Log.Debug(this, "OnCreated", "Begin");
+
+            try
+            {
+                if (!isBroken && !isLoaded)
+                {
+                    InitializeLimits();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(this, "OnCreated", ex);
+                isBroken = true;
+            }
+
+            Log.Debug(this, "OnCreated", "Base");
+            base.OnCreated(loading);
+
+            Log.Debug(this, "OnCreated", "End");
+        }
+
+        /// <summary>
+        /// Called when map (etc) is loaded.
+        /// </summary>
+        /// <param name="mode">The load mode.</param>
+        public override void OnLevelLoaded(LoadMode mode)
+        {
+            Log.Debug(this, "OnLevelLoaded", "Begin");
+
+            try
+            {
+                if (!isBroken && !isLoaded)
+                {
+                    InitializeLimits();
+                    SetLimits();
+                }
+
+                //Global.ReInitializeToolButton();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(this, "OnLevelLoaded", ex);
+                isBroken = true;
+            }
+
+            Log.Debug(this, "OnLevelLoaded", "Base");
+            base.OnLevelLoaded(mode);
+
+            Log.Debug(this, "OnLevelLoaded", "End");
+        }
+
+        /// <summary>
+        /// Called when map (etc) unloads.
+        /// </summary>
+        public override void OnLevelUnloading()
+        {
+            Log.Debug(this, "OnLevelUnloading", "Begin");
+
+            try
+            {
+                Global.DeInitializeToolButton();
+                Global.DeInitializeUI();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(this, "OnLevelUnloading", ex);
+                isBroken = true;
+            }
+
+            try
+            {
+                RestoreLimits();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(this, "OnLevelUnloading", ex);
+                isBroken = true;
+            }
+
+            Log.Debug(this, "OnLevelUnloading", "Base");
+            base.OnLevelUnloading();
+
+            Log.Debug(this, "OnLevelUnloading", "End");
+        }
+
+        /// <summary>
+        /// Called when mod is released.
+        /// </summary>
+        public override void OnReleased()
+        {
+            Log.Debug(this, "OnReleased", "Begin");
+
+            try
+            {
+                Global.DisposeToolButton();
+                Global.DisposeUI();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(this, "OnLevelUnloading", ex);
+                isBroken = true;
+            }
+
+            try
+            {
+                RestoreLimits();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(this, "OnReleased", ex);
+                isBroken = true;
+            }
+
+            Log.Debug(this, "OnReleased", "Base");
+            base.OnReleased();
+
+            Log.Debug(this, "OnReleased", "End");
+        }
 
         /// <summary>
         /// Initializes the slopes.
@@ -31,18 +165,20 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <returns>True on success.</returns>
         protected void InitializeLimits()
         {
-            if (isBroken || originalLimits != null)
+            if (isBroken || isInitialized)
             {
                 return;
             }
 
+            Log.Debug(this, "InitializeLimits", "Begin");
+
             try
             {
-                Log.Info(this, "InitializeLimits", "Begin");
-
-                originalLimits = new Dictionary<string, float>();
-
                 bool missing = false;
+                bool found = false;
+
+                Global.Settings.SlopeLimitsOriginal.Clear();
+                Global.Settings.SlopeLimitsIgnored.Clear();
 
                 foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
                 {
@@ -52,128 +188,56 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                         if (Settings.IgnoreNet(netName))
                         {
-                            Log.Info("NotLimit: " + netName + "=" + netInfo.m_maxSlope.ToString());
+                            if (!Global.Settings.SlopeLimitsIgnored.ContainsKey(netName))
+                            {
+                                Log.Info("NotLimit", netName, netInfo.m_maxSlope);
+                                Global.Settings.SlopeLimitsIgnored[netName] = netInfo.m_maxSlope;
+                            }
+
                             continue;
                         }
 
                         if (Settings.GenericNames.Contains(netName))
                         {
-                            if (!Settings.Current.SlopeLimits.ContainsKey(netName))
+                            if (!Global.Settings.SlopeLimits.ContainsKey(netName))
                             {
-                                Log.Info("NewLimit: " + netName + "=" + netInfo.m_maxSlope.ToString());
-                                Settings.Current.SlopeLimits[netName] = netInfo.m_maxSlope;
+                                Log.Info("NewLimit", netName, netInfo.m_maxSlope);
+                                Global.Settings.SlopeLimits[netName] = netInfo.m_maxSlope;
                                 missing = true;
                             }
                         }
 
-                        if (!originalLimits.ContainsKey(netName))
+                        if (!Global.Settings.SlopeLimitsOriginal.ContainsKey(netName))
                         {
-                            Log.Info("OrgLimit: " + netName + "=" + netInfo.m_maxSlope.ToString());
-                            originalLimits[netName] = netInfo.m_maxSlope;
+                            Log.Info("OrgLimit", netName, netInfo.m_maxSlope);
+                            Global.Settings.SlopeLimitsOriginal[netName] = netInfo.m_maxSlope;
+                            found = true;
                         }
                     }
                 }
 
-                if (missing)
+                if (Global.Settings.SlopeLimitsOriginal.Count > 0)
                 {
-                    Settings.Current.Update();
-                    Settings.Current.Save();
-                }
-
-                Log.Info(this, "InitializeLimits", "End");
-            }
-            catch (Exception ex)
-            {
-                isBroken = true;
-                Log.Error(this, "InitializeLimits", ex);
-            }
-        }
-
-        /// <summary>
-        /// Sets the limits.
-        /// </summary>
-        protected void SetLimits()
-        {
-            if (isBroken)
-            {
-                return;
-            }
-
-            try
-            {
-                Log.Info(this, "SetLimits", "Begin");
-
-                bool missing = false;
-
-                foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
-                {
-                    foreach (NetInfo netInfo in netCollection.m_prefabs)
+                    if (missing || found)
                     {
-                        string netName = netInfo.NetName();
-
-                        if (Settings.IgnoreNet(netName))
+                        if (missing)
                         {
-                            Log.Info("NotLimit: " + netName + "=" + netInfo.m_maxSlope.ToString());
-                            continue;
+                            Global.Settings.Update();
                         }
 
-                        string found = null;
-
-                        if (Settings.Current.SlopeLimits.ContainsKey(netName))
-                        {
-                            netInfo.m_maxSlope = Settings.Current.SlopeLimits[netName];
-                            found = "name";
-                        }
-                        else
-                        {
-                            string name = netName.ToLowerInvariant();
-                            if (Settings.Current.SlopeLimitsGeneric.ContainsKey(name))
-                            {
-                                netInfo.m_maxSlope = Settings.Current.SlopeLimitsGeneric[name];
-                                found = "generic";
-                            }
-                            else
-                            {
-                                foreach (string generic in Settings.Current.SlopeLimitsGeneric.Keys.ToList().OrderBy(sName => name.Length).Reverse())
-                                {
-                                    if (name.Contains(generic))
-                                    {
-                                        netInfo.m_maxSlope = Settings.Current.SlopeLimitsGeneric[generic];
-                                        found = "part";
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-
-                        if (found == null)
-                        {
-                            Log.Info("NewLimit: " + netName + "=" + netInfo.m_maxSlope.ToString());
-                            Settings.Current.SlopeLimits[netName] = netInfo.m_maxSlope;
-                            missing = true;
-                        }
-                        else
-                        {
-                            Log.Info("SetLimit: " + netName + "=" + netInfo.m_maxSlope.ToString() + " (" + found + ")");
-                        }
+                        Global.Settings.Save();
                     }
+
+                    isInitialized = true;
                 }
-
-                if (missing)
-                {
-                    Settings.Current.Update();
-                    Settings.Current.Save();
-                }
-
-                isLoaded = true;
-
-                Log.Info(this, "SetLimits", "End");
             }
             catch (Exception ex)
             {
+                Log.Error(this, "InitializeLimits", ex);
                 isBroken = true;
-                Log.Error(this, "SetLimits", ex);
             }
+
+            Log.Debug(this, "InitializeLimits", "End");
         }
 
         /// <summary>
@@ -181,10 +245,15 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         protected void RestoreLimits()
         {
+            if (!isLoaded || !isInitialized)
+            {
+                return;
+            }
+
+            Log.Debug(this, "RestoreLimits", "Begin");
+
             try
             {
-                Log.Info(this, "RestoreLimits", "Begin");
-
                 foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
                 {
                     foreach (NetInfo netInfo in netCollection.m_prefabs)
@@ -193,23 +262,26 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                         if (Settings.IgnoreNet(netName))
                         {
-                            Log.Info("NotLimit: " + netName + "=" + netInfo.m_maxSlope.ToString());
+                            if (!Global.Settings.SlopeLimitsIgnored.ContainsKey(netName))
+                            {
+                                Log.Info("NotLimit", netName, netInfo.m_maxSlope);
+                                Global.Settings.SlopeLimitsIgnored[netName] = netInfo.m_maxSlope;
+                            }
+
                             continue;
                         }
 
-                        if (originalLimits.ContainsKey(netName))
+                        if (Global.Settings.SlopeLimitsOriginal.ContainsKey(netName))
                         {
-                            netInfo.m_maxSlope = originalLimits[netName];
-                            Log.Info("OldLimit: " + netName + "=" + netInfo.m_maxSlope.ToString());
+                            netInfo.m_maxSlope = Global.Settings.SlopeLimitsOriginal[netName];
+                            Log.Info("OldLimit", netName, netInfo.m_maxSlope);
                         }
                         else
                         {
-                            Log.Info("NonLimit: " + netName + "=" + netInfo.m_maxSlope.ToString());
+                            Log.Info("NonLimit", netName, netInfo.m_maxSlope);
                         }
                     }
                 }
-
-                Log.Info(this, "RestoreLimits", "End");
             }
             catch (Exception ex)
             {
@@ -220,48 +292,107 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 isLoaded = false;
             }
+
+            Log.Debug(this, "RestoreLimits", "End");
         }
 
         /// <summary>
-        /// Called when map (etc) is loaded.
+        /// Sets the limits.
         /// </summary>
-        /// <param name="mode">The load mode.</param>
-        public override void OnLevelLoaded(LoadMode mode)
+        protected void SetLimits()
         {
-            Log.Info(this, "OnLevelLoaded");
+            if (isBroken || !isInitialized)
+            {
+                return;
+            }
+
+            Log.Debug(this, "SetLimits", "Begin");
 
             try
             {
-                InitializeLimits();
+                bool missing = false;
 
-                if (!isBroken && !isLoaded)
+                foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
                 {
-                    SetLimits();
+                    foreach (NetInfo netInfo in netCollection.m_prefabs)
+                    {
+                        string netName = netInfo.NetName();
+
+                        if (Settings.IgnoreNet(netName))
+                        {
+                            if (!Global.Settings.SlopeLimitsIgnored.ContainsKey(netName))
+                            {
+                                Log.Info("NotLimit", netName, netInfo.m_maxSlope);
+                                Global.Settings.SlopeLimitsIgnored[netName] = netInfo.m_maxSlope;
+                            }
+
+                            continue;
+                        }
+
+                        string found = null;
+
+                        if (Global.Settings.SlopeLimits.ContainsKey(netName))
+                        {
+                            netInfo.m_maxSlope = Global.Settings.SlopeLimits[netName];
+                            found = "name";
+                        }
+                        else
+                        {
+                            string name = netName.ToLowerInvariant();
+                            if (Global.Settings.SlopeLimitsGeneric.ContainsKey(name))
+                            {
+                                netInfo.m_maxSlope = Global.Settings.SlopeLimitsGeneric[name];
+                                found = "generic";
+                            }
+                            else
+                            {
+                                foreach (string generic in Global.Settings.SlopeLimitsGeneric.Keys.ToList().OrderBy(sName => name.Length).Reverse())
+                                {
+                                    if (name.Contains(generic))
+                                    {
+                                        netInfo.m_maxSlope = Global.Settings.SlopeLimitsGeneric[generic];
+                                        found = "part";
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (found == null || found != "name")
+                        {
+                            if (found == null)
+                            {
+                                Log.Info("NewLimit", netName, netInfo.m_maxSlope);
+                            }
+                            else
+                            {
+                                Log.Info("SetLimit", netName, netInfo.m_maxSlope, found);
+                            }
+                            Global.Settings.SlopeLimits[netName] = netInfo.m_maxSlope;
+                            missing = true;
+                        }
+                        else
+                        {
+                            Log.Info("SetLimit", netName, netInfo.m_maxSlope);
+                        }
+                    }
                 }
+
+                if (missing)
+                {
+                    Global.Settings.Update();
+                    Global.Settings.Save();
+                }
+
+                isLoaded = true;
             }
             catch (Exception ex)
             {
-                Log.Error(this, "OnLevelLoaded", ex);
                 isBroken = true;
+                Log.Error(this, "SetLimits", ex);
             }
 
-            Log.Info(this, "OnLevelLoaded", "Base");
-            base.OnLevelLoaded(mode);
-        }
-
-        /// <summary>
-        /// Called when map (etc) unloads.
-        /// </summary>
-        public override void OnLevelUnloading()
-        {
-            Log.Info(this, "OnLevelUnloading");
-            if (isLoaded)
-            {
-                RestoreLimits();
-            }
-
-            Log.Info(this, "OnLevelUnloading", "Base");
-            base.OnLevelUnloading();
+            Log.Debug(this, "SetLimits", "End");
         }
     }
 }

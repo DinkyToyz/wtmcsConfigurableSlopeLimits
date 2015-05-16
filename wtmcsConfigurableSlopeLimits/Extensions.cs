@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
+using System;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -9,7 +10,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
     public static class Extensions
     {
         /// <summary>
-        /// Cleans the new lines.
+        /// Cleans the newlines.
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns>The clean text.</returns>
@@ -19,13 +20,33 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
-        /// Cleans the new lines.
+        /// Cleans the newlines.
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns>The clean text.</returns>
         public static string CleanNewLines(this StringBuilder text)
         {
             return text.ToString().CleanNewLines();
+        }
+
+        /// <summary>
+        /// Conforms the newlines to the environment.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns>The comforming text.</returns>
+        public static string ConformNewlines(this string text)
+        {
+            return (new Regex("[\r\n]+")).Replace(text, Environment.NewLine);
+        }
+
+        /// <summary>
+        /// Conforms the newlines to the environment.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns>The comforming text.</returns>
+        public static string ConformNewlines(this StringBuilder text)
+        {
+            return text.ToString().ConformNewlines();
         }
 
         /// <summary>
