@@ -11,16 +11,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// Initializes a new instance of the <see cref="Mod"/> class.
         /// </summary>
         public Mod()
-            : base()
         {
-            if (Library.IsDebugBuild)
-            {
-                Log.LogLevel = Log.Level.All;
-            }
-            else
-            {
-                Log.LogLevel = Log.Level.Warning;
-            }
+            Log.NoOp();
         }
 
         /// <summary>

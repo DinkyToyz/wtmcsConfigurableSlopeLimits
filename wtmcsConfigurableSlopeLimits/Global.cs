@@ -1,5 +1,8 @@
 ﻿namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
+    /// <summary>
+    /// Global objects.
+    /// </summary>
     internal static class Global
     {
         /// <summary>
@@ -11,11 +14,6 @@
         /// The settings instance.
         /// </summary>
         private static Settings settingsInstance = null;
-
-        /// <summary>
-        /// The tool button instance.
-        /// </summary>
-        private static ToolButton toolButtonInstance = null;
 
         /// <summary>
         /// Gets the current settings.
@@ -33,25 +31,6 @@
                 }
 
                 return settingsInstance;
-            }
-        }
-
-        /// <summary>
-        /// Gets the tool button instance.
-        /// </summary>
-        /// <value>
-        /// The tool button instance.
-        /// </value>
-        public static ToolButton ToolButton
-        {
-            get
-            {
-                if (toolButtonInstance == null)
-                {
-                    toolButtonInstance = new ToolButton();
-                }
-
-                return toolButtonInstance;
             }
         }
 
@@ -75,25 +54,13 @@
         }
 
         /// <summary>
-        /// Deinitialize the tool button instance.
+        /// Deinitialize the UI instance.
         /// </summary>
-        public static void DeInitializeToolButton()
+        public static void DeInitializeUI()
         {
-            if (toolButtonInstance != null)
+            if (uiInstance != null)
             {
-                toolButtonInstance.DeInitialize();
-            }
-        }
-
-        /// <summary>
-        /// Disposes the tool button instance.
-        /// </summary>
-        public static void DisposeToolButton()
-        {
-            if (toolButtonInstance != null)
-            {
-                toolButtonInstance.DeInitialize();
-                toolButtonInstance = null;
+                uiInstance.DeInitialize();
             }
         }
 
@@ -107,25 +74,6 @@
                 uiInstance.DeInitialize();
                 uiInstance = null;
             }
-        }
-
-        /// <summary>
-        /// Deinitialize the UI instance.
-        /// </summary>
-        public static void DeInitializeUI()
-        {
-            if (uiInstance != null)
-            {
-                uiInstance.DeInitialize();
-            }
-        }
-
-        /// <summary>
-        /// Reinitialize the tool button instance.
-        /// </summary>
-        public static void ReInitializeToolButton()
-        {
-            ToolButton.ReInitialize();
         }
     }
 }

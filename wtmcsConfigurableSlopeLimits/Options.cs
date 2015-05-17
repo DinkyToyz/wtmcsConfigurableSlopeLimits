@@ -7,7 +7,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
     internal class Options
     {
-        private UISlider slider;
-        private UITextField textField;
+        //private UISlider slider;
+        //private UITextField textField;
     }
 }

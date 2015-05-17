@@ -1,10 +1,11 @@
 ﻿using ColossalFramework.UI;
 using System;
 using UnityEngine;
+using System.Text.RegularExpressions;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
-    internal class ToolButton
+    internal class ToolButton : IDisposable
     {
         /// <summary>
         /// The button name.
@@ -12,47 +13,93 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public readonly string ButtonName;
 
         /// <summary>
+        /// The parent panel.
+        /// </summary>
+        public readonly UIComponent Parent;
+
+        /// <summary>
         /// The tool tip
         /// </summary>
         public readonly string ToolTip;
 
-        // <summary>
-        // The built in tabstrip.
-        // </summary>
-        //private UITabstrip builtInTabstrip = null;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ToolButton"/> class.
+        /// </summary>
+        public ToolButton(UIComponent parent)
+        {
+            Log.Debug(this, "Construct");
+
+            if (parent == null)
+            {
+                throw new NullReferenceException("parent == null");
+            }
+
+            this.Button = null;
+            this.Parent = parent;
+            this.ButtonName = Library.Name + ("ToolButton" + parent.name).ASCIICapitals();
+            this.ToolTip = "Toggle slope limits.\nNothing for menu.";
+
+            Initialize();
+
+            Log.Debug(this, "Constructed");
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="ToolButton"/> class.
+        /// </summary>
+        ~ToolButton()
+        {
+            DeInitialize();
+        }
 
         /// <summary>
         /// The button.
         /// </summary>
-        private UIMultiStateButton button = null;
-
-        /// <summary>
-        /// The parent panel.
-        /// </summary>
-        private UIComponent parentPanel = null;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ToolButton"/> class.
-        /// </summary>
-        public ToolButton(string buttonName = null, string toolTip = null)
-        {
-            this.ButtonName = (buttonName == null) ? Library.Name + "_ToolButton" : buttonName;
-            this.ToolTip = (toolTip == null) ? Library.Name + "Toggle slope limits.\n? for menu." : toolTip;
-        }
+        public UIMultiStateButton Button { get; private set; }
 
         /// <summary>
         /// Deinitialize this instance.
         /// </summary>
         public void DeInitialize()
         {
-            if (button != null && parentPanel != null)
+            if (Button == null)
             {
-                parentPanel.RemoveUIComponent(button);
+                return;
             }
 
-            button = null;
-            //builtInTabstrip = null;
-            parentPanel = null;
+            Log.Debug(this, "DeInitialize", "Begin");
+
+            try
+            {
+                if (Parent != null)
+                {
+                    Log.Debug(this, "DeInitialize", "Remove");
+
+                    Parent.RemoveUIComponent(Button);
+                }
+
+                GameObject.Destroy(Button);
+                Button = null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(this, "DeInitialize", ex);
+            }
+
+            Log.Debug(this, "DeInitialize", "End");
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public void Dispose()
+        {
+            Log.Debug(this, "Dispose", "Begin");
+
+            DeInitialize();
+
+            Log.Debug(this, "Dispose", "End");
         }
 
         /// <summary>
@@ -60,59 +107,76 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         public void Initialize()
         {
-            try
+            Log.Debug(this, "Initialize", "Begin");
+
+            if (Parent == null)
             {
-                if (parentPanel == null /*|| builtInTabstrip == null*/)
-                {
-                    if (Global.UI.RoadsToolIsVisible)
-                    {
-                        parentPanel = Global.UI.RoadsOptionPanel;
-                        //if (parentPanel != null)
-                        //{
-                        //    builtInTabstrip = UI.Instance.BuiltInTabsstrip(parentPanel);
-                        //}
-                    }
-                }
-
-                if (parentPanel == null /*|| builtInTabstrip == null || !builtInTabstrip.gameObject.activeInHierarchy */)
-                {
-                    return;
-                }
-
-                if (button == null)
-                {
-                    UIMultiStateButton snappingToggle = Global.UI.FindComponent<UIMultiStateButton>("SnappingToggle", parentPanel);
-                    if (snappingToggle != null)
-                    {
-                        button = Global.UI.FindComponent<UIMultiStateButton>(ButtonName);
-                        if (button == null)
-                        {
-                            button = parentPanel.AddUIComponent<UIMultiStateButton>();
-                            button.name = ButtonName;
-                            button.tooltip = ToolTip;
-                            button.size = new Vector2(snappingToggle.size.x, snappingToggle.size.y);
-                            button.absolutePosition = new Vector3(snappingToggle.absolutePosition.x - 6, snappingToggle.absolutePosition.y - 38, snappingToggle.absolutePosition.z);
-                            button.playAudioEvents = true;
-                            button.text = "SL";
-
-                            Log.Debug(this, "Initialize", "Button created", parentPanel.name, button.name);
-                        }
-                    }
-                }
+                throw new NullReferenceException("Parent == null");
             }
-            catch (Exception ex)
+
+            if (Button == null)
             {
-                Log.Error(this, "Initialize", ex);
+                Button = Global.UI.FindComponent<UIMultiStateButton>(ButtonName, Parent);
             }
+
+            if (Button != null)
+            {
+                return;
+            }
+
+            UIMultiStateButton snappingToggle = Global.UI.FindComponent<UIMultiStateButton>("SnappingToggle", Parent);
+            if (snappingToggle == null)
+            {
+                throw new NullReferenceException("snappingToggle == null");
+            }
+
+            Log.Debug(this, "Initialize", "Create", Parent.name, ButtonName);
+
+            Button = Parent.AddUIComponent<UIMultiStateButton>();
+            Button.Hide();
+            Button.name = ButtonName;
+            Button.tooltip = ToolTip;
+            Button.size = new Vector2(snappingToggle.size.x, snappingToggle.size.y);
+            Button.absolutePosition = new Vector3(snappingToggle.absolutePosition.x - 6, snappingToggle.absolutePosition.y + 38, snappingToggle.absolutePosition.z);
+            Button.playAudioEvents = true;
+            Button.text = "SL";
+
+            Log.Debug(this, "Initialize", "SnappingToggle", snappingToggle.activeStateIndex);
+            Log.Debug(this, "Initialize", "SnappingToggle", snappingToggle.ActiveStatesCount());
+            Log.Debug(this, "Initialize", "SnappingToggle", snappingToggle.state);
+            Log.Debug(this, "Initialize", "SnappingToggle", Button.activeStateIndex);
+            Log.Debug(this, "Initialize", "SnappingToggle", Button.ActiveStatesCount());
+            Log.Debug(this, "Initialize", "SnappingToggle", Button.state);
+
+            Log.Debug(this, "Initialize", "Button Created", Parent.name, Button.name);
+
+            Log.Debug(this, "Initialize", "End");
         }
 
         /// <summary>
-        /// Reinitialize this instance.
+        /// Shows this instance.
         /// </summary>
-        public void ReInitialize()
+        public void Show()
         {
-            DeInitialize();
-            Initialize();
+            Log.Debug(this, "Show");
+            Button.Show();
+        }
+
+        /// <summary>
+        /// Hides this instance.
+        /// </summary>
+        public void Hide()
+        {
+            Log.Debug(this, "Hide");
+            Button.Hide();
+        }
+
+        public bool IsVisible 
+        {
+            get
+            {
+                return Button.isVisible;
+            }
         }
     }
 }

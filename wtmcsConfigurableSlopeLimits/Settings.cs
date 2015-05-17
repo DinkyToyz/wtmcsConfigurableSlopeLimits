@@ -154,11 +154,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                             foreach (string name in sets.SlopeLimits.Keys)
                             {
-                                Log.Info("CfgLimit", name, sets.SlopeLimits[name]);
+                                Log.Info(null, null, "CfgLimit", name, sets.SlopeLimits[name]);
                             }
                             foreach (string name in sets.SlopeLimitsGeneric.Keys)
                             {
-                                Log.Info("GenLimit", name, sets.SlopeLimitsGeneric[name]);
+                                Log.Info(null, null, "GenLimit", name, sets.SlopeLimitsGeneric[name]);
                             }
 
                             Log.Debug(typeof(Settings), "Load", "End");

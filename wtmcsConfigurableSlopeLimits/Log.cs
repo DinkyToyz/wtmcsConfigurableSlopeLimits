@@ -1,6 +1,7 @@
 ﻿using ColossalFramework.Plugins;
 using System;
 using System.IO;
+using System.Reflection;
 using System.Text;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
@@ -24,6 +25,27 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// True when log file has been created.
         /// </summary>
         private static bool logFileCreated = false;
+
+        static Log()
+        {
+            if (Library.IsDebugBuild || FileSystem.Exists(".debug"))
+            {
+                Log.LogLevel = Log.Level.All;
+                Log.LogToFile = true;
+            }
+            else
+            {
+                Log.LogLevel = Log.Level.Warning;
+                Log.LogToFile = false;
+            }
+
+            try
+            {
+                AssemblyName name = Assembly.GetExecutingAssembly().GetName();
+                Output(Level.None, null, null, null, name.Name + " " + name.Version);
+            }
+            catch { }
+        }
 
         /// <summary>
         /// Log levels.
@@ -73,15 +95,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
-        /// Outputs the specified debugging message.
-        /// </summary>
-        /// <param name="messages">The messages.</param>
-        public static void Debug(params object[] messages)
-        {
-            Output(Level.Debug, null, null, null, messages);
-        }
-
-        /// <summary>
         /// Outputs the specified error message.
         /// </summary>
         /// <param name="sourceObject">The source object.</param>
@@ -105,15 +118,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
-        /// Outputs the specified informational message.
-        /// </summary>
-        /// <param name="messages">The messages.</param>
-        public static void Info(params object[] messages)
-        {
-            Output(Level.Info, null, null, null, messages);
-        }
-
-        /// <summary>
         /// Comvert log level to message type.
         /// </summary>
         /// <param name="level">The level.</param>
@@ -133,6 +137,12 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     return PluginManager.MessageType.Message;
             }
         }
+
+        /// <summary>
+        /// Do nothing (except trigger the class constructor unless it has run allrrady).
+        /// </summary>
+        public static void NoOp()
+        { }
 
         /// <summary>
         /// Outputs the specified message.
@@ -232,11 +242,14 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                 msg.Insert(0, "] ").Insert(0, Library.Name).Insert(0, "[");
 
-                try
+                if (level != Level.None && level != Level.All)
                 {
-                    DebugOutputPanel.AddMessage(level.MessageType(), msg.CleanNewLines());
+                    try
+                    {
+                        DebugOutputPanel.AddMessage(level.MessageType(), msg.CleanNewLines());
+                    }
+                    catch { }
                 }
-                catch { }
 
                 if (exception != null)
                 {
@@ -252,48 +265,51 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 {
                     switch (level)
                     {
-                        case Level.None:
-                            msg.Insert(0, "Critical: ");
-                            UnityEngine.Debug.LogError(msg.CleanNewLines());
-                            break;
-
-                        case Level.Error:
-                            msg.Insert(0, "Error:    ");
-                            UnityEngine.Debug.LogError(msg.CleanNewLines());
+                        case Level.Info:
+                            msg.Insert(0, "Info:    ");
+                            UnityEngine.Debug.Log(msg.CleanNewLines());
                             break;
 
                         case Level.Warning:
-                            msg.Insert(0, "Warning:  ");
+                            msg.Insert(0, "Warning: ");
                             UnityEngine.Debug.LogWarning(msg.CleanNewLines());
                             break;
 
-                        case Level.Info:
-                            msg.Insert(0, "Info:     ");
-                            UnityEngine.Debug.Log(msg.CleanNewLines());
+                        case Level.Error:
+                            msg.Insert(0, "Error:   ");
+                            UnityEngine.Debug.LogError(msg.CleanNewLines());
+                            break;
+
+                        case Level.None:
+                        case Level.All:
+                            msg.Insert(0, "         ");
                             break;
 
                         default:
-                            msg.Insert(0, "Debug:    ");
+                            msg.Insert(0, "Debug:   ");
                             UnityEngine.Debug.Log(msg.CleanNewLines());
                             break;
                     }
                 }
                 catch { }
 
-                try
+                if (LogToFile)
                 {
-                    using (StreamWriter logFile = new StreamWriter(FileSystem.FilePathName(".log"), logFileCreated))
+                    try
                     {
-                        msg.Insert(0, ' ').Insert(0, now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-                        msg.Append("\n");
+                        using (StreamWriter logFile = new StreamWriter(FileSystem.FilePathName(".log"), logFileCreated))
+                        {
+                            msg.Insert(0, ' ').Insert(0, now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+                            msg.Append("\n");
 
-                        logFile.Write(msg.ConformNewlines());
-                        logFile.Close();
+                            logFile.Write(msg.ConformNewlines());
+                            logFile.Close();
+                        }
+
+                        logFileCreated = true;
                     }
-
-                    logFileCreated = true;
+                    catch { }
                 }
-                catch { }
             }
             catch { }
         }

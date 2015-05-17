@@ -1,6 +1,5 @@
 ﻿using ICities;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
@@ -31,7 +30,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public LoadingExtension()
             : base()
         {
-            Log.Debug(this, "Constructing");
+            Log.Debug(this, "Constructed");
         }
 
         /// <summary>
@@ -54,9 +53,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 Log.Error(this, "OnCreated", ex);
                 isBroken = true;
             }
-
-            Log.Debug(this, "OnCreated", "Base");
-            base.OnCreated(loading);
+            finally
+            {
+                Log.Debug(this, "OnCreated", "Base");
+                base.OnCreated(loading);
+            }
 
             Log.Debug(this, "OnCreated", "End");
         }
@@ -76,17 +77,17 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     InitializeLimits();
                     SetLimits();
                 }
-
-                //Global.ReInitializeToolButton();
             }
             catch (Exception ex)
             {
                 Log.Error(this, "OnLevelLoaded", ex);
                 isBroken = true;
             }
-
-            Log.Debug(this, "OnLevelLoaded", "Base");
-            base.OnLevelLoaded(mode);
+            finally
+            {
+                Log.Debug(this, "OnLevelLoaded", "Base");
+                base.OnLevelLoaded(mode);
+            }
 
             Log.Debug(this, "OnLevelLoaded", "End");
         }
@@ -100,17 +101,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             try
             {
-                Global.DeInitializeToolButton();
-                Global.DeInitializeUI();
-            }
-            catch (Exception ex)
-            {
-                Log.Error(this, "OnLevelUnloading", ex);
-                isBroken = true;
-            }
-
-            try
-            {
                 RestoreLimits();
             }
             catch (Exception ex)
@@ -118,9 +108,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 Log.Error(this, "OnLevelUnloading", ex);
                 isBroken = true;
             }
-
-            Log.Debug(this, "OnLevelUnloading", "Base");
-            base.OnLevelUnloading();
+            finally
+            {
+                Log.Debug(this, "OnLevelUnloading", "Base");
+                base.OnLevelUnloading();
+            }
 
             Log.Debug(this, "OnLevelUnloading", "End");
         }
@@ -134,17 +126,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             try
             {
-                Global.DisposeToolButton();
-                Global.DisposeUI();
-            }
-            catch (Exception ex)
-            {
-                Log.Error(this, "OnLevelUnloading", ex);
-                isBroken = true;
-            }
-
-            try
-            {
                 RestoreLimits();
             }
             catch (Exception ex)
@@ -152,9 +133,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 Log.Error(this, "OnReleased", ex);
                 isBroken = true;
             }
-
-            Log.Debug(this, "OnReleased", "Base");
-            base.OnReleased();
+            finally
+            {
+                Log.Debug(this, "OnReleased", "Base");
+                base.OnReleased();
+            }
 
             Log.Debug(this, "OnReleased", "End");
         }
@@ -190,8 +173,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                         {
                             if (!Global.Settings.SlopeLimitsIgnored.ContainsKey(netName))
                             {
-                                Log.Info("NotLimit", netName, netInfo.m_maxSlope);
+                                Log.Info(null, null, "NotLimit", netName, netInfo.m_maxSlope);
                                 Global.Settings.SlopeLimitsIgnored[netName] = netInfo.m_maxSlope;
+                                found = true;
                             }
 
                             continue;
@@ -201,7 +185,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                         {
                             if (!Global.Settings.SlopeLimits.ContainsKey(netName))
                             {
-                                Log.Info("NewLimit", netName, netInfo.m_maxSlope);
+                                Log.Info(null, null, "NewLimit", netName, netInfo.m_maxSlope);
                                 Global.Settings.SlopeLimits[netName] = netInfo.m_maxSlope;
                                 missing = true;
                             }
@@ -209,7 +193,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                         if (!Global.Settings.SlopeLimitsOriginal.ContainsKey(netName))
                         {
-                            Log.Info("OrgLimit", netName, netInfo.m_maxSlope);
+                            Log.Info(null, null, "OrgLimit", netName, netInfo.m_maxSlope);
                             Global.Settings.SlopeLimitsOriginal[netName] = netInfo.m_maxSlope;
                             found = true;
                         }
@@ -264,7 +248,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                         {
                             if (!Global.Settings.SlopeLimitsIgnored.ContainsKey(netName))
                             {
-                                Log.Info("NotLimit", netName, netInfo.m_maxSlope);
+                                Log.Info(null, null, "NotLimit", netName, netInfo.m_maxSlope);
                                 Global.Settings.SlopeLimitsIgnored[netName] = netInfo.m_maxSlope;
                             }
 
@@ -274,11 +258,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                         if (Global.Settings.SlopeLimitsOriginal.ContainsKey(netName))
                         {
                             netInfo.m_maxSlope = Global.Settings.SlopeLimitsOriginal[netName];
-                            Log.Info("OldLimit", netName, netInfo.m_maxSlope);
+                            Log.Info(null, null, "OldLimit", netName, netInfo.m_maxSlope);
                         }
                         else
                         {
-                            Log.Info("NonLimit", netName, netInfo.m_maxSlope);
+                            Log.Info(null, null, "NonLimit", netName, netInfo.m_maxSlope);
                         }
                     }
                 }
@@ -311,6 +295,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             try
             {
                 bool missing = false;
+                bool found = false;
 
                 foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
                 {
@@ -322,19 +307,20 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                         {
                             if (!Global.Settings.SlopeLimitsIgnored.ContainsKey(netName))
                             {
-                                Log.Info("NotLimit", netName, netInfo.m_maxSlope);
+                                Log.Info(null, null, "NotLimit", netName, netInfo.m_maxSlope);
                                 Global.Settings.SlopeLimitsIgnored[netName] = netInfo.m_maxSlope;
+                                found = true;
                             }
 
                             continue;
                         }
 
-                        string found = null;
+                        string match = null;
 
                         if (Global.Settings.SlopeLimits.ContainsKey(netName))
                         {
                             netInfo.m_maxSlope = Global.Settings.SlopeLimits[netName];
-                            found = "name";
+                            match = "name";
                         }
                         else
                         {
@@ -342,7 +328,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             if (Global.Settings.SlopeLimitsGeneric.ContainsKey(name))
                             {
                                 netInfo.m_maxSlope = Global.Settings.SlopeLimitsGeneric[name];
-                                found = "generic";
+                                match = "generic";
                             }
                             else
                             {
@@ -351,36 +337,40 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                                     if (name.Contains(generic))
                                     {
                                         netInfo.m_maxSlope = Global.Settings.SlopeLimitsGeneric[generic];
-                                        found = "part";
+                                        match = "part";
                                         break;
                                     }
                                 }
                             }
                         }
 
-                        if (found == null || found != "name")
+                        if (match == null || match != "name")
                         {
-                            if (found == null)
+                            if (match == null)
                             {
-                                Log.Info("NewLimit", netName, netInfo.m_maxSlope);
+                                Log.Info(null, null, "NewLimit", netName, netInfo.m_maxSlope);
                             }
                             else
                             {
-                                Log.Info("SetLimit", netName, netInfo.m_maxSlope, found);
+                                Log.Info(null, null, "SetLimit", netName, netInfo.m_maxSlope, match);
                             }
                             Global.Settings.SlopeLimits[netName] = netInfo.m_maxSlope;
                             missing = true;
                         }
                         else
                         {
-                            Log.Info("SetLimit", netName, netInfo.m_maxSlope);
+                            Log.Info(null, null, "SetLimit", netName, netInfo.m_maxSlope);
                         }
                     }
                 }
 
-                if (missing)
+                if (found || missing)
                 {
-                    Global.Settings.Update();
+                    if (missing)
+                    {
+                        Global.Settings.Update();
+                    }
+
                     Global.Settings.Save();
                 }
 

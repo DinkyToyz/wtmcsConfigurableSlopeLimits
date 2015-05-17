@@ -43,7 +43,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <value>
         /// The complete path.
         /// </value>
-        public static string FilePathName(string fileName = "")
+        public static string FilePathName(string fileName = null)
         {
             if (String.IsNullOrEmpty(fileName))
             {
@@ -55,6 +55,20 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
                
             return Path.GetFullPath(Path.Combine(FilePath, fileName));
+        }
+
+        public static bool Exists(string fileName = null)
+        {
+            if (String.IsNullOrEmpty(fileName))
+            {
+                fileName = FileName(".tmp");
+            }
+            else if (fileName[0] == '.')
+            {
+                fileName = FileName(fileName);
+            }
+
+            return File.Exists(fileName);
         }
     }
 }

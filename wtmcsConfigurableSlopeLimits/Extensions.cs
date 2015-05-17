@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 using System;
+using System.Reflection;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -16,7 +17,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <returns>The clean text.</returns>
         public static string CleanNewLines(this string text)
         {
-            return (new Regex("[\r\n]+")).Replace(text, "\n");
+            return Regex.Replace(text, "[\r\n]+", "\n");
         }
 
         /// <summary>
@@ -36,7 +37,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <returns>The comforming text.</returns>
         public static string ConformNewlines(this string text)
         {
-            return (new Regex("[\r\n]+")).Replace(text, Environment.NewLine);
+            return Regex.Replace(text, "[\r\n]+", Environment.NewLine);
         }
 
         /// <summary>
@@ -65,6 +66,49 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 return name;
             }
+        }
+
+        /// <summary>
+        /// Invokes method in base class.
+        /// </summary>
+        /// <param name="instance">The instance.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns>The return object.</returns>
+        public static object BaseInvoke(this object instance, string methodName, object[] parameters)
+        {
+            try
+            {
+                Type baseType = instance.GetType().BaseType;
+
+                if (baseType == null)
+                {
+                    return null;
+                }
+
+                MethodInfo methodInfo = baseType.GetMethod(methodName);
+                if (methodInfo == null)
+                {
+                    return null;
+                }
+
+                return methodInfo.Invoke(instance, parameters);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(instance, "BaseInvoke", ex, methodName);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get only ASCII capitals.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns>The ASCII capitals.</returns>
+        public static string ASCIICapitals(this string text)
+        {
+            return Regex.Replace(text, "[^A-Z]", "");
         }
     }
 }
