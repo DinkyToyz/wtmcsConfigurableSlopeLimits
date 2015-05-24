@@ -13,30 +13,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
     public class Settings
     {
         /// <summary>
-        /// The settings version.
-        /// </summary>
-        public readonly int Version = 1;
-
-        /// <summary>
-        /// The settings version in the loaded file.
-        /// </summary>
-        private int? loadedVersion = null;
-
-        /// <summary>
-        /// Gets the settings version in the loaded file.
-        /// </summary>
-        /// <value>
-        /// The settings version in the loaded file.
-        /// </value>
-        public int LoadedVersion
-        {
-            get
-            {
-                return (loadedVersion == null || !loadedVersion.HasValue) ? 0 : loadedVersion.Value;
-            }
-        }
-
-        /// <summary>
         /// The generic names.
         /// </summary>
         public static readonly HashSet<String> GenericNames;
@@ -69,9 +45,19 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public static readonly Regex ignoreNetsRex = new Regex(ignoreNetsPattern, RegexOptions.IgnoreCase);
 
         /// <summary>
+        /// The settings version.
+        /// </summary>
+        public readonly int Version = 1;
+
+        /// <summary>
         /// The save count.
         /// </summary>
         public uint SaveCount = 0;
+
+        /// <summary>
+        /// The settings version in the loaded file.
+        /// </summary>
+        private int? loadedVersion = null;
 
         /// <summary>
         /// Initializes the <see cref="Settings"/> class.
@@ -129,6 +115,20 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             get
             {
                 return FileSystem.FilePathName(".xml");
+            }
+        }
+
+        /// <summary>
+        /// Gets the settings version in the loaded file.
+        /// </summary>
+        /// <value>
+        /// The settings version in the loaded file.
+        /// </value>
+        public int LoadedVersion
+        {
+            get
+            {
+                return (loadedVersion == null || !loadedVersion.HasValue) ? 0 : loadedVersion.Value;
             }
         }
 
@@ -381,11 +381,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public class ConfigurableSlopeLimitsSettings
         {
             /// <summary>
-            /// The settings version.
-            /// </summary>
-            public int Version = 0;
-
-            /// <summary>
             /// The generic net information names.
             /// </summary>
             public List<Generic> GenericNetInfoNames = new List<Generic>();
@@ -419,6 +414,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// The slope limits.
             /// </summary>
             public List<SlopeLimit> SlopeLimits = new List<SlopeLimit>();
+
+            /// <summary>
+            /// The settings version.
+            /// </summary>
+            public int Version = 0;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="ConfigurableSlopeLimitsSettings"/> class.

@@ -92,7 +92,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             )
                     )
             );
- 
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ToolButton"/> class.
         /// </summary>
@@ -245,19 +245,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
-        /// Called when mouse button let up from button.
-        /// </summary>
-        /// <param name="component">The component.</param>
-        /// <param name="eventParam">The event parameter.</param>
-        void Button_eventMouseUp(UIComponent component, UIMouseEventParameter eventParam)
-        {
-            if (eventParam.buttons == UIMouseButton.Right)
-            {
-                Log.Debug(this, "Button_eventMouseUp", component, eventParam.buttons, eventParam.clicks);
-            }
-        }
-
-        /// <summary>
         /// Called when the buttons active state index is changed.
         /// </summary>
         /// <param name="component">The component.</param>
@@ -279,6 +266,19 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     Log.Debug(this, "Button_eventActiveStateIndexChanged", "Global.SetLimits", "Limits.Groups.Custom");
                     Global.SetLimits(Limits.Groups.Custom);
                     break;
+            }
+        }
+
+        /// <summary>
+        /// Called when mouse button let up from button.
+        /// </summary>
+        /// <param name="component">The component.</param>
+        /// <param name="eventParam">The event parameter.</param>
+        private void Button_eventMouseUp(UIComponent component, UIMouseEventParameter eventParam)
+        {
+            if (eventParam.buttons == UIMouseButton.Right)
+            {
+                Log.Debug(this, "Button_eventMouseUp", component, eventParam.buttons, eventParam.clicks);
             }
         }
     }

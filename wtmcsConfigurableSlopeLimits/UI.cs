@@ -389,21 +389,25 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public class MultiStateButtonSpriteSet
         {
             /// <summary>
-            /// The sprite name for the normal state.
-            /// </summary>
-            public string Normal;
-            /// <summary>
             /// The sprite name for the disabled state.
             /// </summary>
             public string Disabled;
+
             /// <summary>
             /// The sprite name for the focused state.
             /// </summary>
             public string Focused;
+
             /// <summary>
             /// The sprite name for the hovered state.
             /// </summary>
             public string Hovered;
+
+            /// <summary>
+            /// The sprite name for the normal state.
+            /// </summary>
+            public string Normal;
+
             /// <summary>
             /// The sprite name for the pressed state.
             /// </summary>
@@ -445,16 +449,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public class MultiStateButtonSpriteSets
         {
             /// <summary>
-            /// The background sprites.
-            /// </summary>
-            public MultiStateButtonSpriteSet Background { get; private set; }
-
-            /// <summary>
-            /// The foreground sprites.
-            /// </summary>
-            public MultiStateButtonSpriteSet Foreground { get; private set; }
-
-            /// <summary>
             /// Initializes a new instance of the <see cref="MultiStateButtonSpriteSets"/> class.
             /// </summary>
             public MultiStateButtonSpriteSets()
@@ -473,6 +467,16 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 this.Background = background;
                 this.Foreground = foreground;
             }
+
+            /// <summary>
+            /// The background sprites.
+            /// </summary>
+            public MultiStateButtonSpriteSet Background { get; private set; }
+
+            /// <summary>
+            /// The foreground sprites.
+            /// </summary>
+            public MultiStateButtonSpriteSet Foreground { get; private set; }
         }
 
         /// <summary>
@@ -506,6 +510,20 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
 
             /// <summary>
+            /// Gets the length.
+            /// </summary>
+            /// <value>
+            /// The length.
+            /// </value>
+            public int Length
+            {
+                get
+                {
+                    return (list == null) ? 0 : list.Length;
+                }
+            }
+
+            /// <summary>
             /// Gets the <see cref="MultiStateButtonSpriteSets"/> at the specified index.
             /// </summary>
             /// <value>
@@ -521,19 +539,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 }
             }
 
-            /// <summary>
-            /// Gets the length.
-            /// </summary>
-            /// <value>
-            /// The length.
-            /// </value>
-            public int Length
-            {
-                get
-                {
-                    return (list == null) ? 0 : list.Length;
-                }
-            }
             /// <summary>
             /// Applies the sprites.
             /// </summary>
@@ -583,7 +588,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     }
                 }
             }
-
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using System.Text;
-using System.Text.RegularExpressions;
-using System;
+﻿using System;
 using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -10,6 +10,49 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
     /// </summary>
     public static class Extensions
     {
+        /// <summary>
+        /// Get only ASCII capitals.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns>The ASCII capitals.</returns>
+        public static string ASCIICapitals(this string text)
+        {
+            return Regex.Replace(text, "[^A-Z]", "");
+        }
+
+        /// <summary>
+        /// Invokes method in base class.
+        /// </summary>
+        /// <param name="instance">The instance.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns>The return object.</returns>
+        public static object BaseInvoke(this object instance, string methodName, object[] parameters)
+        {
+            try
+            {
+                Type baseType = instance.GetType().BaseType;
+
+                if (baseType == null)
+                {
+                    return null;
+                }
+
+                MethodInfo methodInfo = baseType.GetMethod(methodName);
+                if (methodInfo == null)
+                {
+                    return null;
+                }
+
+                return methodInfo.Invoke(instance, parameters);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(instance, "BaseInvoke", ex, methodName);
+                return null;
+            }
+        }
+
         /// <summary>
         /// Cleans the newlines.
         /// </summary>
@@ -70,49 +113,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
 
             return name;
-        }
-
-        /// <summary>
-        /// Invokes method in base class.
-        /// </summary>
-        /// <param name="instance">The instance.</param>
-        /// <param name="methodName">Name of the method.</param>
-        /// <param name="parameters">The parameters.</param>
-        /// <returns>The return object.</returns>
-        public static object BaseInvoke(this object instance, string methodName, object[] parameters)
-        {
-            try
-            {
-                Type baseType = instance.GetType().BaseType;
-
-                if (baseType == null)
-                {
-                    return null;
-                }
-
-                MethodInfo methodInfo = baseType.GetMethod(methodName);
-                if (methodInfo == null)
-                {
-                    return null;
-                }
-
-                return methodInfo.Invoke(instance, parameters);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(instance, "BaseInvoke", ex, methodName);
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Get only ASCII capitals.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <returns>The ASCII capitals.</returns>
-        public static string ASCIICapitals(this string text)
-        {
-            return Regex.Replace(text, "[^A-Z]", "");
         }
     }
 }
