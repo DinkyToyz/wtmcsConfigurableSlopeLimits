@@ -1,4 +1,6 @@
-﻿namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
+﻿using System;
+
+namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
     /// <summary>
     /// Global objects.
@@ -11,9 +13,33 @@
         public static UI uiInstance = null;
 
         /// <summary>
+        /// The limits instance.
+        /// </summary>
+        private static Limits limitsInstance = null;
+
+        /// <summary>
         /// The settings instance.
         /// </summary>
         private static Settings settingsInstance = null;
+
+        /// <summary>
+        /// Gets the limits.
+        /// </summary>
+        /// <value>
+        /// The limits.
+        /// </value>
+        public static Limits Limits
+        {
+            get
+            {
+                if (limitsInstance == null)
+                {
+                    limitsInstance = new Limits();
+                }
+
+                return limitsInstance;
+            }
+        }
 
         /// <summary>
         /// Gets the current settings.
@@ -60,7 +86,36 @@
         {
             if (uiInstance != null)
             {
-                uiInstance.DeInitialize();
+                try
+                {
+                    uiInstance.DeInitialize();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(typeof(Global), "DeInitializeUI", ex);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Disposes the limits.
+        /// </summary>
+        public static void DisposeLimits()
+        {
+            if (limitsInstance != null)
+            {
+                try
+                {
+                    limitsInstance.Restore();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(typeof(Global), "DisposeLimits", ex);
+                }
+                finally
+                {
+                    limitsInstance = null;
+                }
             }
         }
 
@@ -71,8 +126,67 @@
         {
             if (uiInstance != null)
             {
-                uiInstance.DeInitialize();
-                uiInstance = null;
+                try
+                {
+                    uiInstance.DeInitialize();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(typeof(Global), "DisposeUI", ex);
+                }
+                finally
+                {
+                    uiInstance = null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Initializes the limits.
+        /// </summary>
+        public static void InitializeLimits()
+        {
+            try
+            {
+                Limits.Initialize();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(typeof(Global), "InitializeLimits", ex);
+            }
+        }
+
+        /// <summary>
+        /// Restores the limits.
+        /// </summary>
+        public static void RestoreLimits()
+        {
+            if (limitsInstance != null)
+            {
+                try
+                {
+                    limitsInstance.Restore();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(typeof(Global), "RestoreLimits", ex);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the limits.
+        /// </summary>
+        public static void SetLimits(Limits.Groups setToGroup)
+        {
+            try
+            {
+                Limits.Initialize();
+                Limits.SetLimits(setToGroup);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(typeof(Global), "SetLimits", ex);
             }
         }
     }

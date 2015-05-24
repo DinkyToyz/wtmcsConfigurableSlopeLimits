@@ -1,10 +1,12 @@
 ﻿using ColossalFramework.UI;
 using System;
 using UnityEngine;
-using System.Text.RegularExpressions;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
+    /// <summary>
+    /// A tool button for interaction.
+    /// </summary>
     internal class ToolButton : IDisposable
     {
         /// <summary>
@@ -22,6 +24,75 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         public readonly string ToolTip;
 
+        /// <summary>
+        /// The sprite image names.
+        /// </summary>
+        private static readonly string[] spriteImageNames =
+        {
+            "Base",
+            "BaseFocused",
+            "BaseHovered",
+            "BasePressed",
+            "BaseDisabled",
+            "GradeSymbol",
+            "GradeSymbolDisabled"
+        };
+
+        /// <summary>
+        /// The sprite image size.
+        /// </summary>
+        private static readonly int spriteImageSize = 36;
+
+        /// <summary>
+        /// The sprite resource name.
+        /// </summary>
+        private static readonly string spriteResourceName = "ConfigurableSlopeLimitsButton.png";
+
+        /// <summary>
+        /// The sprite sets.
+        /// </summary>
+        private static UI.MultiStateButtonSpriteSetsList spriteSets = new UI.MultiStateButtonSpriteSetsList
+            (
+                disabled: new UI.MultiStateButtonSpriteSets
+                    (
+                        background: new UI.MultiStateButtonSpriteSet
+                            (
+                                disabled: "Base",
+                                focused: "Base",
+                                hovered: "BaseHovered",
+                                normal: "Base",
+                                pressed: "Base"
+                            ),
+                        foreground: new UI.MultiStateButtonSpriteSet
+                            (
+                                disabled: "GradeSymbolDisabled",
+                                focused: "GradeSymbolDisabled",
+                                hovered: "GradeSymbolDisabled",
+                                normal: "GradeSymbolDisabled",
+                                pressed: "GradeSymbolDisabled"
+                            )
+                    ),
+                enabled: new UI.MultiStateButtonSpriteSets
+                    (
+                        background: new UI.MultiStateButtonSpriteSet
+                            (
+                                disabled: "BaseFocused",
+                                focused: "BaseFocused",
+                                hovered: "BaseFocused",
+                                normal: "BaseFocused",
+                                pressed: "BaseFocused"
+                            ),
+                        foreground: new UI.MultiStateButtonSpriteSet
+                            (
+                                disabled: "GradeSymbol",
+                                focused: "GradeSymbol",
+                                hovered: "GradeSymbol",
+                                normal: "GradeSymbol",
+                                pressed: "GradeSymbol"
+                            )
+                    )
+            );
+ 
         /// <summary>
         /// Initializes a new instance of the <see cref="ToolButton"/> class.
         /// </summary>
@@ -56,6 +127,20 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// The button.
         /// </summary>
         public UIMultiStateButton Button { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is visible.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is visible; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsVisible
+        {
+            get
+            {
+                return Button.isVisible;
+            }
+        }
 
         /// <summary>
         /// Deinitialize this instance.
@@ -133,20 +218,26 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             Log.Debug(this, "Initialize", "Create", Parent.name, ButtonName);
 
             Button = Parent.AddUIComponent<UIMultiStateButton>();
-            Button.Hide();
             Button.name = ButtonName;
             Button.tooltip = ToolTip;
             Button.size = new Vector2(snappingToggle.size.x, snappingToggle.size.y);
-            Button.absolutePosition = new Vector3(snappingToggle.absolutePosition.x - 6, snappingToggle.absolutePosition.y + 38, snappingToggle.absolutePosition.z);
+            Button.absolutePosition = new Vector3(snappingToggle.absolutePosition.x, snappingToggle.absolutePosition.y + 38, snappingToggle.absolutePosition.z);
             Button.playAudioEvents = true;
-            Button.text = "SL";
+            Button.activeStateIndex = 1;
+            Button.spritePadding = new RectOffset();
+            Button.atlas = Global.UI.CreateAtlas(ButtonName + "_Atlas", spriteResourceName, spriteImageNames, spriteImageSize, snappingToggle.atlas.material);
+            spriteSets.Apply(Button);
 
-            Log.Debug(this, "Initialize", "SnappingToggle", snappingToggle.activeStateIndex);
-            Log.Debug(this, "Initialize", "SnappingToggle", snappingToggle.ActiveStatesCount());
-            Log.Debug(this, "Initialize", "SnappingToggle", snappingToggle.state);
-            Log.Debug(this, "Initialize", "SnappingToggle", Button.activeStateIndex);
-            Log.Debug(this, "Initialize", "SnappingToggle", Button.ActiveStatesCount());
-            Log.Debug(this, "Initialize", "SnappingToggle", Button.state);
+            Button.eventActiveStateIndexChanged += Button_eventActiveStateIndexChanged;
+
+            Button.eventMouseUp += Button_eventMouseUp;
+
+            Log.Debug(this, "Initialize", "SnappingToggle.activeStateIndex", snappingToggle.activeStateIndex);
+            Log.Debug(this, "Initialize", "SnappingToggle.ActiveStatesCount", snappingToggle.ActiveStatesCount());
+            Log.Debug(this, "Initialize", "SnappingToggle.state", snappingToggle.state);
+            Log.Debug(this, "Initialize", "Button.activeStateIndex", Button.activeStateIndex);
+            Log.Debug(this, "Initialize", "Button.ActiveStatesCount", Button.ActiveStatesCount());
+            Log.Debug(this, "Initialize", "Button.state", Button.state);
 
             Log.Debug(this, "Initialize", "Button Created", Parent.name, Button.name);
 
@@ -154,28 +245,40 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
-        /// Shows this instance.
+        /// Called when mouse button let up from button.
         /// </summary>
-        public void Show()
+        /// <param name="component">The component.</param>
+        /// <param name="eventParam">The event parameter.</param>
+        void Button_eventMouseUp(UIComponent component, UIMouseEventParameter eventParam)
         {
-            Log.Debug(this, "Show");
-            Button.Show();
+            if (eventParam.buttons == UIMouseButton.Right)
+            {
+                Log.Debug(this, "Button_eventMouseUp", component, eventParam.buttons, eventParam.clicks);
+            }
         }
 
         /// <summary>
-        /// Hides this instance.
+        /// Called when the buttons active state index is changed.
         /// </summary>
-        public void Hide()
+        /// <param name="component">The component.</param>
+        /// <param name="value">The value.</param>
+        private void Button_eventActiveStateIndexChanged(UIComponent component, int value)
         {
-            Log.Debug(this, "Hide");
-            Button.Hide();
-        }
+            Log.Debug(this, "Button_eventActiveStateIndexChanged", component, value);
 
-        public bool IsVisible 
-        {
-            get
+            switch (value)
             {
-                return Button.isVisible;
+                // Disable limits.
+                case 0:
+                    Log.Debug(this, "Button_eventActiveStateIndexChanged", "Global.SetLimits", "Limits.Groups.Disabled");
+                    Global.SetLimits(Limits.Groups.Disabled);
+                    break;
+
+                // Enable limits.
+                case 1:
+                    Log.Debug(this, "Button_eventActiveStateIndexChanged", "Global.SetLimits", "Limits.Groups.Custom");
+                    Global.SetLimits(Limits.Groups.Custom);
+                    break;
             }
         }
     }

@@ -72,6 +72,7 @@
     <Compile Include="FileSystem.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Library.cs" />
+    <Compile Include="Limits.cs" />
     <Compile Include="LoadingExtension.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Mod.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="UI.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ConfigurableSlopeLimitsButton.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

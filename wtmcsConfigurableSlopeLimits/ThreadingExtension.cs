@@ -8,10 +8,15 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
     /// </summary>
     public class ThreadingExtension : ThreadingExtensionBase
     {
+        //// <summary>
+        //// The active tool.
+        //// </summary>
+        //private Tool ActiveTool = Tool.None;
+
         /// <summary>
-        /// The active tool.
+        /// Wether to create buttons on update.
         /// </summary>
-        private Tool ActiveTool = Tool.None;
+        private bool createButtonsOnUpdate = true;
 
         /// <summary>
         /// The doer is broken.
@@ -21,7 +26,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// The tool button.
         /// </summary>
-        private ToolButton RoadsToolButton = null;
+        private ToolButton roadsToolButton = null;
 
         /// <summary>
         /// Tools.
@@ -30,6 +35,20 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             None = 0,
             Roads = 1
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether all buttons have been created.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if all buttons have been created; otherwise, <c>false</c>.
+        /// </value>
+        private bool ButtonsCreated
+        {
+            get
+            {
+                return (roadsToolButton != null);
+            }
         }
 
         /// <summary>
@@ -46,6 +65,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             catch (Exception ex)
             {
                 Log.Error(this, "OnCreated", ex);
+                isBroken = true;
             }
             finally
             {
@@ -70,6 +90,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             catch (Exception ex)
             {
                 Log.Error(this, "OnReleased", ex);
+                isBroken = true;
             }
             finally
             {
@@ -91,41 +112,13 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             try
             {
-                if (isBroken)
+                if (createButtonsOnUpdate && !isBroken)
                 {
-                    return;
-                }
-
-                if (Global.UI.RoadsToolIsVisible)
-                {
-                    if (RoadsToolButton == null)
+                    if (CreateButtons())
                     {
-                        Log.Debug(this, "OnUpdate", "New RoadsToolButton");
-                        RoadsToolButton = new ToolButton(Global.UI.RoadsOptionPanel);
+                        createButtonsOnUpdate = false;
                     }
-
-                    if (ActiveTool != Tool.Roads)
-                    {
-                        HideButtons();
-                        ActiveTool = Tool.Roads;
-                    }
-
-                    if (!RoadsToolButton.IsVisible)
-                    {
-                        RoadsToolButton.Show();
-                    }
-
-                    return;
                 }
-
-                if (ActiveTool == Tool.None)
-                {
-                    return;
-                }
-
-                Log.Debug(this, "OnUpdate", "No Tool");
-                HideButtons();
-                ActiveTool = Tool.None;
             }
             catch (Exception ex)
             {
@@ -155,6 +148,10 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             Log.Debug(this, "DeInitialize", "End");
         }
 
+        //        if (ActiveTool == Tool.None)
+        //        {
+        //            return;
+        //        }
         /// <summary>
         /// Disposes the tool button instance.
         /// </summary>
@@ -164,10 +161,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             try
             {
-                if (RoadsToolButton != null)
+                if (roadsToolButton != null)
                 {
-                    RoadsToolButton.Dispose();
-                    RoadsToolButton = null;
+                    roadsToolButton.Dispose();
                 }
             }
             catch (Exception ex)
@@ -175,31 +171,37 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 Log.Error(this, "DisposeToolButtons", ex);
                 isBroken = true;
             }
+            finally
+            {
+                roadsToolButton = null;
+                createButtonsOnUpdate = true;
+            }
 
             Log.Debug(this, "DisposeToolButtons", "End");
         }
 
         /// <summary>
-        /// Hides the buttons.
+        /// Creates the buttons.
         /// </summary>
-        protected void HideButtons()
+        /// <returns><c>true</c> if all buttons have been created; otherwise, <c>false</c>.</returns>
+        private bool CreateButtons()
         {
-            Log.Debug(this, "HideButtons", "Begin");
-
             try
             {
-                if (RoadsToolButton != null && RoadsToolButton.IsVisible)
+                if (roadsToolButton == null && Global.UI.RoadsPanel != null && Global.UI.RoadsOptionPanel != null)
                 {
-                    RoadsToolButton.Hide();
+                    Log.Debug(this, "CreateButtons", "RoadsToolButton");
+                    roadsToolButton = new ToolButton(Global.UI.RoadsOptionPanel);
                 }
+
+                return ButtonsCreated;
             }
             catch (Exception ex)
             {
-                Log.Error(this, "HideButtons", ex);
+                Log.Error(this, "CreateButtun", ex);
                 isBroken = true;
+                return false;
             }
-
-            Log.Debug(this, "HideButtons", "End");
         }
     }
 }

@@ -13,6 +13,30 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
     public class Settings
     {
         /// <summary>
+        /// The settings version.
+        /// </summary>
+        public readonly int Version = 1;
+
+        /// <summary>
+        /// The settings version in the loaded file.
+        /// </summary>
+        private int? loadedVersion = null;
+
+        /// <summary>
+        /// Gets the settings version in the loaded file.
+        /// </summary>
+        /// <value>
+        /// The settings version in the loaded file.
+        /// </value>
+        public int LoadedVersion
+        {
+            get
+            {
+                return (loadedVersion == null || !loadedVersion.HasValue) ? 0 : loadedVersion.Value;
+            }
+        }
+
+        /// <summary>
         /// The generic names.
         /// </summary>
         public static readonly HashSet<String> GenericNames;
@@ -60,12 +84,28 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// Initializes a new instance of the <see cref="Settings"/> class.
         /// </summary>
-        /// <param name="slopeLimits">The slope limits.</param>
-        public Settings(Dictionary<string, float> slopeLimits = null)
+        /// <param name="settings">The file settings.</param>
+        public Settings(ConfigurableSlopeLimitsSettings settings = null)
         {
             SlopeLimitsGeneric = new Dictionary<string, float>();
             SlopeLimitsOriginal = new Dictionary<string, float>();
             SlopeLimitsIgnored = new Dictionary<string, float>();
+
+            Dictionary<string, float> slopeLimits = null;
+
+            if (settings != null)
+            {
+                loadedVersion = settings.Version;
+
+                try
+                {
+                    slopeLimits = settings.GetSlopeLimits();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(typeof(Settings), "Constructor", ex, "config.GetSlopeLimits()");
+                }
+            }
 
             if (slopeLimits == null)
             {
@@ -150,7 +190,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                         {
                             Log.Debug(typeof(Settings), "Load", "Loaded");
 
-                            Settings sets = new Settings(cfg.GetSlopeLimits());
+                            Settings sets = new Settings(cfg);
 
                             foreach (string name in sets.SlopeLimits.Keys)
                             {
@@ -208,6 +248,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 using (FileStream file = File.Create(fileName))
                 {
                     ConfigurableSlopeLimitsSettings cfg = new ConfigurableSlopeLimitsSettings();
+                    cfg.Version = this.Version;
                     cfg.SaveCount = SaveCount;
                     cfg.IgnoreNetInfoPattern = ignoreNetsPattern;
                     cfg.GenericNetInfoNames = Generics;
@@ -339,6 +380,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         [Serializable]
         public class ConfigurableSlopeLimitsSettings
         {
+            /// <summary>
+            /// The settings version.
+            /// </summary>
+            public int Version = 0;
+
             /// <summary>
             /// The generic net information names.
             /// </summary>

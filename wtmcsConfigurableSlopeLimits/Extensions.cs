@@ -58,14 +58,18 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public static string NetName(this NetInfo netInfo)
         {
             string name = netInfo.m_class.name;
-            if (name == "Highway" && netInfo.m_lanes.Length == 1)
+
+            if (name == "Highway" && netInfo.name.Contains("Ramp"))
             {
                 return "Highway Ramp";
             }
-            else
+
+            if (name == "Highway Tunnel" && netInfo.name.Contains("Ramp"))
             {
-                return name;
+                return "Highway Ramp Tunnel";
             }
+
+            return name;
         }
 
         /// <summary>

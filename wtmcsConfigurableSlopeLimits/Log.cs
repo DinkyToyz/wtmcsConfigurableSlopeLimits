@@ -26,6 +26,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         private static bool logFileCreated = false;
 
+        /// <summary>
+        /// Initializes the <see cref="Log"/> class.
+        /// </summary>
         static Log()
         {
             if (Library.IsDebugBuild || FileSystem.Exists(".debug"))
