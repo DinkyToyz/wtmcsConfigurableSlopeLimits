@@ -13,20 +13,17 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
     /// </summary>
     internal class UI
     {
+        public readonly ComponentList Components;
+
+        public UI()
+        {
+            Components = new ComponentList(this);
+        }
+
         /// <summary>
         /// The main tool strip.
         /// </summary>
         private UITabstrip mainToolStrip = null;
-
-        /// <summary>
-        /// The roads option panel.
-        /// </summary>
-        private UIComponent roadsOptionPanel = null;
-
-        /// <summary>
-        /// The roads panel.
-        /// </summary>
-        private UIPanel roadsPanel = null;
 
         /// <summary>
         /// The UI root.
@@ -52,97 +49,39 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
         }
 
-        /// <summary>
-        /// Gets the roads option panel.
-        /// </summary>
-        /// <value>
-        /// The roads option panel.
-        /// </value>
-        public UIComponent RoadsOptionPanel
+        public class ComponentList
         {
-            get
+            private UI ui = null;
+
+            public ComponentList(UI ui)
             {
-                if (roadsOptionPanel == null)
+                this.ui = ui; 
+            }
+
+            Dictionary<string, UIComponent> components = new Dictionary<string, UIComponent>();
+
+            public UIComponent this[string name]
+            {
+                get
                 {
-                    try
+                    if (!components.ContainsKey(name))
                     {
-                        roadsOptionPanel = FindComponent<UIComponent>("RoadsOptionPanel(RoadsPanel)");
+                        UIComponent component = ui.FindComponent<UIComponent>(name);
+                        if (component == null)
+                        {
+                            return null;
+                        }
+
+                        components[name] = component;
                     }
-                    catch (Exception ex)
-                    {
-                        Log.Error(this, "RoadsOptionPanel", ex);
-                    }
+
+                    return components[name];
                 }
-
-                return roadsOptionPanel;
             }
-        }
 
-        /// <summary>
-        /// Gets a value indicating whether the roads option panel is visible.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if the roads option panel is visible; otherwise, <c>false</c>.
-        /// </value>
-        public bool RoadsOptionPanelIsVisible
-        {
-            get
+            public void Clear()
             {
-                return (RoadsOptionPanel != null && RoadsOptionPanel.isVisible && RoadsOptionPanel.gameObject.activeInHierarchy);
-            }
-        }
-
-        /// <summary>
-        /// Gets the roads panel.
-        /// </summary>
-        /// <value>
-        /// The roads panel.
-        /// </value>
-        public UIPanel RoadsPanel
-        {
-            get
-            {
-                if (roadsPanel == null)
-                {
-                    try
-                    {
-                        roadsPanel = UIView.Find<UIPanel>("RoadsPanel");
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(this, "RoadsPanel", ex);
-                    }
-                }
-
-                return roadsPanel;
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the roads panel is visible.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if the roads panel is visible; otherwise, <c>false</c>.
-        /// </value>
-        public bool RoadsPanelIsVisible
-        {
-            get
-            {
-                return (RoadsPanel != null && RoadsPanel.isVisible);
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the roads tool is visible.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if the roads tool is vsible; otherwise, <c>false</c>.
-        /// </value>
-        public bool RoadsToolIsVisible
-        {
-            get
-            {
-                return (RoadsPanelIsVisible && RoadsOptionPanelIsVisible);
+                components.Clear();
             }
         }
 
@@ -250,8 +189,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             Log.Debug(this, "DeInitialize", "Begin");
 
-            roadsPanel = null;
-            roadsOptionPanel = null;
+            Components.Clear();
 
             Log.Debug(this, "DeInitialize", "End");
         }
@@ -266,7 +204,40 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <returns>The component.</returns>
         public T FindComponent<T>(string name, UIComponent parent = null, bool exactMatch = false) where T : UIComponent
         {
-            //Log.Debug(this, "Find", "'" + name + "'");
+            List<T> components = FindComponents<T>(name, parent, exactMatch, 1);
+
+            return (components == null || components.Count != 1) ? (T)null : components[0];
+        }
+        /// <summary>
+        /// Finds the component.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="parent">The parent.</param>
+        /// <param name="exactMatch">If set to <c>true</c> name must be exact match.</param>
+        /// <returns>
+        /// The component.
+        /// </returns>
+        public UIComponent FindComponent(string name, UIComponent parent = null, bool exactMatch = false)
+        {
+            return FindComponent<UIComponent>(name, parent, exactMatch);
+        }
+
+        /// <summary>
+        /// Finds the components.
+        /// </summary>
+        /// <typeparam name="T">The type.</typeparam>
+        /// <param name="name">The name.</param>
+        /// <param name="parent">The parent.</param>
+        /// <param name="exactMatch">If set to <c>true</c> name must be exact match.</param>
+        /// <param name="maxCount">The maximum numeber of components to return.</param>
+        /// <returns>
+        /// The components.
+        /// </returns>
+        public List<T> FindComponents<T>(string name, UIComponent parent = null, bool exactMatch = false, int? maxCount = null) where T : UIComponent
+        {
+            //Log.Debug(this, "FindComponents", "'" + name + "'");
+
+            List<T> components = new List<T>();
 
             string lcName = exactMatch ? null : name.ToLowerInvariant();
 
@@ -286,20 +257,44 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                         if (pTrans != null)
                         {
-                            //Log.Debug(this, "Find", "Found");
-                            return component;
+                            //Log.Debug(this, "FindComponents", "Found", component.name);
+                            components.Add(component);
+
+                            if (maxCount != null && maxCount.HasValue && components.Count >= maxCount.Value)
+                            {
+                                break;
+                            }
                         }
                     }
                 }
 
-                //Log.Debug(this, "Find", "Not found");
-                return null;
+                //if (components.Count == 0)
+                //{
+                //    Log.Debug(this, "FindComponents", "Not found");
+                //}
+
+                return components;
             }
             catch (Exception ex)
             {
-                Log.Error(this, "Find", ex);
+                Log.Error(this, "FindComponents", ex);
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Finds the components.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="parent">The parent.</param>
+        /// <param name="exactMatch">If set to <c>true</c> name must be exact match.</param>
+        /// <param name="maxCount">The maximum numeber of components to return.</param>
+        /// <returns>
+        /// The components.
+        /// </returns>
+        public List<UIComponent> FindComponents(string name, UIComponent parent = null, bool exactMatch = false, int? maxCount = null)
+        {
+            return FindComponents<UIComponent>(name, parent, exactMatch, maxCount);
         }
 
         /// <summary>
@@ -312,42 +307,38 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <returns>The component paths.</returns>
         public List<string> GetComponentPaths<T>(string name, UIComponent parent = null, bool exactMatch = false) where T : UIComponent
         {
-            string lcName = exactMatch ? null : name.ToLowerInvariant();
             List<string> paths = new List<string>();
 
             try
             {
-                foreach (T component in UIComponent.FindObjectsOfType<T>())
+                foreach (T component in FindComponents<T>(name, parent, exactMatch))
                 {
-                    if (component.name == name || (!exactMatch && component.name.ToLowerInvariant().Contains(lcName)))
+                    StringBuilder path = new StringBuilder();
+
+                    Transform tTrans = (parent == null) ? Root.transform : parent.transform;
+
+                    Transform pTrans = component.transform;
+                    while (pTrans != null)
                     {
-                        StringBuilder path = new StringBuilder();
-
-                        Transform tTrans = (parent == null) ? Root.transform : parent.transform;
-
-                        Transform pTrans = component.transform;
-                        while (pTrans != null)
+                        if (path.Length > 0)
                         {
-                            if (path.Length > 0)
-                            {
-                                path.Append('|');
-                            }
-                            if (pTrans == tTrans)
-                            {
-                                path.Append('<');
-                            }
-                            path.Append(pTrans.name);
-                            if (pTrans == tTrans)
-                            {
-                                path.Append('>');
-                            }
-
-                            pTrans = pTrans.parent;
+                            path.Append('|');
+                        }
+                        if (pTrans == tTrans)
+                        {
+                            path.Append('<');
+                        }
+                        path.Append(pTrans.name);
+                        if (pTrans == tTrans)
+                        {
+                            path.Append('>');
                         }
 
-                        path.Insert(0, ": ").Insert(0, component.name);
-                        paths.Add(path.ToString());
+                        pTrans = pTrans.parent;
                     }
+
+                    path.Insert(0, ": ").Insert(0, component.name);
+                    paths.Add(path.ToString());
                 }
 
                 return paths;
@@ -356,6 +347,20 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Gets the component paths.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="parent">The parent.</param>
+        /// <param name="exactMatch">If set to <c>true</c> name must be exact match.</param>
+        /// <returns>
+        /// The component paths.
+        /// </returns>
+        public List<string> GetComponentPaths(string name, UIComponent parent = null, bool exactMatch = false)
+        {
+            return GetComponentPaths<UIComponent>(name, parent, exactMatch);
         }
 
         /// <summary>
@@ -368,6 +373,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <param name="exactMatch">If set to <c>true</c> name must be exact match.</param>
         public void LogComponentPaths<T>(object caller, string name, UIComponent parent = null, bool exactMatch = false) where T : UIComponent
         {
+            Log.Debug(this, "LogComponentPaths", "'" + name + "'");
+
             List<string> paths = GetComponentPaths<T>(name, parent, exactMatch);
 
             if (paths == null)
@@ -376,11 +383,31 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
             else
             {
+                HashSet<string> shown = new HashSet<string>();
+
                 foreach (string path in paths)
                 {
-                    Log.Debug(caller, "LogComponentPaths", typeof(T).Name, name, path);
+                    if (!shown.Contains(path))
+                    {
+                        Log.Debug(caller, "LogComponentPaths", typeof(T).Name, name, path);
+                        shown.Add(path);
+                    }
                 }
             }
+
+            Log.Debug(this, "LogComponentPaths");
+        }
+
+        /// <summary>
+        /// Logs the component paths.
+        /// </summary>
+        /// <param name="caller">The caller.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="parent">The parent.</param>
+        /// <param name="exactMatch">If set to <c>true</c> name must be exact match.</param>
+        public void LogComponentPaths(object caller, string name, UIComponent parent = null, bool exactMatch = false)
+        {
+            LogComponentPaths<UIComponent>(caller, name, parent, exactMatch);
         }
 
         /// <summary>

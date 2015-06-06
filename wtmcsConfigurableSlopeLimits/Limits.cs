@@ -334,7 +334,19 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                                 cfgLimit = orgLimit;
                             }
 
-                            float disLimit = (cfgLimit.Value < orgLimit) ? orgLimit + cfgLimit.Value : orgLimit;
+                            float disLimit;
+                            if (cfgLimit.Value < orgLimit)
+                            {
+                                disLimit = orgLimit + (cfgLimit.Value * 2);
+                                if (disLimit > orgLimit * 3)
+                                {
+                                    disLimit = orgLimit * 3;
+                                }
+                            }
+                            else
+                            {
+                                disLimit = orgLimit;
+                            }
 
                             Log.Info(null, null, "DisLimit", netName, disLimit, orgLimit, cfgLimit.Value);
                             netInfo.m_maxSlope = disLimit;

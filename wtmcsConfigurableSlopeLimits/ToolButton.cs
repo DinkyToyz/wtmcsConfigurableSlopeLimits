@@ -17,8 +17,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// The parent panel.
         /// </summary>
-        public readonly UIComponent Parent;
+        public readonly UIComponent Parent = null;
 
+        public readonly UIMultiStateButton SnappingToggle;
         /// <summary>
         /// The tool tip
         /// </summary>
@@ -93,26 +94,40 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     )
             );
 
+        private string parentName
+        {
+            get
+            {
+                return (Parent == null) ? "~" : Parent.name;
+            }
+        }
         /// <summary>
         /// Initializes a new instance of the <see cref="ToolButton"/> class.
         /// </summary>
-        public ToolButton(UIComponent parent)
+        public ToolButton(UIComponent parent, UIMultiStateButton snappingToggle)
         {
-            Log.Debug(this, "Construct");
+            Log.Debug(this, parentName, "Construct");
 
             if (parent == null)
             {
                 throw new NullReferenceException("parent == null");
             }
 
+            if (snappingToggle == null)
+            {
+                throw new NullReferenceException("snappingToggle == null");
+            }
+
             this.Button = null;
             this.Parent = parent;
+            this.SnappingToggle = snappingToggle;
+
             this.ButtonName = Library.Name + ("ToolButton" + parent.name).ASCIICapitals();
             this.ToolTip = "Toggle slope limits.\nNothing for menu.";
 
             Initialize();
 
-            Log.Debug(this, "Constructed");
+            Log.Debug(this, parentName, "Constructed");
         }
 
         /// <summary>
@@ -152,13 +167,13 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 return;
             }
 
-            Log.Debug(this, "DeInitialize", "Begin");
+            Log.Debug(this, parentName, "DeInitialize", "Begin");
 
             try
             {
                 if (Parent != null)
                 {
-                    Log.Debug(this, "DeInitialize", "Remove");
+                    Log.Debug(this, parentName, "DeInitialize", "Remove");
 
                     Parent.RemoveUIComponent(Button);
                 }
@@ -168,10 +183,10 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
             catch (Exception ex)
             {
-                Log.Error(this, "DeInitialize", ex);
+                Log.Error(this, "DeInitialize", ex, parentName);
             }
 
-            Log.Debug(this, "DeInitialize", "End");
+            Log.Debug(this, parentName, "DeInitialize", "End");
         }
 
         /// <summary>
@@ -180,11 +195,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <exception cref="System.NotImplementedException"></exception>
         public void Dispose()
         {
-            Log.Debug(this, "Dispose", "Begin");
+            Log.Debug(this, parentName, "Dispose", "Begin");
 
             DeInitialize();
 
-            Log.Debug(this, "Dispose", "End");
+            Log.Debug(this, parentName, "Dispose", "End");
         }
 
         /// <summary>
@@ -192,7 +207,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         public void Initialize()
         {
-            Log.Debug(this, "Initialize", "Begin");
+            Log.Debug(this, parentName, "Initialize", "Begin");
 
             if (Parent == null)
             {
@@ -209,39 +224,39 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 return;
             }
 
-            UIMultiStateButton snappingToggle = Global.UI.FindComponent<UIMultiStateButton>("SnappingToggle", Parent);
-            if (snappingToggle == null)
-            {
-                throw new NullReferenceException("snappingToggle == null");
-            }
-
-            Log.Debug(this, "Initialize", "Create", Parent.name, ButtonName);
+            Log.Debug(this, parentName, "Initialize", "Create", Parent.name, ButtonName);
 
             Button = Parent.AddUIComponent<UIMultiStateButton>();
             Button.name = ButtonName;
             Button.tooltip = ToolTip;
-            Button.size = new Vector2(snappingToggle.size.x, snappingToggle.size.y);
-            Button.absolutePosition = new Vector3(snappingToggle.absolutePosition.x, snappingToggle.absolutePosition.y + 38, snappingToggle.absolutePosition.z);
+            Button.size = new Vector2(SnappingToggle.size.x, SnappingToggle.size.y);
+            Button.absolutePosition = new Vector3(SnappingToggle.absolutePosition.x, SnappingToggle.absolutePosition.y + 38, SnappingToggle.absolutePosition.z);
             Button.playAudioEvents = true;
-            Button.activeStateIndex = 1;
+            Button.activeStateIndex = (Global.LimitsGroup == Limits.Groups.Custom) ? 1 : 0;
             Button.spritePadding = new RectOffset();
-            Button.atlas = Global.UI.CreateAtlas(ButtonName + "_Atlas", spriteResourceName, spriteImageNames, spriteImageSize, snappingToggle.atlas.material);
+            Button.atlas = Global.UI.CreateAtlas(ButtonName + "_Atlas", spriteResourceName, spriteImageNames, spriteImageSize, SnappingToggle.atlas.material);
             spriteSets.Apply(Button);
 
             Button.eventActiveStateIndexChanged += Button_eventActiveStateIndexChanged;
-
             Button.eventMouseUp += Button_eventMouseUp;
+            Button.eventVisibilityChanged += Button_eventVisibilityChanged;
 
-            Log.Debug(this, "Initialize", "SnappingToggle.activeStateIndex", snappingToggle.activeStateIndex);
-            Log.Debug(this, "Initialize", "SnappingToggle.ActiveStatesCount", snappingToggle.ActiveStatesCount());
-            Log.Debug(this, "Initialize", "SnappingToggle.state", snappingToggle.state);
-            Log.Debug(this, "Initialize", "Button.activeStateIndex", Button.activeStateIndex);
-            Log.Debug(this, "Initialize", "Button.ActiveStatesCount", Button.ActiveStatesCount());
-            Log.Debug(this, "Initialize", "Button.state", Button.state);
+            Log.Debug(this, parentName, "Initialize", "Button Created", Parent.name, Button.name);
 
-            Log.Debug(this, "Initialize", "Button Created", Parent.name, Button.name);
+            Log.Debug(this, parentName, "Initialize", "End");
+        }
 
-            Log.Debug(this, "Initialize", "End");
+        void Button_eventVisibilityChanged(UIComponent component, bool value)
+        {
+            if (value)
+            {
+                int state = (Global.LimitsGroup == Limits.Groups.Custom) ? 1 : 0;
+
+                if (state != Button.activeStateIndex)
+                {
+                    Button.activeStateIndex = state;
+                }
+            }
         }
 
         /// <summary>
@@ -251,20 +266,26 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <param name="value">The value.</param>
         private void Button_eventActiveStateIndexChanged(UIComponent component, int value)
         {
-            Log.Debug(this, "Button_eventActiveStateIndexChanged", component, value);
+            Log.Debug(this, parentName, "Button_eventActiveStateIndexChanged", component, value);
 
             switch (value)
             {
                 // Disable limits.
                 case 0:
-                    Log.Debug(this, "Button_eventActiveStateIndexChanged", "Global.SetLimits", "Limits.Groups.Disabled");
-                    Global.SetLimits(Limits.Groups.Disabled);
+                    if (Global.Limits.Group != Limits.Groups.Disabled)
+                    {
+                        Log.Debug(this, parentName, "Button_eventActiveStateIndexChanged", "Global.SetLimits", "Limits.Groups.Disabled");
+                        Global.SetLimits(Limits.Groups.Disabled);
+                    }
                     break;
 
                 // Enable limits.
                 case 1:
-                    Log.Debug(this, "Button_eventActiveStateIndexChanged", "Global.SetLimits", "Limits.Groups.Custom");
-                    Global.SetLimits(Limits.Groups.Custom);
+                    if (Global.Limits.Group != Limits.Groups.Custom)
+                    {
+                        Log.Debug(this, parentName, "Button_eventActiveStateIndexChanged", "Global.SetLimits", "Limits.Groups.Custom");
+                        Global.SetLimits(Limits.Groups.Custom);
+                    }
                     break;
             }
         }
@@ -278,7 +299,18 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             if (eventParam.buttons == UIMouseButton.Right)
             {
-                Log.Debug(this, "Button_eventMouseUp", component, eventParam.buttons, eventParam.clicks);
+                Log.Debug(this, parentName, "Button_eventMouseUp", component, eventParam.buttons, eventParam.clicks);
+                if (Global.SettingsPanelIsVisible)
+                {
+                    Global.CloseSettingsPanel();
+                    Global.UI.LogComponentPaths(this, "OptionPanel", null, false);
+                    Global.UI.LogComponentPaths(this, "OptionsPanel", null, false);
+                    Global.UI.LogComponentPaths(this, "SnappingToggle", null, false);
+                }
+                else
+                {
+                    Global.ShowSettingsPanel();
+                }
             }
         }
     }

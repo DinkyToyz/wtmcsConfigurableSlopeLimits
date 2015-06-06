@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ColossalFramework.UI;
+using System;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -7,6 +8,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
     /// </summary>
     internal static class Global
     {
+        public static SettingsPanel settingsPanel = null;
+
         /// <summary>
         /// The UI instance.
         /// </summary>
@@ -60,6 +63,30 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
         }
 
+        public static SettingsPanel SettingsPanel
+        {
+            get
+            {
+                CreateSettingsPanel();
+
+                return settingsPanel;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the settings panel is visible.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the settings panel is visible; otherwise, <c>false</c>.
+        /// </value>
+        public static bool SettingsPanelIsVisible
+        {
+            get
+            {
+                return (settingsPanel != null && settingsPanel.isVisible);
+            }
+        }
+
         /// <summary>
         /// Gets the UI instance.
         /// </summary>
@@ -77,6 +104,31 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                 return uiInstance;
             }
+        }
+
+        /// <summary>
+        /// Closes the settings panel.
+        /// </summary>
+        public static void CloseSettingsPanel()
+        {
+            if (settingsPanel == null || !settingsPanel.isVisible)
+            {
+                return;
+            }
+
+            Log.Debug(typeof(Global), "CloseSettingsPanel", "Begin");
+
+            try
+            {
+                settingsPanel.isVisible = false;
+                settingsPanel.Hide();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(typeof(Global), "CloseSettingsPanel", ex);
+            }
+
+            Log.Debug(typeof(Global), "CloseSettingsPanel", "End");
         }
 
         /// <summary>
@@ -116,6 +168,32 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 {
                     limitsInstance = null;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Disposes the settings panel.
+        /// </summary>
+        public static void DisposeSettingsPanel()
+        {
+            if (settingsPanel != null)
+            {
+                Log.Debug(typeof(Global), "DisposeSettingsPanel", "Begin");
+
+                try
+                {
+                    UIView.Destroy(settingsPanel);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(typeof(Global), "DisposeSettingsPanel", ex);
+                }
+                finally
+                {
+                    settingsPanel = null;
+                }
+
+                Log.Debug(typeof(Global), "DisposeSettingsPanel", "End");
             }
         }
 
@@ -188,6 +266,76 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 Log.Error(typeof(Global), "SetLimits", ex);
             }
+        }
+
+        public static Limits.Groups LimitsGroup
+        {
+            get
+            {
+                try
+                {
+                    Limits.Initialize();
+                    return Limits.Group;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(typeof(Global), "GetLimits", ex);
+                    return Limits.Groups.Original;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Shows the settings panel.
+        /// </summary>
+        public static void ShowSettingsPanel()
+        {
+            Log.Debug(typeof(Global), "ShowSettingsPanel", "Begin");
+
+            CreateSettingsPanel();
+            try
+            {
+                if (!settingsPanel.isVisible)
+                {
+                    settingsPanel.isVisible = true;
+                    settingsPanel.Show();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(typeof(Global), "ShowSettingsPanel", ex);
+            }
+
+            Log.Debug(typeof(Global), "ShowSettingsPanel", "End");
+        }
+
+        /// <summary>
+        /// Creates the settings panel.
+        /// </summary>
+        private static void CreateSettingsPanel()
+        {
+            if (settingsPanel != null)
+            {
+                return;
+            }
+
+            Log.Debug(typeof(Global), "CreateSettingsPanel", "Begin");
+
+            try
+            {
+                UIView view = UIView.GetAView();
+
+                settingsPanel = (SettingsPanel)view.AddUIComponent(typeof(SettingsPanel));
+
+                settingsPanel.transform.parent = view.transform;
+                settingsPanel.Hide();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(typeof(Global), "CreateSettingsPanel", ex);
+            }
+
+            Log.Debug(typeof(Global), "CreateSettingsPanel", "End");
         }
     }
 }

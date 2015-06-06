@@ -1,5 +1,7 @@
 ﻿using ICities;
 using System;
+using ColossalFramework.UI;
+using System.Collections.Generic;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -23,10 +25,16 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         private bool isBroken = false;
 
-        /// <summary>
-        /// The tool button.
-        /// </summary>
-        private ToolButton roadsToolButton = null;
+        private static readonly string[] buttonParents = 
+            {
+                "RoadsOptionPanel(RoadsPanel)",
+                "PathsOptionPanel(BeautificationPanel)",
+                "TracksOptionPanel(PublicTransportPanel)",
+                "TunnelsOptionPanel(PublicTransportPanel)",
+                "RoadsOptionPanel(PublicTransportPanel)"
+            };
+
+        private Dictionary<string, ToolButton> toolButtons = new Dictionary<string, ToolButton>();
 
         /// <summary>
         /// Tools.
@@ -47,7 +55,23 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             get
             {
-                return (roadsToolButton != null);
+                try
+                {
+                    foreach (string parent in buttonParents)
+                    {
+                        if (!toolButtons.ContainsKey(parent))
+                        {
+                            return false;
+                        }
+                    }
+                }
+                catch 
+                {
+                    isBroken = true;
+                    return false;
+                }
+
+                return true;
             }
         }
 
@@ -101,6 +125,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             Log.Debug(this, "OnReleased", "End");
         }
 
+        private float updateTimeCheck = 0;
+
         /// <summary>
         /// Called on update.
         /// </summary>
@@ -114,9 +140,16 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 if (createButtonsOnUpdate && !isBroken)
                 {
-                    if (CreateButtons())
+                    updateTimeCheck += realTimeDelta;
+
+                    if (updateTimeCheck > 1.25)
                     {
-                        createButtonsOnUpdate = false;
+                        updateTimeCheck = 0;
+
+                        if (CreateButtons())
+                        {
+                            createButtonsOnUpdate = false;
+                        }
                     }
                 }
             }
@@ -137,6 +170,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             try
             {
                 DisposeToolButtons();
+                Global.DisposeSettingsPanel();
                 Global.DisposeUI();
             }
             catch (Exception ex)
@@ -161,9 +195,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             try
             {
-                if (roadsToolButton != null)
+                foreach (ToolButton button in toolButtons.Values)
                 {
-                    roadsToolButton.Dispose();
+                    button.Dispose();
                 }
             }
             catch (Exception ex)
@@ -173,7 +207,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
             finally
             {
-                roadsToolButton = null;
+                toolButtons.Clear();
                 createButtonsOnUpdate = true;
             }
 
@@ -188,10 +222,29 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             try
             {
-                if (roadsToolButton == null && Global.UI.RoadsPanel != null && Global.UI.RoadsOptionPanel != null)
+                foreach (string parentName in buttonParents)
                 {
-                    Log.Debug(this, "CreateButtons", "RoadsToolButton");
-                    roadsToolButton = new ToolButton(Global.UI.RoadsOptionPanel);
+                    if (!toolButtons.ContainsKey(parentName))
+                    {
+                        UIComponent parentComponent = Global.UI.Components[parentName];
+                        if (parentComponent != null)
+                        {
+                            ToolButton button = null;
+                            UIMultiStateButton snappingToggle = Global.UI.FindComponent<UIMultiStateButton>("SnappingToggle", parentComponent);
+
+                            if (snappingToggle == null)
+                            {
+                                Log.Debug(this, "CreateButtons", "No Snap Toggle", parentName);
+                            }
+                            else
+                            {
+                                Log.Debug(this, "CreateButtons", parentName);
+                                button = new ToolButton(parentComponent, snappingToggle);
+                            }
+
+                            toolButtons[parentName] = button;
+                        }
+                    }
                 }
 
                 return ButtonsCreated;

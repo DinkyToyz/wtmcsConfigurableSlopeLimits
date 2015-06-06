@@ -32,11 +32,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             if (String.IsNullOrEmpty(fileName))
             {
-                fileName = FileName(".tmp");
+                fileName = FilePathName(".tmp");
             }
             else if (fileName[0] == '.')
             {
-                fileName = FileName(fileName);
+                fileName = FilePathName(fileName);
             }
 
             return File.Exists(fileName);
