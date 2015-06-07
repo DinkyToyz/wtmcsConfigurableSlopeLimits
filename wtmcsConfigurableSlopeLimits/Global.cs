@@ -45,6 +45,29 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
+        /// Gets the limits group.
+        /// </summary>
+        /// <value>
+        /// The limits group.
+        /// </value>
+        public static Limits.Groups LimitsGroup
+        {
+            get
+            {
+                try
+                {
+                    Limits.Initialize();
+                    return Limits.Group;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(typeof(Global), "GetLimits", ex);
+                    return Limits.Groups.Original;
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the current settings.
         /// </summary>
         /// <value>
@@ -265,23 +288,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             catch (Exception ex)
             {
                 Log.Error(typeof(Global), "SetLimits", ex);
-            }
-        }
-
-        public static Limits.Groups LimitsGroup
-        {
-            get
-            {
-                try
-                {
-                    Limits.Initialize();
-                    return Limits.Group;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(typeof(Global), "GetLimits", ex);
-                    return Limits.Groups.Original;
-                }
             }
         }
 

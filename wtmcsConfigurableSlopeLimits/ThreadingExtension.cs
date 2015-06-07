@@ -1,6 +1,6 @@
-﻿using ICities;
+﻿using ColossalFramework.UI;
+using ICities;
 using System;
-using ColossalFramework.UI;
 using System.Collections.Generic;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
@@ -15,6 +15,15 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         //// </summary>
         //private Tool ActiveTool = Tool.None;
 
+        private static readonly string[] buttonParents =
+            {
+                "RoadsOptionPanel(RoadsPanel)",
+                "PathsOptionPanel(BeautificationPanel)",
+                "TracksOptionPanel(PublicTransportPanel)",
+                "TunnelsOptionPanel(PublicTransportPanel)",
+                "RoadsOptionPanel(PublicTransportPanel)"
+            };
+
         /// <summary>
         /// Wether to create buttons on update.
         /// </summary>
@@ -25,16 +34,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         private bool isBroken = false;
 
-        private static readonly string[] buttonParents = 
-            {
-                "RoadsOptionPanel(RoadsPanel)",
-                "PathsOptionPanel(BeautificationPanel)",
-                "TracksOptionPanel(PublicTransportPanel)",
-                "TunnelsOptionPanel(PublicTransportPanel)",
-                "RoadsOptionPanel(PublicTransportPanel)"
-            };
-
         private Dictionary<string, ToolButton> toolButtons = new Dictionary<string, ToolButton>();
+
+        private float updateTimeCheck = 0;
 
         /// <summary>
         /// Tools.
@@ -65,7 +67,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                         }
                     }
                 }
-                catch 
+                catch
                 {
                     isBroken = true;
                     return false;
@@ -124,8 +126,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             Log.Debug(this, "OnReleased", "End");
         }
-
-        private float updateTimeCheck = 0;
 
         /// <summary>
         /// Called on update.

@@ -15,11 +15,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
     {
         public readonly ComponentList Components;
 
-        public UI()
-        {
-            Components = new ComponentList(this);
-        }
-
         /// <summary>
         /// The main tool strip.
         /// </summary>
@@ -29,6 +24,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// The UI root.
         /// </summary>
         private UIView uiRoot = null;
+
+        public UI()
+        {
+            Components = new ComponentList(this);
+        }
 
         /// <summary>
         /// Gets the main tool strip.
@@ -46,42 +46,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 }
 
                 return mainToolStrip;
-            }
-        }
-
-        public class ComponentList
-        {
-            private UI ui = null;
-
-            public ComponentList(UI ui)
-            {
-                this.ui = ui; 
-            }
-
-            Dictionary<string, UIComponent> components = new Dictionary<string, UIComponent>();
-
-            public UIComponent this[string name]
-            {
-                get
-                {
-                    if (!components.ContainsKey(name))
-                    {
-                        UIComponent component = ui.FindComponent<UIComponent>(name);
-                        if (component == null)
-                        {
-                            return null;
-                        }
-
-                        components[name] = component;
-                    }
-
-                    return components[name];
-                }
-            }
-
-            public void Clear()
-            {
-                components.Clear();
             }
         }
 
@@ -208,6 +172,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             return (components == null || components.Count != 1) ? (T)null : components[0];
         }
+
         /// <summary>
         /// Finds the component.
         /// </summary>
@@ -408,6 +373,41 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public void LogComponentPaths(object caller, string name, UIComponent parent = null, bool exactMatch = false)
         {
             LogComponentPaths<UIComponent>(caller, name, parent, exactMatch);
+        }
+
+        public class ComponentList
+        {
+            private Dictionary<string, UIComponent> components = new Dictionary<string, UIComponent>();
+            private UI ui = null;
+
+            public ComponentList(UI ui)
+            {
+                this.ui = ui;
+            }
+
+            public UIComponent this[string name]
+            {
+                get
+                {
+                    if (!components.ContainsKey(name))
+                    {
+                        UIComponent component = ui.FindComponent<UIComponent>(name);
+                        if (component == null)
+                        {
+                            return null;
+                        }
+
+                        components[name] = component;
+                    }
+
+                    return components[name];
+                }
+            }
+
+            public void Clear()
+            {
+                components.Clear();
+            }
         }
 
         /// <summary>

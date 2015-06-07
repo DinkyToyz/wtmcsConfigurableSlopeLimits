@@ -19,7 +19,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         public readonly UIComponent Parent = null;
 
+        /// <summary>
+        /// The snapping toggle button.
+        /// </summary>
         public readonly UIMultiStateButton SnappingToggle;
+
         /// <summary>
         /// The tool tip
         /// </summary>
@@ -94,13 +98,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     )
             );
 
-        private string parentName
-        {
-            get
-            {
-                return (Parent == null) ? "~" : Parent.name;
-            }
-        }
         /// <summary>
         /// Initializes a new instance of the <see cref="ToolButton"/> class.
         /// </summary>
@@ -154,6 +151,20 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             get
             {
                 return Button.isVisible;
+            }
+        }
+
+        /// <summary>
+        /// Gets the name of the parent component.
+        /// </summary>
+        /// <value>
+        /// The name of the parent component.
+        /// </value>
+        private string parentName
+        {
+            get
+            {
+                return (Parent == null) ? "~" : Parent.name;
             }
         }
 
@@ -246,19 +257,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             Log.Debug(this, parentName, "Initialize", "End");
         }
 
-        void Button_eventVisibilityChanged(UIComponent component, bool value)
-        {
-            if (value)
-            {
-                int state = (Global.LimitsGroup == Limits.Groups.Custom) ? 1 : 0;
-
-                if (state != Button.activeStateIndex)
-                {
-                    Button.activeStateIndex = state;
-                }
-            }
-        }
-
         /// <summary>
         /// Called when the buttons active state index is changed.
         /// </summary>
@@ -311,6 +309,26 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 {
                     Global.ShowSettingsPanel();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Called when the buttons visibility is changed.
+        /// </summary>
+        /// <param name="component">The component.</param>
+        /// <param name="value">if set to <c>true</c> the button was made visible, otherwise invisible.</param>
+        private void Button_eventVisibilityChanged(UIComponent component, bool value)
+        {
+            if (value)
+            {
+                int state = (Global.LimitsGroup == Limits.Groups.Custom) ? 1 : 0;
+
+                if (state != Button.activeStateIndex)
+                {
+                    Button.activeStateIndex = state;
+                }
+
+                Global.CloseSettingsPanel();
             }
         }
     }

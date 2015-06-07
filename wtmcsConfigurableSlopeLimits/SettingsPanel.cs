@@ -34,14 +34,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             Log.Debug(this, "Awake", "End");
         }
 
-        void SettingsPanel_eventKeyPress(UIComponent component, UIKeyEventParameter eventParam)
-        {
-            if (eventParam.keycode == KeyCode.Escape)
-            {
-                Global.CloseSettingsPanel();
-            }
-        }
-
         /// <summary>
         /// Called at start of this instance (whatever that means).
         /// </summary>
@@ -62,6 +54,14 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             title.relativePosition = new Vector3((this.width - title.width) / 2, 0);
 
             Log.Debug(this, "Start", "End");
+        }
+
+        private void SettingsPanel_eventKeyPress(UIComponent component, UIKeyEventParameter eventParam)
+        {
+            if (eventParam.keycode == KeyCode.Escape)
+            {
+                Global.CloseSettingsPanel();
+            }
         }
     }
 }
