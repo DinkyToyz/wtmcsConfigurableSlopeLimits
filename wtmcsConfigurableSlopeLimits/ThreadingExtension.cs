@@ -170,7 +170,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             try
             {
                 DisposeToolButtons();
-                Global.DisposeSettingsPanel();
+                //Global.DisposeSettingsPanel();
                 Global.DisposeUI();
             }
             catch (Exception ex)

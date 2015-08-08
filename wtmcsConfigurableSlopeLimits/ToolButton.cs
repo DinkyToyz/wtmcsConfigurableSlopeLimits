@@ -120,7 +120,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             this.SnappingToggle = snappingToggle;
 
             this.ButtonName = Library.Name + ("ToolButton" + parent.name).ASCIICapitals();
-            this.ToolTip = "Toggle slope limits.\nNothing for menu.";
+            this.ToolTip = "Toggle slope limits.";
 
             Initialize();
 
@@ -249,7 +249,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             spriteSets.Apply(Button);
 
             Button.eventActiveStateIndexChanged += Button_eventActiveStateIndexChanged;
-            Button.eventMouseUp += Button_eventMouseUp;
+            //Button.eventMouseUp += Button_eventMouseUp;
             Button.eventVisibilityChanged += Button_eventVisibilityChanged;
 
             Log.Debug(this, parentName, "Initialize", "Button Created", Parent.name, Button.name);
@@ -288,29 +288,29 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
         }
 
-        /// <summary>
-        /// Called when mouse button let up from button.
-        /// </summary>
-        /// <param name="component">The component.</param>
-        /// <param name="eventParam">The event parameter.</param>
-        private void Button_eventMouseUp(UIComponent component, UIMouseEventParameter eventParam)
-        {
-            if (eventParam.buttons == UIMouseButton.Right)
-            {
-                Log.Debug(this, parentName, "Button_eventMouseUp", component, eventParam.buttons, eventParam.clicks);
-                if (Global.SettingsPanelIsVisible)
-                {
-                    Global.CloseSettingsPanel();
-                    Global.UI.LogComponentPaths(this, "OptionPanel", null, false);
-                    Global.UI.LogComponentPaths(this, "OptionsPanel", null, false);
-                    Global.UI.LogComponentPaths(this, "SnappingToggle", null, false);
-                }
-                else
-                {
-                    Global.ShowSettingsPanel();
-                }
-            }
-        }
+        ///// <summary>
+        ///// Called when mouse button let up from button.
+        ///// </summary>
+        ///// <param name="component">The component.</param>
+        ///// <param name="eventParam">The event parameter.</param>
+        //private void Button_eventMouseUp(UIComponent component, UIMouseEventParameter eventParam)
+        //{
+        //    if (eventParam.buttons == UIMouseButton.Right)
+        //    {
+        //        Log.Debug(this, parentName, "Button_eventMouseUp", component, eventParam.buttons, eventParam.clicks);
+        //        if (Global.SettingsPanelIsVisible)
+        //        {
+        //            Global.CloseSettingsPanel();
+        //            Global.UI.LogComponentPaths(this, "OptionPanel", null, false);
+        //            Global.UI.LogComponentPaths(this, "OptionsPanel", null, false);
+        //            Global.UI.LogComponentPaths(this, "SnappingToggle", null, false);
+        //        }
+        //        else
+        //        {
+        //            Global.ShowSettingsPanel();
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Called when the buttons visibility is changed.
@@ -328,7 +328,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     Button.activeStateIndex = state;
                 }
 
-                Global.CloseSettingsPanel();
+                //Global.CloseSettingsPanel();
             }
         }
     }

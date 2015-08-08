@@ -22,17 +22,77 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         public static readonly List<Generic> Generics = new List<Generic>
         {
-            new Generic("Highway", "high"),
-            new Generic("Highway Ramp", "ramp"),
-            new Generic("Large Road", "large"),
-            new Generic("Medium Road", "medium"),
-            new Generic("Small Road", "small"),
-            new Generic("Gravel Road", "gravel"),
-            new Generic("Train Track", "track"),
-            new Generic("Metro Track", "track"),
-            new Generic("Pedestrian Path", "pedestrian"),
-            new Generic("Pedestrian Path", "pedestrian")
+            new Generic("Highway Ramp", "ramp", "Roads", 5),
+            new Generic("Highway", "high", "Roads", 6),
+            new Generic("Large Road", "large", "Roads", 4),
+            new Generic("Medium Road", "medium", "Roads", 3),
+            new Generic("Small Road", "small", "Roads", 2),
+            new Generic("Gravel Road", "gravel", "Roads", 1),
+            new Generic("Train Track", "track", "Railroads", 9),
+            new Generic("Metro Track", "track", "Railroads", 8),
+            new Generic("Pedestrian Path", "pedestrian", "Paths", 7),
+            new Generic("Airplane Runway", "runway", "Runways", 10)
         };
+
+        /// <summary>
+        /// The net groups.
+        /// </summary>
+        public static Dictionary<string, int> NetGroups = new Dictionary<string, int>
+        {
+            {"Roads", 1},
+            {"Paths", 2},
+            {"Railroads", 3},
+            {"Runways", 4},
+            {"Others", 5}
+        };
+
+        /// <summary>
+        /// Gets the matching generic.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>A generic.</returns>
+        public Generic GetGeneric(string name)
+        {
+            string lName = name.ToLowerInvariant();
+
+            foreach (Generic generic in Generics)
+            {
+                if (generic.LowerCaseName == lName)
+                {
+                    return generic;
+                }
+            }
+
+            foreach (Generic generic in Generics)
+            {
+                if (lName.Contains(generic.LowerCaseName))
+                {
+                    return generic;
+                }
+            }
+
+            foreach (Generic generic in Generics)
+            {
+                if (lName.Contains(generic.Part))
+                {
+                    return generic;
+                }
+            }
+
+            Generic Result = new Generic(-1);
+
+            foreach (KeyValuePair<string, int> group in NetGroups)
+            {
+                if (group.Value > Result.Order)
+                {
+                    Result.Group = group.Key;
+                    Result.Order = group.Value;
+                }
+            }
+
+            Result.Order += 1000;
+            return Result;
+        }
 
         /// <summary>
         /// The pattern for the nets that should be ignored.
@@ -89,7 +149,21 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(typeof(Settings), "Constructor", ex, "config.GetSlopeLimits()");
+                    Log.Error(typeof(Settings), "Constructor", ex, "settings.GetSlopeLimits()");
+                }
+
+                try
+                {
+                    Dictionary<string, float> orgLimits = settings.GetOriginalSlopeLimits();
+                    if (orgLimits != null)
+                    {
+                        Log.Debug(this, "Constructor", "Load original limits");
+                        SlopeLimitsOriginal = orgLimits;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(typeof(Settings), "Constructor", ex, "settings.GetOriginalSlopeLimits()");
                 }
             }
 
@@ -160,6 +234,37 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public static bool IgnoreNet(string name)
         {
             return ignoreNetsRex.Match(name).Success;
+        }
+
+        /// <summary>
+        /// Sets the limit.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="limit">The limit.</param>
+        public void SetLimit(string name, float limit)
+        { 
+            Log.Debug(this, "SetLimit", name, limit);
+
+            string lName = name.ToLowerInvariant();
+
+            bool changed = false;
+
+            if (SlopeLimits[name] != limit)
+            {
+                SlopeLimits[name] = limit;
+                changed = true;
+            }
+
+            if (SlopeLimitsGeneric.ContainsKey(lName) && SlopeLimitsGeneric[lName] != limit)
+            {
+                SlopeLimitsGeneric[lName] = limit;
+                changed = true;
+            }
+
+            if (changed)
+            {
+                Save();
+            }
         }
 
         /// <summary>
@@ -358,19 +463,51 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             public string Name;
 
             /// <summary>
+            /// The lower case name.
+            /// </summary>
+            public string LowerCaseName;
+
+            /// <summary>
             /// The part.
             /// </summary>
             public string Part;
+
+            /// <summary>
+            /// The group.
+            /// </summary>
+            public string Group;
+
+            /// <summary>
+            /// The order.
+            /// </summary>
+            public int Order;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Generic"/> struct.
+            /// </summary>
+            public Generic(int order)
+            {
+                Name = null;
+                Part = null;
+                Group = null;
+                Order = order;
+                LowerCaseName = null;
+            }
 
             /// <summary>
             /// Initializes a new instance of the <see cref="Generic"/> struct.
             /// </summary>
             /// <param name="name">The name.</param>
             /// <param name="part">The part.</param>
-            public Generic(string name, string part)
+            /// <param name="group">The group.</param>
+            /// <param name="order">The sort order.</param>
+            public Generic(string name, string part, string group, int order)
             {
                 Name = name;
                 Part = part;
+                Group = group;
+                Order = order;
+                LowerCaseName = name.ToLowerInvariant();
             }
         }
 
@@ -435,7 +572,18 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// </value>
             public Dictionary<string, float> GetSlopeLimits()
             {
-                return GetLimitsDictionary(SlopeLimits, "SlopeLimitsDictionary");
+                return GetLimitsDictionary(SlopeLimits, "GetSlopeLimits");
+            }
+
+            /// <summary>
+            /// Gets the slope limits dictionary.
+            /// </summary>
+            /// <value>
+            /// The slope limits dictionary.
+            /// </value>
+            public Dictionary<string, float> GetOriginalSlopeLimits()
+            {
+                return GetLimitsDictionary(OriginalSlopeLimits, "GetOriginalSlopeLimits");
             }
 
             /// <summary>

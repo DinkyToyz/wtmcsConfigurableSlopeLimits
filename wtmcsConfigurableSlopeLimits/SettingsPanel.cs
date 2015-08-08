@@ -8,6 +8,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
     /// </summary>
     public class SettingsPanel : UIPanel
     {
+    /*
         /// <summary>
         /// The title label.
         /// </summary>
@@ -56,6 +57,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             Log.Debug(this, "Start", "End");
         }
 
+        /// <summary>
+        /// Called when key is pressed.
+        /// </summary>
+        /// <param name="component">The component.</param>
+        /// <param name="eventParam">The event parameter.</param>
         private void SettingsPanel_eventKeyPress(UIComponent component, UIKeyEventParameter eventParam)
         {
             if (eventParam.keycode == KeyCode.Escape)
@@ -63,5 +69,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 Global.CloseSettingsPanel();
             }
         }
+        */
     }
 }
+ 
