@@ -74,7 +74,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 {
                     UIHelperBase group = helper.AddGroup(groupName);
 
-                    foreach (SlopeLimitSlider slider in sliders[groupName].OrderBy(s => s.Order))
+                    foreach (SlopeLimitSlider slider in sliders[groupName].OrderBy(s => s, new SlopeLimitSliderComparer()))
                     {
                         string label = slider.Name + " (" + slider.MaxLimit.ToString("0.00") + ")";
 
@@ -87,6 +87,35 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             catch (System.Exception ex)
             {
                 Log.Error(this, "OnSettingsUI", ex);
+            }
+        }
+
+        /// <summary>
+        /// Comparer for SlopeLimitSlider.
+        /// </summary>
+        private class SlopeLimitSliderComparer : IComparer<SlopeLimitSlider>
+        {
+            /// <summary>
+            /// Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other.
+            /// </summary>
+            /// <param name="x">The first object to compare.</param>
+            /// <param name="y">The second object to compare.</param>
+            /// <returns>
+            /// A signed integer that indicates the relative values of <paramref name="x" /> and <paramref name="y" />, as shown in the following table.Value Meaning Less than zero<paramref name="x" /> is less than <paramref name="y" />.Zero<paramref name="x" /> equals <paramref name="y" />.Greater than zero<paramref name="x" /> is greater than <paramref name="y" />.
+            /// </returns>
+            /// <exception cref="System.NotImplementedException"></exception>
+            public int Compare(SlopeLimitSlider x, SlopeLimitSlider y)
+            {
+                int r = x.Order - y.Order;
+                if (r != 0)
+                {
+                    return r;
+                }
+                else
+                {
+                    return string.Compare(x.Name, y.Name, System.StringComparison.InvariantCultureIgnoreCase);
+                }
+                throw new System.NotImplementedException();
             }
         }
 
