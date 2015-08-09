@@ -1,6 +1,5 @@
 ﻿using ICities;
 using System;
-using System.Linq;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -115,6 +114,5 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             Log.Debug(this, "OnReleased", "End");
         }
-
     }
 }

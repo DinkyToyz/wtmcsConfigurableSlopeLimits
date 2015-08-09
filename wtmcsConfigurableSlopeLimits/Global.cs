@@ -1,5 +1,4 @@
-﻿using ColossalFramework.UI;
-using System;
+﻿using System;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {

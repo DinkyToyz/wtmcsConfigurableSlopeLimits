@@ -35,6 +35,16 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         };
 
         /// <summary>
+        /// The pattern for the nets that should be ignored.
+        /// </summary>
+        public static readonly string ignoreNetsPattern = "(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam)|(?<!Pedestrian) Path)$";
+
+        /// <summary>
+        /// The nets that should be ignored.
+        /// </summary>
+        public static readonly Regex ignoreNetsRex = new Regex(ignoreNetsPattern, RegexOptions.IgnoreCase);
+
+        /// <summary>
         /// The net groups.
         /// </summary>
         public static Dictionary<string, int> NetGroups = new Dictionary<string, int>
@@ -45,64 +55,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {"Runways", 4},
             {"Others", 5}
         };
-
-        /// <summary>
-        /// Gets the matching generic.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns>A generic.</returns>
-        public Generic GetGeneric(string name)
-        {
-            string lName = name.ToLowerInvariant();
-
-            foreach (Generic generic in Generics)
-            {
-                if (generic.LowerCaseName == lName)
-                {
-                    return generic;
-                }
-            }
-
-            foreach (Generic generic in Generics)
-            {
-                if (lName.Contains(generic.LowerCaseName))
-                {
-                    return generic;
-                }
-            }
-
-            foreach (Generic generic in Generics)
-            {
-                if (lName.Contains(generic.Part))
-                {
-                    return generic;
-                }
-            }
-
-            Generic Result = new Generic(-1);
-
-            foreach (KeyValuePair<string, int> group in NetGroups)
-            {
-                if (group.Value > Result.Order)
-                {
-                    Result.Group = group.Key;
-                    Result.Order = group.Value;
-                }
-            }
-
-            Result.Order += 1000;
-            return Result;
-        }
-
-        /// <summary>
-        /// The pattern for the nets that should be ignored.
-        /// </summary>
-        public static readonly string ignoreNetsPattern = "(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam)|(?<!Pedestrian) Path)$";
-
-        /// <summary>
-        /// The nets that should be ignored.
-        /// </summary>
-        public static readonly Regex ignoreNetsRex = new Regex(ignoreNetsPattern, RegexOptions.IgnoreCase);
 
         /// <summary>
         /// The settings version.
@@ -237,37 +189,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
-        /// Sets the limit.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="limit">The limit.</param>
-        public void SetLimit(string name, float limit)
-        { 
-            Log.Debug(this, "SetLimit", name, limit);
-
-            string lName = name.ToLowerInvariant();
-
-            bool changed = false;
-
-            if (SlopeLimits[name] != limit)
-            {
-                SlopeLimits[name] = limit;
-                changed = true;
-            }
-
-            if (SlopeLimitsGeneric.ContainsKey(lName) && SlopeLimitsGeneric[lName] != limit)
-            {
-                SlopeLimitsGeneric[lName] = limit;
-                changed = true;
-            }
-
-            if (changed)
-            {
-                Save();
-            }
-        }
-
-        /// <summary>
         /// Loads settings from the specified file name.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
@@ -319,6 +240,54 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             Log.Debug(typeof(Settings), "Load", "End");
             return new Settings();
+        }
+
+        /// <summary>
+        /// Gets the matching generic.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>A generic.</returns>
+        public Generic GetGeneric(string name)
+        {
+            string lName = name.ToLowerInvariant();
+
+            foreach (Generic generic in Generics)
+            {
+                if (generic.LowerCaseName == lName)
+                {
+                    return generic;
+                }
+            }
+
+            foreach (Generic generic in Generics)
+            {
+                if (lName.Contains(generic.LowerCaseName))
+                {
+                    return generic;
+                }
+            }
+
+            foreach (Generic generic in Generics)
+            {
+                if (lName.Contains(generic.Part))
+                {
+                    return generic;
+                }
+            }
+
+            Generic Result = new Generic(-1);
+
+            foreach (KeyValuePair<string, int> group in NetGroups)
+            {
+                if (group.Value > Result.Order)
+                {
+                    Result.Group = group.Key;
+                    Result.Order = group.Value;
+                }
+            }
+
+            Result.Order += 1000;
+            return Result;
         }
 
         /// <summary>
@@ -374,6 +343,37 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
 
             Log.Debug(this, "Save", "End");
+        }
+
+        /// <summary>
+        /// Sets the limit.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="limit">The limit.</param>
+        public void SetLimit(string name, float limit)
+        {
+            Log.Debug(this, "SetLimit", name, limit);
+
+            string lName = name.ToLowerInvariant();
+
+            bool changed = false;
+
+            if (SlopeLimits[name] != limit)
+            {
+                SlopeLimits[name] = limit;
+                changed = true;
+            }
+
+            if (SlopeLimitsGeneric.ContainsKey(lName) && SlopeLimitsGeneric[lName] != limit)
+            {
+                SlopeLimitsGeneric[lName] = limit;
+                changed = true;
+            }
+
+            if (changed)
+            {
+                Save();
+            }
         }
 
         /// <summary>
@@ -458,9 +458,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public struct Generic
         {
             /// <summary>
-            /// The name.
+            /// The group.
             /// </summary>
-            public string Name;
+            public string Group;
 
             /// <summary>
             /// The lower case name.
@@ -468,19 +468,19 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             public string LowerCaseName;
 
             /// <summary>
-            /// The part.
+            /// The name.
             /// </summary>
-            public string Part;
-
-            /// <summary>
-            /// The group.
-            /// </summary>
-            public string Group;
+            public string Name;
 
             /// <summary>
             /// The order.
             /// </summary>
             public int Order;
+
+            /// <summary>
+            /// The part.
+            /// </summary>
+            public string Part;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="Generic"/> struct.
@@ -570,9 +570,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <value>
             /// The slope limits dictionary.
             /// </value>
-            public Dictionary<string, float> GetSlopeLimits()
+            public Dictionary<string, float> GetOriginalSlopeLimits()
             {
-                return GetLimitsDictionary(SlopeLimits, "GetSlopeLimits");
+                return GetLimitsDictionary(OriginalSlopeLimits, "GetOriginalSlopeLimits");
             }
 
             /// <summary>
@@ -581,9 +581,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <value>
             /// The slope limits dictionary.
             /// </value>
-            public Dictionary<string, float> GetOriginalSlopeLimits()
+            public Dictionary<string, float> GetSlopeLimits()
             {
-                return GetLimitsDictionary(OriginalSlopeLimits, "GetOriginalSlopeLimits");
+                return GetLimitsDictionary(SlopeLimits, "GetSlopeLimits");
             }
 
             /// <summary>

@@ -96,24 +96,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         private struct SlopeLimitSlider
         {
             /// <summary>
-            /// The name.
-            /// </summary>
-            public string Name;
-
-            /// <summary>
             /// The current limit.
             /// </summary>
             public float CurLimit;
-
-            /// <summary>
-            /// The original limit.
-            /// </summary>
-            public float OrgLimit;
-
-            /// <summary>
-            /// The minimum limit.
-            /// </summary>
-            public float MinLimit;
 
             /// <summary>
             /// The maximum limit.
@@ -121,9 +106,24 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             public float MaxLimit;
 
             /// <summary>
+            /// The minimum limit.
+            /// </summary>
+            public float MinLimit;
+
+            /// <summary>
+            /// The name.
+            /// </summary>
+            public string Name;
+
+            /// <summary>
             /// The sort order.
             /// </summary>
             public int Order;
+
+            /// <summary>
+            /// The original limit.
+            /// </summary>
+            public float OrgLimit;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="SlopeLimitSlider"/> struct.
