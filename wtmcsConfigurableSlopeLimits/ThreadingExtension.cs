@@ -39,6 +39,15 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         private float updateTimeCheck = 0;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ThreadingExtension"/> class.
+        /// </summary>
+        public ThreadingExtension()
+            : base()
+        {
+            Log.Debug(this, "Constructed");
+        }
+
+        /// <summary>
         /// Tools.
         /// </summary>
         private enum Tool
