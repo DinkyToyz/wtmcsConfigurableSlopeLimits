@@ -18,7 +18,7 @@
         /// <summary>
         /// The title.
         /// </summary>
-        public const string Title = "WtM Slope Limits";
+        public const string Title = "Slope Limits (WtM)";
 
         /// <summary>
         /// Gets a value indicating whether this is a debug build.
