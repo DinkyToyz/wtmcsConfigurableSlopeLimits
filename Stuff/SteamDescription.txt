@@ -1,13 +1,25 @@
 Allows slope limits to be configured separately for different network types.
 
+[h1]Usage[/h1]
+
 The limits can be configured using the options in the content manager (unfortunately the options controls are quite limited, so there's just a bunch of sliders without any display of the numeric values for now), or a configuration file.
 
 In the game the slope limits can be toggled between stricter and looser with this button (near the snap toggle button):
 [img]http://www.truls.org/jonas/CS/ConfigurableSlopeLimitsButtonWeb.png[/img]
 
+The config file, wtmcsConfigurableSlopeLimits.xml, is stored in the folder "ModConfig" wherever the game points to with <DataLocation.localApplicationData>. On a Windows system that'd usually be some where like "C:\Users\<UserName>\AppData\Local\Colossal Order\Cities_Skylines\ModConfig".
+
+[h1]Errors & Logging[/h1]
+
+When reporting severe errors, please upload [url=http://steamcommunity.com/sharedfiles/filedetails/?id=463645931]the games complete log file[/url] and/or the separate log file (see below) somewhere and post a link.
+
+The mod logs to [url=http://steamcommunity.com/sharedfiles/filedetails/?id=463645931]the games normal output log[/url], and can also log to a separate log file, wtmcsConfigurableSlopeLimits.log, stored in the same directory as the settings.
+
+Create the file wtmcsConfigurableSlopeLimits.debug in the same directory in order to enable debug log stuff (wich might slow things down quite a bit) and logging to file.
+
+[h1]Whatever[/h1]
+
 I made this for myself, and use it. Hopefully it works for others as well, but I make no promises.
 I also make no promises about updating or fixing things fast, as that depends on how busy I am with work and other stuff.
-
-The config file, wtmcsConfigurableSlopeLimits.xml, is stored in the folder "ModConfig" wherever the game points to with <DataLocation.localApplicationData>. On a Windows system that'd usually be some where like "C:\Users\<UserName>\AppData\Local\Colossal Order\Cities_Skylines\ModConfig".
 
 [url=https://github.com/DinkyToyz/wtmcsConfigurableSlopeLimits]Source code[/url] is realesed with MIT license.

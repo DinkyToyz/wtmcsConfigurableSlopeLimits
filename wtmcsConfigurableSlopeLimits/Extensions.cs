@@ -74,6 +74,41 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
+        /// Compacts the name. "AppleSauce" becomes "ApSa".
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <returns></returns>
+        public static string CompactName(this string text)
+        {
+            StringBuilder compact = new StringBuilder();
+
+            bool wuc = false;
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (text[i] >= 'A' && text[i] <= 'Z')
+                {
+                    compact.Append(text[i]);
+                    wuc = true;
+                }
+                else if (text[i] >= 'a' && text[i] <= 'z')
+                {
+                    if (wuc)
+                    {
+                        compact.Append(text[i]);
+                        wuc = false;
+                    }
+                }
+                else
+                {
+                    compact.Append(text[i]);
+                    wuc = false;
+                }
+            }
+
+            return compact.ToString();
+        }
+
+        /// <summary>
         /// Conforms the newlines to the environment.
         /// </summary>
         /// <param name="text">The text.</param>

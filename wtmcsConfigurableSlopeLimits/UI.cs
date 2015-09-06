@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using UnityEngine;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
@@ -13,40 +12,27 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
     /// </summary>
     internal class UI
     {
+        /// <summary>
+        /// The components
+        /// </summary>
         public readonly ComponentList Components;
 
         /// <summary>
-        /// The main tool strip.
+        /// The parent child possesion list.
         /// </summary>
-        private UITabstrip mainToolStrip = null;
+        private static bool[] hasParentChild = new bool[] { false, true };
 
         /// <summary>
         /// The UI root.
         /// </summary>
         private UIView uiRoot = null;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UI"/> class.
+        /// </summary>
         public UI()
         {
             Components = new ComponentList(this);
-        }
-
-        /// <summary>
-        /// Gets the main tool strip.
-        /// </summary>
-        /// <value>
-        /// The main tool strip.
-        /// </value>
-        public UITabstrip MainToolStrip
-        {
-            get
-            {
-                if (mainToolStrip == null)
-                {
-                    mainToolStrip = FindComponent<UITabstrip>("MainToolstrip");
-                }
-
-                return mainToolStrip;
-            }
         }
 
         /// <summary>
@@ -87,16 +73,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                 return uiRoot;
             }
-        }
-
-        /// <summary>
-        /// Get the built-in tabstrip.
-        /// </summary>
-        /// <param name="parent">The parent.</param>
-        /// <returns>The tabstrip.</returns>
-        public UITabstrip BuiltInTabsstrip(UIComponent parent)
-        {
-            return FindComponent<UITabstrip>("ToolMode", parent);
         }
 
         /// <summary>
@@ -163,250 +139,415 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         /// <typeparam name="T">The type.</typeparam>
         /// <param name="name">The name.</param>
-        /// <param name="parent">The parent.</param>
-        /// <param name="exactMatch">If set to <c>true</c> name must be exact match.</param>
-        /// <returns>The component.</returns>
-        public T FindComponent<T>(string name, UIComponent parent = null, bool exactMatch = false) where T : UIComponent
-        {
-            List<T> components = FindComponents<T>(name, parent, exactMatch, 1);
-
-            return (components == null || components.Count != 1) ? (T)null : components[0];
-        }
-
-        /// <summary>
-        /// Finds the component.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="parent">The parent.</param>
-        /// <param name="exactMatch">If set to <c>true</c> name must be exact match.</param>
+        /// <param name="parentComponent">The parent.</param>
         /// <returns>
         /// The component.
         /// </returns>
-        public UIComponent FindComponent(string name, UIComponent parent = null, bool exactMatch = false)
+        public T FindComponent<T>(string name, UIComponent parentComponent = null) where T : UIComponent
         {
-            return FindComponent<UIComponent>(name, parent, exactMatch);
+            ComponentList tmpcmps = new ComponentList(this, name, typeof(T), null, parentComponent);
+            FindComponents(tmpcmps);
+            return (T)(tmpcmps[name]);
         }
 
         /// <summary>
         /// Finds the components.
         /// </summary>
-        /// <typeparam name="T">The type.</typeparam>
-        /// <param name="name">The name.</param>
-        /// <param name="parent">The parent.</param>
-        /// <param name="exactMatch">If set to <c>true</c> name must be exact match.</param>
-        /// <param name="maxCount">The maximum numeber of components to return.</param>
-        /// <returns>
-        /// The components.
-        /// </returns>
-        public List<T> FindComponents<T>(string name, UIComponent parent = null, bool exactMatch = false, int? maxCount = null) where T : UIComponent
+        public void FindComponents()
         {
-            //Log.Debug(this, "FindComponents", "'" + name + "'");
+            FindComponents(Components);
+        }
 
-            List<T> components = new List<T>();
-
-            string lcName = exactMatch ? null : name.ToLowerInvariant();
+        /// <summary>
+        /// Finds the components.
+        /// </summary>
+        /// <param name="components">The components.</param>
+        public void FindComponents(ComponentList components)
+        {
+            ////if (Log.LogToFile) Log.Debug(this, "FindComponents", "Begin");
 
             try
             {
-                foreach (T component in UIComponent.FindObjectsOfType<T>())
+                Dictionary<bool, HashSet<Type>> types = new Dictionary<bool, HashSet<Type>>() { { true, new HashSet<Type>() }, { false, new HashSet<Type>() } };
+                foreach (ComponentInfo info in components)
                 {
-                    if (component.name == name || (!exactMatch && component.name.ToLowerInvariant().Contains(lcName)))
+                    if (info.ParentName != null && info.ParentComponent == null)
                     {
-                        Transform tTrans = (parent == null) ? Root.transform : parent.transform;
+                        info.ParentComponent = components[info.ParentName];
+                    }
 
-                        Transform pTrans = component.transform.parent;
-                        while (pTrans != null && pTrans != tTrans)
+                    if (info.Component == null)
+                    {
+                        ////if (Log.LogToFile) Log.Debug(this, "FindComponents", "Types", info.Type, info.PathName);
+                        types[info.ParentName != null].Add(info.Type);
+                    }
+                }
+
+                foreach (bool hasParent in hasParentChild)
+                {
+                    bool found = false;
+                    foreach (Type type in types[hasParent])
+                    {
+                        if (type != typeof(UIComponent) && types[hasParent].Contains(typeof(UIComponent)))
                         {
-                            pTrans = pTrans.parent;
+                            continue;
                         }
 
-                        if (pTrans != null)
-                        {
-                            //Log.Debug(this, "FindComponents", "Found", component.name);
-                            components.Add(component);
+                        ////if (Log.LogToFile) Log.Debug(this, "FindComponents", "Type", type, hasParent);
 
-                            if (maxCount != null && maxCount.HasValue && components.Count >= maxCount.Value)
+                        foreach (UIComponent component in UIComponent.FindObjectsOfType(type))
+                        {
+                            foreach (ComponentInfo info in components)
                             {
-                                break;
+                                if (info.Component == null && (info.Type == typeof(UIComponent) || info.Type == type) &&
+                                    (hasParent == (info.ParentName != null)) &&
+                                    (info.ParentName == null || info.ParentComponent != null) &&
+                                    (component.name == info.Name))
+                                {
+                                    ////if (Log.LogToFile) Log.Debug(this, "FindComponents", "Component", type, info.PathName, component.GetType(), component.name);
+
+                                    Transform tTrans = (info.ParentComponent == null) ? Root.transform : info.ParentComponent.transform;
+
+                                    Transform pTrans = component.transform.parent;
+                                    while (pTrans != null && pTrans != tTrans)
+                                    {
+                                        pTrans = pTrans.parent;
+                                    }
+
+                                    if (pTrans != null)
+                                    {
+                                        ////if (Log.LogToFile) Log.Debug(this, "FindComponents", "Found", type, info.PathName);
+
+                                        if (info.Component == null)
+                                        {
+                                            info.Component = component;
+                                            found = true;
+                                        }
+                                        else
+                                        {
+                                            info.Ambiguous = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (found && !hasParent)
+                    {
+                        foreach (ComponentInfo info in components)
+                        {
+                            if (info.ParentName != null && info.ParentComponent == null)
+                            {
+                                info.ParentComponent = components[info.ParentName];
+                            }
+                        }
+                    }
+
+                    if (Log.LogToFile)
+                    {
+                        foreach (ComponentInfo info in components)
+                        {
+                            if (hasParent == (info.ParentName != null) && info.Component == null)
+                            {
+                                if (info.ParentName != null && info.ParentComponent == null)
+                                {
+                                    ////if (Log.LogToFile) Log.Debug(this, "FindComponents", "No Parent", info.Type, info.PathName);
+                                }
+                                else
+                                {
+                                    ////if (Log.LogToFile) Log.Debug(this, "FindComponents", "Not Found", info.Type, info.PathName);
+                                }
                             }
                         }
                     }
                 }
 
-                //if (components.Count == 0)
-                //{
-                //    Log.Debug(this, "FindComponents", "Not found");
-                //}
-
-                return components;
+                ////if (Log.LogToFile) Log.Debug(this, "FindComponents", "End");
             }
             catch (Exception ex)
             {
                 Log.Error(this, "FindComponents", ex);
-                return null;
             }
         }
 
         /// <summary>
-        /// Finds the components.
+        /// Component info holder.
         /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="parent">The parent.</param>
-        /// <param name="exactMatch">If set to <c>true</c> name must be exact match.</param>
-        /// <param name="maxCount">The maximum numeber of components to return.</param>
-        /// <returns>
-        /// The components.
-        /// </returns>
-        public List<UIComponent> FindComponents(string name, UIComponent parent = null, bool exactMatch = false, int? maxCount = null)
+        public class ComponentInfo
         {
-            return FindComponents<UIComponent>(name, parent, exactMatch, maxCount);
-        }
+            /// <summary>
+            /// Component could not be uniquely found.
+            /// </summary>
+            public bool Ambiguous;
 
-        /// <summary>
-        /// Gets the component paths.
-        /// </summary>
-        /// <typeparam name="T">The type.</typeparam>
-        /// <param name="name">The name.</param>
-        /// <param name="parent">The parent.</param>
-        /// <param name="exactMatch">If set to <c>true</c> name must be exact match.</param>
-        /// <returns>The component paths.</returns>
-        public List<string> GetComponentPaths<T>(string name, UIComponent parent = null, bool exactMatch = false) where T : UIComponent
-        {
-            List<string> paths = new List<string>();
+            /// <summary>
+            /// The component.
+            /// </summary>
+            public UIComponent Component;
 
-            try
+            /// <summary>
+            /// The parent component
+            /// </summary>
+            public UIComponent ParentComponent;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ComponentInfo"/> class.
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <param name="type">The type.</param>
+            /// <param name="parentName">Name of the parent.</param>
+            public ComponentInfo(string name, Type type, string parentName = null)
             {
-                foreach (T component in FindComponents<T>(name, parent, exactMatch))
+                initialize(name, type, parentName, null);
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ComponentInfo"/> class.
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <param name="parentName">Name of the parent.</param>
+            public ComponentInfo(string name, string parentName = null)
+            {
+                initialize(name, typeof(UIComponent), parentName, null);
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ComponentInfo"/> class.
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <param name="type">The type.</param>
+            /// <param name="parentComponent">The parent component.</param>
+            public ComponentInfo(string name, Type type, UIComponent parentComponent)
+            {
+                initialize(name, type, null, parentComponent);
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ComponentInfo"/> class.
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <param name="parentComponent">The parent component.</param>
+            public ComponentInfo(string name, UIComponent parentComponent)
+            {
+                initialize(name, typeof(UIComponent), null, parentComponent);
+            }
+
+            /// <summary>
+            /// Gets the name.
+            /// </summary>
+            /// <value>
+            /// The name.
+            /// </value>
+            public string Name { get; private set; }
+
+            /// <summary>
+            /// Gets the name of the parent.
+            /// </summary>
+            /// <value>
+            /// The name of the parent.
+            /// </value>
+            public string ParentName { get; private set; }
+
+            /// <summary>
+            /// Gets the path name.
+            /// </summary>
+            /// <value>
+            /// The path name.
+            /// </value>
+            public string PathName
+            {
+                get
                 {
-                    StringBuilder path = new StringBuilder();
-
-                    Transform tTrans = (parent == null) ? Root.transform : parent.transform;
-
-                    Transform pTrans = component.transform;
-                    while (pTrans != null)
-                    {
-                        if (path.Length > 0)
-                        {
-                            path.Append('|');
-                        }
-                        if (pTrans == tTrans)
-                        {
-                            path.Append('<');
-                        }
-                        path.Append(pTrans.name);
-                        if (pTrans == tTrans)
-                        {
-                            path.Append('>');
-                        }
-
-                        pTrans = pTrans.parent;
-                    }
-
-                    path.Insert(0, ": ").Insert(0, component.name);
-                    paths.Add(path.ToString());
-                }
-
-                return paths;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets the component paths.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="parent">The parent.</param>
-        /// <param name="exactMatch">If set to <c>true</c> name must be exact match.</param>
-        /// <returns>
-        /// The component paths.
-        /// </returns>
-        public List<string> GetComponentPaths(string name, UIComponent parent = null, bool exactMatch = false)
-        {
-            return GetComponentPaths<UIComponent>(name, parent, exactMatch);
-        }
-
-        /// <summary>
-        /// Logs the component paths.
-        /// </summary>
-        /// <typeparam name="T">The type.</typeparam>
-        /// <param name="caller">The caller.</param>
-        /// <param name="name">The name.</param>
-        /// <param name="parent">The parent.</param>
-        /// <param name="exactMatch">If set to <c>true</c> name must be exact match.</param>
-        public void LogComponentPaths<T>(object caller, string name, UIComponent parent = null, bool exactMatch = false) where T : UIComponent
-        {
-            Log.Debug(this, "LogComponentPaths", "'" + name + "'");
-
-            List<string> paths = GetComponentPaths<T>(name, parent, exactMatch);
-
-            if (paths == null)
-            {
-                Log.Debug(caller, "LogComponentPaths", typeof(T).Name, name, "~");
-            }
-            else
-            {
-                HashSet<string> shown = new HashSet<string>();
-
-                foreach (string path in paths)
-                {
-                    if (!shown.Contains(path))
-                    {
-                        Log.Debug(caller, "LogComponentPaths", typeof(T).Name, name, path);
-                        shown.Add(path);
-                    }
+                    return (ParentName != null ? ParentName + "/" : ParentComponent != null ? ParentComponent.ToString() : "") + Name;
                 }
             }
 
-            Log.Debug(this, "LogComponentPaths");
+            /// <summary>
+            /// Gets the type.
+            /// </summary>
+            /// <value>
+            /// The type.
+            /// </value>
+            public Type Type { get; private set; }
+
+            /// <summary>
+            /// Initializes the properties.
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <param name="type">The type.</param>
+            /// <param name="parentName">Name of the parent.</param>
+            /// <param name="parentComponent">The parent component.</param>
+            private void initialize(string name, Type type, string parentName, UIComponent parentComponent)
+            {
+                this.Name = name;
+                this.Type = type;
+                this.ParentName = parentName;
+                this.Component = null;
+                this.ParentComponent = parentComponent;
+                this.Ambiguous = false;
+            }
         }
 
         /// <summary>
-        /// Logs the component paths.
+        /// A list of components.
         /// </summary>
-        /// <param name="caller">The caller.</param>
-        /// <param name="name">The name.</param>
-        /// <param name="parent">The parent.</param>
-        /// <param name="exactMatch">If set to <c>true</c> name must be exact match.</param>
-        public void LogComponentPaths(object caller, string name, UIComponent parent = null, bool exactMatch = false)
+        public class ComponentList : IEnumerable<ComponentInfo>
         {
-            LogComponentPaths<UIComponent>(caller, name, parent, exactMatch);
-        }
+            /// <summary>
+            /// The components.
+            /// </summary>
+            private Dictionary<string, ComponentInfo> components = new Dictionary<string, ComponentInfo>();
 
-        public class ComponentList
-        {
-            private Dictionary<string, UIComponent> components = new Dictionary<string, UIComponent>();
+            /// <summary>
+            /// The UI.
+            /// </summary>
             private UI ui = null;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ComponentList"/> class.
+            /// </summary>
+            /// <param name="ui">The UI.</param>
             public ComponentList(UI ui)
             {
-                this.ui = ui;
+                initialize(ui, null, typeof(UIComponent), null, null);
             }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ComponentList"/> class and adds one component.
+            /// </summary>
+            /// <param name="ui">The UI.</param>
+            /// <param name="name">The name.</param>
+            /// <param name="parentName">Name of the parent.</param>
+            /// <param name="parentComponent">The parent component.</param>
+            public ComponentList(UI ui, string name, string parentName = null, UIComponent parentComponent = null)
+            {
+                initialize(ui, name, typeof(UIComponent), parentName, parentComponent);
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ComponentList"/> class and adds one component.
+            /// </summary>
+            /// <param name="ui">The UI.</param>
+            /// <param name="name">The name.</param>
+            /// <param name="type">The type.</param>
+            /// <param name="parentName">Name of the parent.</param>
+            /// <param name="parentComponent">The parent component.</param>
+            public ComponentList(UI ui, string name, Type type, string parentName = null, UIComponent parentComponent = null)
+            {
+                initialize(ui, name, type, parentName, parentComponent);
+            }
+
+            /// <summary>
+            /// Gets or sets the <see cref="UIComponent"/> with the specified name.
+            /// </summary>
+            /// <value>
+            /// The <see cref="UIComponent"/>.
+            /// </value>
+            /// <param name="name">The name.</param>
+            /// <returns></returns>
             public UIComponent this[string name]
             {
                 get
                 {
+                    ComponentInfo info;
                     if (!components.ContainsKey(name))
                     {
-                        UIComponent component = ui.FindComponent<UIComponent>(name);
-                        if (component == null)
-                        {
-                            return null;
-                        }
-
-                        components[name] = component;
+                        info = new ComponentInfo(name);
+                        components[name] = info;
+                    }
+                    else
+                    {
+                        info = components[name];
                     }
 
-                    return components[name];
+                    return info.Ambiguous ? (UIComponent)null : info.Component;
+                }
+
+                set
+                {
+                    if (!components.ContainsKey(name))
+                    {
+                        components[name] = new ComponentInfo(name);
+                    }
+
+                    components[name].Component = value;
                 }
             }
 
+            /// <summary>
+            /// Adds the specified component.
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <param name="type">The type.</param>
+            /// <param name="parentName">Name of the parent.</param>
+            /// <param name="parentComponent">The parent component.</param>
+            public void Add(string name, Type type, string parentName = null, UIComponent parentComponent = null)
+            {
+                string pathName = (parentName == null ? "" : parentName + "/") + name;
+                if (!components.ContainsKey(pathName))
+                {
+                    components[pathName] = new ComponentInfo(name, type, parentName);
+                }
+            }
+
+            /// <summary>
+            /// Adds the specified component.
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <param name="parentName">Name of the parent.</param>
+            /// <param name="parentComponent">The parent component.</param>
+            public void Add(string name, string parentName = null, UIComponent parentComponent = null)
+            {
+                Add(name, typeof(UIComponent), parentName);
+            }
+
+            /// <summary>
+            /// Clears this instance.
+            /// </summary>
             public void Clear()
             {
                 components.Clear();
+            }
+
+            /// <summary>
+            /// Returns an enumerator that iterates through the collection.
+            /// </summary>
+            /// <returns>
+            /// A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.
+            /// </returns>
+            public IEnumerator<ComponentInfo> GetEnumerator()
+            {
+                return components.Values.GetEnumerator();
+            }
+
+            /// <summary>
+            /// Returns an enumerator that iterates through a collection.
+            /// </summary>
+            /// <returns>
+            /// An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.
+            /// </returns>
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            {
+                return components.Values.GetEnumerator();
+            }
+
+            /// <summary>
+            /// Initializes the properties.
+            /// </summary>
+            /// <param name="ui">The UI.</param>
+            /// <param name="name">The name.</param>
+            /// <param name="type">The type.</param>
+            /// <param name="parentName">Name of the parent.</param>
+            /// <param name="parentComponent">The parent component.</param>
+            private void initialize(UI ui, string name, Type type, string parentName, UIComponent parentComponent)
+            {
+                this.ui = ui;
+
+                if (name != null)
+                {
+                    Add(name, type, parentName);
+                }
             }
         }
 

@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Collections.Generic;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -20,6 +21,67 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// True for logging to file.
         /// </summary>
         public static bool LogToFile = true;
+
+        /// <summary>
+        /// The file buffer.
+        /// </summary>
+        private static List<string> fileBuffer = null;
+
+        /// <summary>
+        /// True when buffering file writes.
+        /// </summary>
+        private static bool fileBuffering = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to buffer file writes.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if buffering file writes; otherwise, <c>false</c>.
+        /// </value>
+        public static bool BufferFileWrites
+        {
+            get
+            {
+                return fileBuffering;
+            }
+
+            set
+            {
+                if (value != fileBuffering)
+                {
+                    if (value)
+                    {
+                        if (LogToFile && fileBuffer == null)
+                        {
+                            fileBuffer = new List<string>();
+                        }
+                    }
+                    else
+                    {
+                        if (fileBuffer != null && fileBuffer.Count > 0)
+                        {
+                            if (LogToFile)
+                            {
+                                try
+                                {
+                                    using (StreamWriter logFile = new StreamWriter(FileSystem.FilePathName(".log"), logFileCreated))
+                                    {
+                                        logFile.Write(String.Join("", fileBuffer.ToArray()).ConformNewlines());
+                                        logFile.Close();
+                                    }
+
+                                    logFileCreated = true;
+                                }
+                                catch { }
+                            }
+
+                            fileBuffer.Clear();
+                        }
+                    }
+                    fileBuffering = value;
+                }
+            }
+        }
 
         /// <summary>
         /// True when log file has been created.
@@ -300,16 +362,23 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 {
                     try
                     {
-                        using (StreamWriter logFile = new StreamWriter(FileSystem.FilePathName(".log"), logFileCreated))
+                        msg.Insert(0, ' ').Insert(0, now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+                        msg.Append("\n");
+
+                        if (fileBuffering && fileBuffer != null)
                         {
-                            msg.Insert(0, ' ').Insert(0, now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-                            msg.Append("\n");
-
-                            logFile.Write(msg.ConformNewlines());
-                            logFile.Close();
+                            fileBuffer.Add(msg.ToString());
                         }
+                        else
+                        {
+                            using (StreamWriter logFile = new StreamWriter(FileSystem.FilePathName(".log"), logFileCreated))
+                            {
+                                logFile.Write(msg.ConformNewlines());
+                                logFile.Close();
+                            }
 
-                        logFileCreated = true;
+                            logFileCreated = true;
+                        }
                     }
                     catch { }
                 }

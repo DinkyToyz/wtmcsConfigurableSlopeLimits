@@ -15,6 +15,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         //// </summary>
         //private Tool ActiveTool = Tool.None;
 
+        /// <summary>
+        /// The button parents.
+        /// </summary>
         private static readonly string[] buttonParents =
             {
                 "RoadsOptionPanel(RoadsPanel)",
@@ -34,8 +37,14 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         private bool isBroken = false;
 
+        /// <summary>
+        /// The tool buttons.
+        /// </summary>
         private Dictionary<string, ToolButton> toolButtons = new Dictionary<string, ToolButton>();
 
+        /// <summary>
+        /// The update time check.
+        /// </summary>
         private float updateTimeCheck = 0;
 
         /// <summary>
@@ -44,6 +53,12 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public ThreadingExtension()
             : base()
         {
+            foreach (string parentName in buttonParents)
+            {
+                Global.UI.Components.Add(parentName, typeof(UIPanel));
+                Global.UI.Components.Add("SnappingToggle", typeof(UIMultiStateButton), parentName);
+            }
+
             Log.Debug(this, "Constructed");
         }
 
@@ -151,14 +166,15 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 {
                     updateTimeCheck += realTimeDelta;
 
-                    if (updateTimeCheck > 1.25)
+                    if (updateTimeCheck > 1.37)
                     {
-                        updateTimeCheck = 0;
-
                         if (CreateButtons())
                         {
+                            Log.Debug(this, "OnUpdate", "All Buttons Created");
                             createButtonsOnUpdate = false;
                         }
+
+                        updateTimeCheck = 0;
                     }
                 }
             }
@@ -231,30 +247,38 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             try
             {
+                if (Log.LogToFile) Log.BufferFileWrites = true;
+
+                //if (Log.LogToFile) Log.Debug(this, "CreateButtons", "Begin");
+
+                //if (Log.LogToFile) Log.Debug(this, "CreateButtons", "FindComponents");
+                Global.UI.FindComponents();
                 foreach (string parentName in buttonParents)
                 {
                     if (!toolButtons.ContainsKey(parentName))
                     {
+                        //if (Log.LogToFile) Log.Debug(this, "CreateButtons", "Components[parentName]", parentName);
                         UIComponent parentComponent = Global.UI.Components[parentName];
                         if (parentComponent != null)
                         {
-                            ToolButton button = null;
-                            UIMultiStateButton snappingToggle = Global.UI.FindComponent<UIMultiStateButton>("SnappingToggle", parentComponent);
+                            //if (Log.LogToFile) Log.Debug(this, "CreateButtons", "Component[parentName/SnappingToggle]", parentName);
+                            UIMultiStateButton snappingToggle = (UIMultiStateButton)Global.UI.Components[parentName + "/SnappingToggle"];
 
                             if (snappingToggle == null)
                             {
                                 Log.Debug(this, "CreateButtons", "No Snap Toggle", parentName);
+                                toolButtons[parentName] = null;
                             }
                             else
                             {
                                 Log.Debug(this, "CreateButtons", parentName);
-                                button = new ToolButton(parentComponent, snappingToggle);
+                                toolButtons[parentName] = new ToolButton(parentComponent, snappingToggle);
                             }
-
-                            toolButtons[parentName] = button;
                         }
                     }
                 }
+
+                //if (Log.LogToFile) Log.Debug(this, "CreateButtons", "End");
 
                 return ButtonsCreated;
             }
@@ -263,6 +287,10 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 Log.Error(this, "CreateButtun", ex);
                 isBroken = true;
                 return false;
+            }
+            finally
+            {
+                if (Log.LogToFile) Log.BufferFileWrites = false;
             }
         }
     }

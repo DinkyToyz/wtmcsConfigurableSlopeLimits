@@ -17,4 +17,4 @@ When logging to file, logs will be written to `wtmcsConfigurableSlopeLimits.log`
 
 ## Logging
 
-Create the file `wtmcsServiceDispatcher.debug`in order to enable debug log stuff (wich might slow things down quite a bit).
+Create the file `wtmcsConfigurableSlopeLimits.debug` in order to enable debug log stuff (wich might slow things down quite a bit).
