@@ -1,0 +1,2 @@
+Cities: Skyklines Mod Name: wtmcsConfigurableSlopeLimits
+Steam Workshop Mod File Id: 512194601
