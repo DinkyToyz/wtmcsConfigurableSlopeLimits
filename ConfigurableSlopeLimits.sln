@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Stuff", "Stuff", "{A08722F3
 		Stuff\Configurable Slope Limits.xcf = Stuff\Configurable Slope Limits.xcf
 		Stuff\ConfigurableSlopeLimitsButtonWeb.png = Stuff\ConfigurableSlopeLimitsButtonWeb.png
 		Stuff\SteamDescription.txt = Stuff\SteamDescription.txt
+		ToDo.md = ToDo.md
 	EndProjectSection
 EndProject
 Global

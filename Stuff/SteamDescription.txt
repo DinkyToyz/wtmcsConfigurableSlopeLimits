@@ -9,6 +9,10 @@ In the game the slope limits can be toggled between stricter and looser with thi
 
 The config file, wtmcsConfigurableSlopeLimits.xml, is stored in the folder "ModConfig" wherever the game points to with <DataLocation.localApplicationData>. On a Windows system that'd usually be some where like "C:\Users\<UserName>\AppData\Local\Colossal Order\Cities_Skylines\ModConfig".
 
+[h1]Known Bugs[/h1]
+
+When changing options in-game the new values aren't applied until the limits are toggled on and off.
+
 [h1]Errors & Logging[/h1]
 
 When reporting severe errors, please upload [url=http://steamcommunity.com/sharedfiles/filedetails/?id=463645931]the games complete log file[/url] and/or the separate log file (see below) somewhere and post a link.
