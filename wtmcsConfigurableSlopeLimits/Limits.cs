@@ -56,6 +56,14 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
         }
 
+        public bool IsUsable
+        {
+            get
+            {
+                return isInitialized && !isBroken;
+            }
+        }
+
         /// <summary>
         /// Initializes the slopes.
         /// </summary>
@@ -79,9 +87,27 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                 foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
                 {
+                    if (netCollection == null)
+                    {
+                        Log.Warning(this, "Initialize", "Null NetCollection");
+                        continue;
+                    }
+
+                    if (netCollection.m_prefabs == null)
+                    {
+                        Log.Warning(this, "Initialize", "Null NetCollection.m_prefabs", netCollection);
+                        continue;
+                    }
+
                     foreach (NetInfo netInfo in netCollection.m_prefabs)
                     {
-                        //LogNetInfo(this, "Initialize", netInfo);
+                        if (netInfo == null)
+                        {
+                            Log.Warning(this, "Initialize", "Null NetInfo", netCollection, netCollection.m_prefabs);
+                            continue;
+                        }
+
+                        if (Log.LogToFile) LogNetInfo(this, "Initialize", netInfo);
 
                         string netName = netInfo.NetName();
 
@@ -179,9 +205,27 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
                 {
+                    if (netCollection == null)
+                    {
+                        Log.Warning(this, "Restore", "Null NetCollection");
+                        continue;
+                    }
+
+                    if (netCollection.m_prefabs == null)
+                    {
+                        Log.Warning(this, "Restore", "Null NetCollection.m_prefabs", netCollection);
+                        continue;
+                    }
+
                     foreach (NetInfo netInfo in netCollection.m_prefabs)
                     {
-                        //LogNetInfo(this, "Initialize", netInfo);
+                        if (netInfo == null)
+                        {
+                            Log.Warning(this, "Restore", "Null NetInfo", netCollection, netCollection.m_prefabs);
+                            continue;
+                        }
+
+                        if (Log.LogToFile) LogNetInfo(this, "Restore", netInfo);
 
                         string netName = netInfo.NetName();
 
@@ -246,8 +290,28 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                 foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
                 {
+                    if (netCollection == null)
+                    {
+                        Log.Warning(this, "SetLimits", "Null NetCollection");
+                        continue;
+                    }
+
+                    if (netCollection.m_prefabs == null)
+                    {
+                        Log.Warning(this, "SetLimits", "Null NetCollection.m_prefabs", netCollection);
+                        continue;
+                    }
+
                     foreach (NetInfo netInfo in netCollection.m_prefabs)
                     {
+                        if (netInfo == null)
+                        {
+                            Log.Warning(this, "SetLimits", "Null NetInfo", netCollection, netCollection.m_prefabs);
+                            continue;
+                        }
+
+                        if (Log.LogToFile) LogNetInfo(this, "SetLimits", netInfo);
+
                         string netName = netInfo.NetName();
 
                         if (Settings.IgnoreNet(netName))

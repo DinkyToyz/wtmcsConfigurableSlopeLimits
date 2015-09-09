@@ -1,8 +1,8 @@
 #Additions and Fixes
 
 - In-game options changes
-- Kompatibilitet: Network Extensions
-- Kompatibilitet: Traffic ++
+- Compatibility: Network Extensions
+- Compatibility: Traffic ++
 
 #Changes and Experiments
 

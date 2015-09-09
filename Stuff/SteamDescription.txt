@@ -13,6 +13,14 @@ The config file, wtmcsConfigurableSlopeLimits.xml, is stored in the folder "ModC
 
 When changing options in-game the new values aren't applied until the limits are toggled on and off.
 
+[h1]To-do[/h1]
+
+[list]
+[*]Fix: In-game options changes.
+[*]Compatibility: Apply to and list Network Extension roads correctly.
+[*]Compatibility: Apply to Traffic ++ roads.
+[/list]
+
 [h1]Errors & Logging[/h1]
 
 When reporting severe errors, please upload [url=http://steamcommunity.com/sharedfiles/filedetails/?id=463645931]the games complete log file[/url] and/or the separate log file (see below) somewhere and post a link.

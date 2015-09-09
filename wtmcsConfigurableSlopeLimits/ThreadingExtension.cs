@@ -162,7 +162,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             try
             {
-                if (createButtonsOnUpdate && !isBroken)
+                if (createButtonsOnUpdate && !isBroken && Global.Limits != null && Global.Limits.IsUsable)
                 {
                     updateTimeCheck += realTimeDelta;
 
