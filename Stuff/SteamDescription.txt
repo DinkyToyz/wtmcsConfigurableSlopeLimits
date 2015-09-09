@@ -11,7 +11,9 @@ The config file, wtmcsConfigurableSlopeLimits.xml, is stored in the folder "ModC
 
 [h1]Known Bugs[/h1]
 
-When changing options in-game the new values aren't applied until the limits are toggled on and off.
+[list]
+[*]When changing options in-game the new values aren't applied until the limits are toggled on and off.
+[/list]
 
 [h1]To-do[/h1]
 
