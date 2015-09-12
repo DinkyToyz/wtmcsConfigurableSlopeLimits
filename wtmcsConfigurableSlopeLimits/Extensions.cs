@@ -127,47 +127,5 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             return text.ToString().ConformNewlines();
         }
-
-        /// <summary>
-        /// Get the nets name.
-        /// </summary>
-        /// <param name="netInfo">The net information.</param>
-        /// <returns>The name.</returns>
-        public static string NetName(this NetInfo netInfo)
-        {
-            string name = netInfo.m_class.name;
-
-            if (name == "Highway" && netInfo.name.Contains("Ramp"))
-            {
-                return "Highway Ramp";
-            }
-
-            if (name == "Highway Tunnel" && netInfo.name.Contains("Ramp"))
-            {
-                return "Highway Ramp Tunnel";
-            }
-
-            /*
-             * TODO: Compatibility with Network Extensions
-             *
-             * netInfo; Small Road; True; True; 6; Small Avenue; Small Avenue (NetInfo); Small Four-Lane Road
-             * netInfo; NExtMediumAvenue; True; True; 8; Medium Avenue; Medium Avenue (NetInfo); Four-Lane Road
-             * netInfo; NExtMediumAvenue; True; True; 10; Medium Avenue TL; Medium Avenue TL (NetInfo); Four-Lane Road with Turning Lane
-             * netInfo; NExtHighway; True; True; 6; Small Rural Highway; Small Rural Highway (NetInfo); Rural Highway
-             * netInfo; NExtHighway; True; True; 6; Rural Highway; Rural Highway (NetInfo); Two-Lane Highway
-             * netInfo; Small Road; True; True; 4; Rural Highway Elevated; Rural Highway Elevated (NetInfo); NET_TITLE[Rural Highway Elevated]:0
-             * netInfo; Small Road; True; True; 4; Rural Highway Bridge; Rural Highway Bridge (NetInfo); NET_TITLE[Rural Highway Bridge]:0
-             * netInfo; Small Road Tunnel; True; True; 4; Rural Highway Tunnel; Rural Highway Tunnel (NetInfo); NET_TITLE[Rural Highway Tunnel]:0
-             * netInfo; Small Road; True; True; 4; Rural Highway Slope; Rural Highway Slope (NetInfo); NET_TITLE[Rural Highway Slope]:0
-             * netInfo; NExtHighway; True; True; 10; Large Highway; Large Highway (NetInfo); Six-Lane Highway
-             * netInfo; Large Road; True; True; 8; Large Highway Elevated; Large Highway Elevated (NetInfo); NET_TITLE[Large Highway Elevated]:0
-             * netInfo; Large Road; True; True; 8; Large Highway Bridge; Large Highway Bridge (NetInfo); NET_TITLE[Large Highway Bridge]:0
-             * netInfo; Large Road Tunnel; True; True; 8; Large Highway Tunnel; Large Highway Tunnel (NetInfo); NET_TITLE[Large Highway Tunnel]:0
-             * netInfo; Large Road; True; True; 8; Large Highway Slope; Large Highway Slope (NetInfo); NET_TITLE[Large Highway Slope]:0
-             *
-             */
-
-            return name;
-        }
     }
 }

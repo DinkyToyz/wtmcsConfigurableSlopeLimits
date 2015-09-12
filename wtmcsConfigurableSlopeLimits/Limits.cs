@@ -450,7 +450,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             try
             {
                 Log.Debug((caller == null) ? this : caller, String.IsNullOrEmpty(block) ? "LogNetInfo" : block,
-                          "netInfo", netInfo.NetName(), netInfo.CanBeBuilt(), netInfo.m_canCrossLanes, netInfo.m_lanes.Length, netInfo.name, netInfo.ToString(), netInfo.GetLocalizedTitle());
+                          "netInfo", netInfo.NetName(), netInfo.CanBeBuilt(), netInfo.m_canCrossLanes, netInfo.m_lanes.Length, netInfo.m_class.name, netInfo.name, netInfo.ToString(), netInfo.GetLocalizedTitle());
             }
             catch { }
         }
