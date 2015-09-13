@@ -11,7 +11,7 @@
         public const string Description = "Allows slope limits to be configured separately for different network types.";
 
         /// <summary>
-        /// The name;
+        /// The name.
         /// </summary>
         public const string Name = "wtmcsConfigurableSlopeLimits";
 

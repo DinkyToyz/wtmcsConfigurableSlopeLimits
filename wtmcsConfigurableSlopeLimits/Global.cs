@@ -7,16 +7,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
     /// </summary>
     internal static class Global
     {
-        ///// <summary>
-        ///// The settings panel.
-        ///// </summary>
-        //public static SettingsPanel settingsPanel = null;
-
-        /// <summary>
-        /// The UI instance.
-        /// </summary>
-        public static UI uiInstance = null;
-
         /// <summary>
         /// The limits instance.
         /// </summary>
@@ -26,6 +16,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// The settings instance.
         /// </summary>
         private static Settings settingsInstance = null;
+
+        /// <summary>
+        /// The UI instance.
+        /// </summary>
+        private static UI uiInstance = null;
 
         /// <summary>
         /// Gets the limits.
@@ -108,7 +103,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
-        /// Deinitialize the UI instance.
+        /// Uninitialize the UI instance.
         /// </summary>
         public static void DeInitializeUI()
         {
@@ -205,6 +200,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// Sets the limits.
         /// </summary>
+        /// <param name="setToGroup">The group to set to.</param>
         public static void SetLimits(Limits.Groups setToGroup)
         {
             try

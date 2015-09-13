@@ -13,12 +13,12 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
     internal class UI
     {
         /// <summary>
-        /// The components
+        /// The components.
         /// </summary>
         public readonly ComponentList Components;
 
         /// <summary>
-        /// The parent child possesion list.
+        /// The parent child possession list.
         /// </summary>
         private static bool[] hasParentChild = new bool[] { false, true };
 
@@ -32,7 +32,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         public UI()
         {
-            Components = new ComponentList(this);
+            this.Components = new ComponentList(this);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             get
             {
-                if (uiRoot == null)
+                if (this.uiRoot == null)
                 {
                     Log.Debug(this, "Root", "Initialize");
                     try
@@ -55,12 +55,12 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             if (view.transform.parent == null && view.name == "UIView")
                             {
                                 Log.Debug(this, "Root", "Initialized");
-                                uiRoot = view;
+                                this.uiRoot = view;
                                 break;
                             }
                         }
 
-                        if (uiRoot == null)
+                        if (this.uiRoot == null)
                         {
                             Log.Debug(this, "Root", "Not found");
                         }
@@ -71,7 +71,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     }
                 }
 
-                return uiRoot;
+                return this.uiRoot;
             }
         }
 
@@ -123,13 +123,13 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
-        /// Deinitialize this instance.
+        /// Uninitialize this instance.
         /// </summary>
         public void DeInitialize()
         {
             Log.Debug(this, "DeInitialize", "Begin");
 
-            Components.Clear();
+            this.Components.Clear();
 
             Log.Debug(this, "DeInitialize", "End");
         }
@@ -146,8 +146,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public T FindComponent<T>(string name, UIComponent parentComponent = null) where T : UIComponent
         {
             ComponentList tmpcmps = new ComponentList(this, name, typeof(T), null, parentComponent);
-            FindComponents(tmpcmps);
-            return (T)(tmpcmps[name]);
+            this.FindComponents(tmpcmps);
+            return (T)tmpcmps[name];
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         public void FindComponents()
         {
-            FindComponents(Components);
+            this.FindComponents(this.Components);
         }
 
         /// <summary>
@@ -206,15 +206,15 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                                 {
                                     ////if (Log.LogToFile) Log.Debug(this, "FindComponents", "Component", type, info.PathName, component.GetType(), component.name);
 
-                                    Transform tTrans = (info.ParentComponent == null) ? Root.transform : info.ParentComponent.transform;
+                                    Transform topTrans = (info.ParentComponent == null) ? this.Root.transform : info.ParentComponent.transform;
 
-                                    Transform pTrans = component.transform.parent;
-                                    while (pTrans != null && pTrans != tTrans)
+                                    Transform curTrans = component.transform.parent;
+                                    while (curTrans != null && curTrans != topTrans)
                                     {
-                                        pTrans = pTrans.parent;
+                                        curTrans = curTrans.parent;
                                     }
 
-                                    if (pTrans != null)
+                                    if (curTrans != null)
                                     {
                                         ////if (Log.LogToFile) Log.Debug(this, "FindComponents", "Found", type, info.PathName);
 
@@ -287,7 +287,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             public UIComponent Component;
 
             /// <summary>
-            /// The parent component
+            /// The parent component.
             /// </summary>
             public UIComponent ParentComponent;
 
@@ -299,7 +299,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <param name="parentName">Name of the parent.</param>
             public ComponentInfo(string name, Type type, string parentName = null)
             {
-                initialize(name, type, parentName, null);
+                this.Initialize(name, type, parentName, null);
             }
 
             /// <summary>
@@ -309,7 +309,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <param name="parentName">Name of the parent.</param>
             public ComponentInfo(string name, string parentName = null)
             {
-                initialize(name, typeof(UIComponent), parentName, null);
+                this.Initialize(name, typeof(UIComponent), parentName, null);
             }
 
             /// <summary>
@@ -320,7 +320,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <param name="parentComponent">The parent component.</param>
             public ComponentInfo(string name, Type type, UIComponent parentComponent)
             {
-                initialize(name, type, null, parentComponent);
+                this.Initialize(name, type, null, parentComponent);
             }
 
             /// <summary>
@@ -330,7 +330,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <param name="parentComponent">The parent component.</param>
             public ComponentInfo(string name, UIComponent parentComponent)
             {
-                initialize(name, typeof(UIComponent), null, parentComponent);
+                this.Initialize(name, typeof(UIComponent), null, parentComponent);
             }
 
             /// <summary>
@@ -359,7 +359,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 get
                 {
-                    return (ParentName != null ? ParentName + "/" : ParentComponent != null ? ParentComponent.ToString() : "") + Name;
+                    return (this.ParentName != null ? this.ParentName + "/" : this.ParentComponent != null ? this.ParentComponent.ToString() : "") + this.Name;
                 }
             }
 
@@ -378,7 +378,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <param name="type">The type.</param>
             /// <param name="parentName">Name of the parent.</param>
             /// <param name="parentComponent">The parent component.</param>
-            private void initialize(string name, Type type, string parentName, UIComponent parentComponent)
+            private void Initialize(string name, Type type, string parentName, UIComponent parentComponent)
             {
                 this.Name = name;
                 this.Type = type;
@@ -410,7 +410,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <param name="ui">The UI.</param>
             public ComponentList(UI ui)
             {
-                initialize(ui, null, typeof(UIComponent), null, null);
+                this.Initialize(ui, null, typeof(UIComponent), null, null);
             }
 
             /// <summary>
@@ -422,7 +422,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <param name="parentComponent">The parent component.</param>
             public ComponentList(UI ui, string name, string parentName = null, UIComponent parentComponent = null)
             {
-                initialize(ui, name, typeof(UIComponent), parentName, parentComponent);
+                this.Initialize(ui, name, typeof(UIComponent), parentName, parentComponent);
             }
 
             /// <summary>
@@ -435,7 +435,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <param name="parentComponent">The parent component.</param>
             public ComponentList(UI ui, string name, Type type, string parentName = null, UIComponent parentComponent = null)
             {
-                initialize(ui, name, type, parentName, parentComponent);
+                this.Initialize(ui, name, type, parentName, parentComponent);
             }
 
             /// <summary>
@@ -445,20 +445,20 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// The <see cref="UIComponent"/>.
             /// </value>
             /// <param name="name">The name.</param>
-            /// <returns></returns>
+            /// <returns>The component control.</returns>
             public UIComponent this[string name]
             {
                 get
                 {
                     ComponentInfo info;
-                    if (!components.ContainsKey(name))
+                    if (!this.components.ContainsKey(name))
                     {
                         info = new ComponentInfo(name);
-                        components[name] = info;
+                        this.components[name] = info;
                     }
                     else
                     {
-                        info = components[name];
+                        info = this.components[name];
                     }
 
                     return info.Ambiguous ? (UIComponent)null : info.Component;
@@ -466,12 +466,12 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                 set
                 {
-                    if (!components.ContainsKey(name))
+                    if (!this.components.ContainsKey(name))
                     {
-                        components[name] = new ComponentInfo(name);
+                        this.components[name] = new ComponentInfo(name);
                     }
 
-                    components[name].Component = value;
+                    this.components[name].Component = value;
                 }
             }
 
@@ -485,9 +485,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             public void Add(string name, Type type, string parentName = null, UIComponent parentComponent = null)
             {
                 string pathName = (parentName == null ? "" : parentName + "/") + name;
-                if (!components.ContainsKey(pathName))
+                if (!this.components.ContainsKey(pathName))
                 {
-                    components[pathName] = new ComponentInfo(name, type, parentName);
+                    this.components[pathName] = new ComponentInfo(name, type, parentName);
                 }
             }
 
@@ -499,7 +499,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <param name="parentComponent">The parent component.</param>
             public void Add(string name, string parentName = null, UIComponent parentComponent = null)
             {
-                Add(name, typeof(UIComponent), parentName);
+                this.Add(name, typeof(UIComponent), parentName);
             }
 
             /// <summary>
@@ -507,7 +507,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// </summary>
             public void Clear()
             {
-                components.Clear();
+                this.components.Clear();
             }
 
             /// <summary>
@@ -518,7 +518,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// </returns>
             public IEnumerator<ComponentInfo> GetEnumerator()
             {
-                return components.Values.GetEnumerator();
+                return this.components.Values.GetEnumerator();
             }
 
             /// <summary>
@@ -529,7 +529,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// </returns>
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
             {
-                return components.Values.GetEnumerator();
+                return this.components.Values.GetEnumerator();
             }
 
             /// <summary>
@@ -540,13 +540,13 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <param name="type">The type.</param>
             /// <param name="parentName">Name of the parent.</param>
             /// <param name="parentComponent">The parent component.</param>
-            private void initialize(UI ui, string name, Type type, string parentName, UIComponent parentComponent)
+            private void Initialize(UI ui, string name, Type type, string parentName, UIComponent parentComponent)
             {
                 this.ui = ui;
 
                 if (name != null)
                 {
-                    Add(name, type, parentName);
+                    this.Add(name, type, parentName);
                 }
             }
         }
@@ -612,7 +612,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
-        /// Sets of fore- and backround sprites for multistate buttons.
+        /// Sets of fore- and background sprites for multistate buttons.
         /// </summary>
         public class MultiStateButtonSpriteSets
         {
@@ -621,8 +621,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// </summary>
             public MultiStateButtonSpriteSets()
             {
-                Background = new MultiStateButtonSpriteSet();
-                Foreground = new MultiStateButtonSpriteSet();
+                this.Background = new MultiStateButtonSpriteSet();
+                this.Foreground = new MultiStateButtonSpriteSet();
             }
 
             /// <summary>
@@ -637,12 +637,12 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
 
             /// <summary>
-            /// The background sprites.
+            /// Gets the background sprites.
             /// </summary>
             public MultiStateButtonSpriteSet Background { get; private set; }
 
             /// <summary>
-            /// The foreground sprites.
+            /// Gets the foreground sprites.
             /// </summary>
             public MultiStateButtonSpriteSet Foreground { get; private set; }
         }
@@ -662,7 +662,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// </summary>
             public MultiStateButtonSpriteSetsList()
             {
-                list = new MultiStateButtonSpriteSets[0];
+                this.list = new MultiStateButtonSpriteSets[0];
             }
 
             /// <summary>
@@ -672,9 +672,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <param name="enabled">The sprites for an enabled button.</param>
             public MultiStateButtonSpriteSetsList(MultiStateButtonSpriteSets disabled, MultiStateButtonSpriteSets enabled)
             {
-                list = new MultiStateButtonSpriteSets[2];
-                list[0] = disabled;
-                list[1] = enabled;
+                this.list = new MultiStateButtonSpriteSets[2];
+                this.list[0] = disabled;
+                this.list[1] = enabled;
             }
 
             /// <summary>
@@ -687,7 +687,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 get
                 {
-                    return (list == null) ? 0 : list.Length;
+                    return (this.list == null) ? 0 : this.list.Length;
                 }
             }
 
@@ -703,7 +703,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 get
                 {
-                    return list[index];
+                    return this.list[index];
                 }
             }
 
@@ -713,16 +713,16 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <param name="button">The button.</param>
             public void Apply(UIMultiStateButton button)
             {
-                for (int i = 0; i < list.Length; i++)
+                for (int i = 0; i < this.list.Length; i++)
                 {
                     try
                     {
-                        if (list[i].Background == null)
+                        if (this.list[i].Background == null)
                         {
                             throw new NullReferenceException("[" + i.ToString() + "].Background == null");
                         }
 
-                        if (list[i].Foreground == null)
+                        if (this.list[i].Foreground == null)
                         {
                             throw new NullReferenceException("[" + i.ToString() + "].Foreground == null");
                         }
@@ -737,21 +737,21 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             button.foregroundSprites.AddState();
                         }
 
-                        button.backgroundSprites[i].disabled = list[i].Background.Disabled;
-                        button.backgroundSprites[i].focused = list[i].Background.Focused;
-                        button.backgroundSprites[i].hovered = list[i].Background.Hovered;
-                        button.backgroundSprites[i].normal = list[i].Background.Normal;
-                        button.backgroundSprites[i].pressed = list[i].Background.Pressed;
+                        button.backgroundSprites[i].disabled = this.list[i].Background.Disabled;
+                        button.backgroundSprites[i].focused = this.list[i].Background.Focused;
+                        button.backgroundSprites[i].hovered = this.list[i].Background.Hovered;
+                        button.backgroundSprites[i].normal = this.list[i].Background.Normal;
+                        button.backgroundSprites[i].pressed = this.list[i].Background.Pressed;
 
-                        button.foregroundSprites[i].disabled = list[i].Foreground.Disabled;
-                        button.foregroundSprites[i].focused = list[i].Foreground.Focused;
-                        button.foregroundSprites[i].hovered = list[i].Foreground.Hovered;
-                        button.foregroundSprites[i].normal = list[i].Foreground.Normal;
-                        button.foregroundSprites[i].pressed = list[i].Foreground.Pressed;
+                        button.foregroundSprites[i].disabled = this.list[i].Foreground.Disabled;
+                        button.foregroundSprites[i].focused = this.list[i].Foreground.Focused;
+                        button.foregroundSprites[i].hovered = this.list[i].Foreground.Hovered;
+                        button.foregroundSprites[i].normal = this.list[i].Foreground.Normal;
+                        button.foregroundSprites[i].pressed = this.list[i].Foreground.Pressed;
                     }
                     catch (Exception ex)
                     {
-                        Log.Error(this, "ApplySprites", ex, i, list.Length);
+                        Log.Error(this, "ApplySprites", ex, i, this.list.Length);
                         throw;
                     }
                 }

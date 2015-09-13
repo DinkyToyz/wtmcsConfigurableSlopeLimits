@@ -38,7 +38,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         private static bool logFileCreated = false;
 
         /// <summary>
-        /// Initializes the <see cref="Log"/> class.
+        /// Initializes static members of the <see cref="Log"/> class.
         /// </summary>
         static Log()
         {
@@ -58,7 +58,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 AssemblyName name = Assembly.GetExecutingAssembly().GetName();
                 Output(Level.None, null, null, null, name.Name + " " + name.Version);
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         /// <summary>
@@ -137,7 +139,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                                     logFileCreated = true;
                                 }
-                                catch { }
+                                catch
+                                {
+                                }
                             }
 
                             fileBuffer.Clear();
@@ -183,10 +187,10 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
-        /// Comvert log level to message type.
+        /// Convert log level to message type.
         /// </summary>
         /// <param name="level">The level.</param>
-        /// <returns></returns>
+        /// <returns>The message type.</returns>
         public static PluginManager.MessageType MessageType(this Level level)
         {
             switch (level)
@@ -204,10 +208,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
-        /// Do nothing (except trigger the class constructor unless it has run allrrady).
+        /// Do nothing (except trigger the class constructor unless it has run already).
         /// </summary>
         public static void NoOp()
-        { }
+        {
+        }
 
         /// <summary>
         /// Outputs the specified message.
@@ -313,7 +318,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     {
                         DebugOutputPanel.AddMessage(level.MessageType(), msg.CleanNewLines());
                     }
-                    catch { }
+                    catch
+                    {
+                    }
                 }
 
                 if (exception != null)
@@ -356,7 +363,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             break;
                     }
                 }
-                catch { }
+                catch
+                {
+                }
 
                 if (LogToFile)
                 {
@@ -380,10 +389,14 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             logFileCreated = true;
                         }
                     }
-                    catch { }
+                    catch
+                    {
+                    }
                 }
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         /// <summary>

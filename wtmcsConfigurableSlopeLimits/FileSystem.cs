@@ -24,7 +24,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
-        /// Check if file exists, with file name automagic.
+        /// Check if file exists, with file name automatic.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         /// <returns>True if file exists.</returns>
@@ -45,9 +45,10 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// Gets the name of the file.
         /// </summary>
-        /// <value>
+        /// <param name="extension">The extension.</param>
+        /// <returns>
         /// The name of the file.
-        /// </value>
+        /// </returns>
         public static string FileName(string extension = "")
         {
             return Library.Name + extension;
@@ -56,9 +57,10 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// Gets the complete path.
         /// </summary>
-        /// <value>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns>
         /// The complete path.
-        /// </value>
+        /// </returns>
         public static string FilePathName(string fileName = null)
         {
             if (String.IsNullOrEmpty(fileName))

@@ -37,23 +37,23 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// The pattern for the nets that should be ignored.
         /// </summary>
-        public static readonly string ignoreNetsPattern = "(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam)|(?<!Pedestrian) Path)$";
+        public static readonly string IgnoreNetsPattern = "(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam)|(?<!Pedestrian) Path)$";
 
         /// <summary>
         /// The nets that should be ignored.
         /// </summary>
-        public static readonly Regex ignoreNetsRex = new Regex(ignoreNetsPattern, RegexOptions.IgnoreCase);
+        public static readonly Regex IgnoreNetsRex = new Regex(IgnoreNetsPattern, RegexOptions.IgnoreCase);
 
         /// <summary>
         /// The net groups.
         /// </summary>
         public static Dictionary<string, int> NetGroups = new Dictionary<string, int>
         {
-            {"Roads", 1},
-            {"Paths", 2},
-            {"Railroads", 3},
-            {"Runways", 4},
-            {"Others", 5}
+            { "Roads", 1 },
+            { "Paths", 2 },
+            { "Railroads", 3 },
+            { "Runways", 4 },
+            { "Others", 5 }
         };
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         private int? loadedVersion = null;
 
         /// <summary>
-        /// Initializes the <see cref="Settings"/> class.
+        /// Initializes static members of the <see cref="Settings"/> class.
         /// </summary>
         static Settings()
         {
@@ -85,15 +85,15 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <param name="settings">The file settings.</param>
         public Settings(ConfigurableSlopeLimitsSettings settings = null)
         {
-            SlopeLimitsGeneric = new Dictionary<string, float>();
-            SlopeLimitsOriginal = new Dictionary<string, float>();
-            SlopeLimitsIgnored = new Dictionary<string, float>();
+            this.SlopeLimitsGeneric = new Dictionary<string, float>();
+            this.SlopeLimitsOriginal = new Dictionary<string, float>();
+            this.SlopeLimitsIgnored = new Dictionary<string, float>();
 
             Dictionary<string, float> slopeLimits = null;
 
             if (settings != null)
             {
-                loadedVersion = settings.Version;
+                this.loadedVersion = settings.Version;
 
                 try
                 {
@@ -110,7 +110,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     if (orgLimits != null)
                     {
                         Log.Debug(this, "Constructor", "Load original limits");
-                        SlopeLimitsOriginal = orgLimits;
+                        this.SlopeLimitsOriginal = orgLimits;
                     }
                 }
                 catch (Exception ex)
@@ -121,12 +121,12 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             if (slopeLimits == null)
             {
-                SlopeLimits = new Dictionary<string, float>();
+                this.SlopeLimits = new Dictionary<string, float>();
             }
             else
             {
-                SlopeLimits = slopeLimits;
-                InitGenerics();
+                this.SlopeLimits = slopeLimits;
+                this.InitGenerics();
             }
         }
 
@@ -154,28 +154,40 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             get
             {
-                return (loadedVersion == null || !loadedVersion.HasValue) ? 0 : loadedVersion.Value;
+                return (this.loadedVersion == null || !this.loadedVersion.HasValue) ? 0 : this.loadedVersion.Value;
             }
         }
 
         /// <summary>
-        /// The slope limits.
+        /// Gets the slope limits.
         /// </summary>
+        /// <value>
+        /// The slope limits.
+        /// </value>
         public Dictionary<string, float> SlopeLimits { get; private set; }
 
         /// <summary>
-        /// The generic slope limits.
+        /// Gets the generic slope limits.
         /// </summary>
+        /// <value>
+        /// The generic slope limits.
+        /// </value>
         public Dictionary<string, float> SlopeLimitsGeneric { get; private set; }
 
         /// <summary>
-        /// The ignored slope limits.
+        /// Gets the ignored slope limits.
         /// </summary>
+        /// <value>
+        /// The ignored slope limits.
+        /// </value>
         public Dictionary<string, float> SlopeLimitsIgnored { get; private set; }
 
         /// <summary>
-        /// The original slope limits.
+        /// Gets the original slope limits.
         /// </summary>
+        /// <value>
+        /// The original slope limits.
+        /// </value>
         public Dictionary<string, float> SlopeLimitsOriginal { get; private set; }
 
         /// <summary>
@@ -185,7 +197,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <returns>True if net should be ignored.</returns>
         public static bool IgnoreNet(string name)
         {
-            return ignoreNetsRex.Match(name).Success;
+            return IgnoreNetsRex.Match(name).Success;
         }
 
         /// <summary>
@@ -249,11 +261,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <returns>A generic.</returns>
         public Generic GetGeneric(string name)
         {
-            string lName = name.ToLowerInvariant();
+            string lowerName = name.ToLowerInvariant();
 
             foreach (Generic generic in Generics)
             {
-                if (generic.LowerCaseName == lName)
+                if (generic.LowerCaseName == lowerName)
                 {
                     return generic;
                 }
@@ -261,7 +273,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             foreach (Generic generic in Generics)
             {
-                if (lName.Contains(generic.LowerCaseName))
+                if (lowerName.Contains(generic.LowerCaseName))
                 {
                     return generic;
                 }
@@ -269,25 +281,25 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             foreach (Generic generic in Generics)
             {
-                if (lName.Contains(generic.Part))
+                if (lowerName.Contains(generic.Part))
                 {
                     return generic;
                 }
             }
 
-            Generic Result = new Generic(-1);
+            Generic result = new Generic(-1);
 
             foreach (KeyValuePair<string, int> group in NetGroups)
             {
-                if (group.Value > Result.Order)
+                if (group.Value > result.Order)
                 {
-                    Result.Group = group.Key;
-                    Result.Order = group.Value;
+                    result.Group = group.Key;
+                    result.Order = group.Value;
                 }
             }
 
-            Result.Order += 1000;
-            return Result;
+            result.Order += 1000;
+            return result;
         }
 
         /// <summary>
@@ -300,9 +312,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             try
             {
-                if (SlopeLimitsOriginal == null)
+                if (this.SlopeLimitsOriginal == null)
                 {
-                    SlopeLimitsOriginal = new Dictionary<string, float>();
+                    this.SlopeLimitsOriginal = new Dictionary<string, float>();
                 }
 
                 if (fileName == null)
@@ -318,18 +330,18 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                 Log.Info(this, "Save", fileName);
 
-                SaveCount++;
+                this.SaveCount++;
                 using (FileStream file = File.Create(fileName))
                 {
                     ConfigurableSlopeLimitsSettings cfg = new ConfigurableSlopeLimitsSettings();
                     cfg.Version = this.Version;
-                    cfg.SaveCount = SaveCount;
-                    cfg.IgnoreNetInfoPattern = ignoreNetsPattern;
+                    cfg.SaveCount = this.SaveCount;
+                    cfg.IgnoreNetInfoPattern = IgnoreNetsPattern;
                     cfg.GenericNetInfoNames = Generics;
-                    cfg.SetSlopeLimits(SlopeLimits);
-                    cfg.SetGenericSlopeLimits(SlopeLimitsGeneric);
-                    cfg.SetOriginalSlopeLimits(SlopeLimitsOriginal);
-                    cfg.SetIgnoredtSlopeLimits(SlopeLimitsIgnored);
+                    cfg.SetSlopeLimits(this.SlopeLimits);
+                    cfg.SetGenericSlopeLimits(this.SlopeLimitsGeneric);
+                    cfg.SetOriginalSlopeLimits(this.SlopeLimitsOriginal);
+                    cfg.SetIgnoredtSlopeLimits(this.SlopeLimitsIgnored);
 
                     XmlSerializer ser = new XmlSerializer(typeof(ConfigurableSlopeLimitsSettings));
                     ser.Serialize(file, cfg);
@@ -354,25 +366,25 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             Log.Debug(this, "SetLimit", name, limit);
 
-            string lName = name.ToLowerInvariant();
+            string lowerName = name.ToLowerInvariant();
 
             bool changed = false;
 
-            if (SlopeLimits[name] != limit)
+            if (this.SlopeLimits[name] != limit)
             {
-                SlopeLimits[name] = limit;
+                this.SlopeLimits[name] = limit;
                 changed = true;
             }
 
-            if (SlopeLimitsGeneric.ContainsKey(lName) && SlopeLimitsGeneric[lName] != limit)
+            if (this.SlopeLimitsGeneric.ContainsKey(lowerName) && this.SlopeLimitsGeneric[lowerName] != limit)
             {
-                SlopeLimitsGeneric[lName] = limit;
+                this.SlopeLimitsGeneric[lowerName] = limit;
                 changed = true;
             }
 
             if (changed)
             {
-                Save();
+                this.Save();
             }
         }
 
@@ -381,7 +393,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         public void Update()
         {
-            InitGenerics();
+            this.InitGenerics();
         }
 
         /// <summary>
@@ -393,26 +405,26 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             try
             {
-                if (!SlopeLimitsGeneric.ContainsKey(generic))
+                if (!this.SlopeLimitsGeneric.ContainsKey(generic))
                 {
-                    if (SlopeLimits.ContainsKey(name))
+                    if (this.SlopeLimits.ContainsKey(name))
                     {
-                        SlopeLimitsGeneric[generic] = SlopeLimits[name];
+                        this.SlopeLimitsGeneric[generic] = this.SlopeLimits[name];
                     }
                     else
                     {
-                        string lName = name.ToLowerInvariant();
-                        if (SlopeLimitsGeneric.ContainsKey(lName))
+                        string lowerName = name.ToLowerInvariant();
+                        if (this.SlopeLimitsGeneric.ContainsKey(lowerName))
                         {
-                            SlopeLimitsGeneric[generic] = SlopeLimitsGeneric[lName];
+                            this.SlopeLimitsGeneric[generic] = this.SlopeLimitsGeneric[lowerName];
                         }
                         else
                         {
-                            foreach (string sName in SlopeLimits.Keys)
+                            foreach (string limitName in this.SlopeLimits.Keys)
                             {
-                                if (sName.ToLowerInvariant().Contains(generic))
+                                if (limitName.ToLowerInvariant().Contains(generic))
                                 {
-                                    SlopeLimitsGeneric[generic] = SlopeLimits[sName];
+                                    this.SlopeLimitsGeneric[generic] = this.SlopeLimits[limitName];
                                 }
                             }
                         }
@@ -432,18 +444,18 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             try
             {
-                foreach (string name in SlopeLimits.Keys)
+                foreach (string name in this.SlopeLimits.Keys)
                 {
-                    string lName = name.ToLowerInvariant();
-                    if (!SlopeLimitsGeneric.ContainsKey(lName))
+                    string lowerName = name.ToLowerInvariant();
+                    if (!this.SlopeLimitsGeneric.ContainsKey(lowerName))
                     {
-                        SlopeLimitsGeneric[lName] = SlopeLimits[name];
+                        this.SlopeLimitsGeneric[lowerName] = this.SlopeLimits[name];
                     }
                 }
 
                 foreach (Generic gen in Generics)
                 {
-                    InitGeneric(gen.Name, gen.Part);
+                    this.InitGeneric(gen.Name, gen.Part);
                 }
             }
             catch (Exception ex)
@@ -483,15 +495,16 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             public string Part;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="Generic"/> struct.
+            /// Initializes a new instance of the <see cref="Generic" /> struct.
             /// </summary>
+            /// <param name="order">The order.</param>
             public Generic(int order)
             {
-                Name = null;
-                Part = null;
-                Group = null;
-                Order = order;
-                LowerCaseName = null;
+                this.Name = null;
+                this.Part = null;
+                this.Group = null;
+                this.Order = order;
+                this.LowerCaseName = null;
             }
 
             /// <summary>
@@ -503,11 +516,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <param name="order">The sort order.</param>
             public Generic(string name, string part, string group, int order)
             {
-                Name = name;
-                Part = part;
-                Group = group;
-                Order = order;
-                LowerCaseName = name.ToLowerInvariant();
+                this.Name = name;
+                this.Part = part;
+                this.Group = group;
+                this.Order = order;
+                this.LowerCaseName = name.ToLowerInvariant();
             }
         }
 
@@ -567,23 +580,23 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <summary>
             /// Gets the slope limits dictionary.
             /// </summary>
-            /// <value>
+            /// <returns>
             /// The slope limits dictionary.
-            /// </value>
+            /// </returns>
             public Dictionary<string, float> GetOriginalSlopeLimits()
             {
-                return GetLimitsDictionary(OriginalSlopeLimits, "GetOriginalSlopeLimits");
+                return this.GetLimitsDictionary(this.OriginalSlopeLimits, "GetOriginalSlopeLimits");
             }
 
             /// <summary>
             /// Gets the slope limits dictionary.
             /// </summary>
-            /// <value>
+            /// <returns>
             /// The slope limits dictionary.
-            /// </value>
+            /// </returns>
             public Dictionary<string, float> GetSlopeLimits()
             {
-                return GetLimitsDictionary(SlopeLimits, "GetSlopeLimits");
+                return this.GetLimitsDictionary(this.SlopeLimits, "GetSlopeLimits");
             }
 
             /// <summary>
@@ -592,7 +605,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <param name="limitsDictionary">The limits dictionary.</param>
             public void SetGenericSlopeLimits(Dictionary<string, float> limitsDictionary)
             {
-                SetLimitsDictionary(GenericSlopeLimits, limitsDictionary, "SetSlopeLimits");
+                this.SetLimitsDictionary(this.GenericSlopeLimits, limitsDictionary, "SetSlopeLimits");
             }
 
             /// <summary>
@@ -601,7 +614,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <param name="limitsDictionary">The limits dictionary.</param>
             public void SetIgnoredtSlopeLimits(Dictionary<string, float> limitsDictionary)
             {
-                SetLimitsDictionary(IgnoredSlopeLimits, limitsDictionary, "SetSlopeLimits");
+                this.SetLimitsDictionary(this.IgnoredSlopeLimits, limitsDictionary, "SetSlopeLimits");
             }
 
             /// <summary>
@@ -610,7 +623,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <param name="limitsDictionary">The limits dictionary.</param>
             public void SetOriginalSlopeLimits(Dictionary<string, float> limitsDictionary)
             {
-                SetLimitsDictionary(OriginalSlopeLimits, limitsDictionary, "SetSlopeLimits");
+                this.SetLimitsDictionary(this.OriginalSlopeLimits, limitsDictionary, "SetSlopeLimits");
             }
 
             /// <summary>
@@ -619,7 +632,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <param name="limitsDictionary">The limits dictionary.</param>
             public void SetSlopeLimits(Dictionary<string, float> limitsDictionary)
             {
-                SetLimitsDictionary(SlopeLimits, limitsDictionary, "SetSlopeLimits");
+                this.SetLimitsDictionary(this.SlopeLimits, limitsDictionary, "SetSlopeLimits");
             }
 
             /// <summary>
@@ -627,7 +640,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// </summary>
             /// <param name="limits">The limits.</param>
             /// <param name="name">The name.</param>
-            /// <returns></returns>
+            /// <returns>The limits dictionary.</returns>
             private Dictionary<string, float> GetLimitsDictionary(List<SlopeLimit> limits, string name = null)
             {
                 try
@@ -693,8 +706,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 /// <param name="limit">The limit.</param>
                 public SlopeLimit(string name, float limit)
                 {
-                    Name = name;
-                    Limit = limit;
+                    this.Name = name;
+                    this.Limit = limit;
                 }
             }
         }

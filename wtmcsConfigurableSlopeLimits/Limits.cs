@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
+    /// <summary>
+    /// Handles the slope limits.
+    /// </summary>
     internal class Limits
     {
         /// <summary>
@@ -25,8 +28,19 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         public enum Groups
         {
+            /// <summary>
+            /// The original limits.
+            /// </summary>
             Original = 1,
+
+            /// <summary>
+            /// The custom limits.
+            /// </summary>
             Custom = 2,
+
+            /// <summary>
+            /// The relaxed limits.
+            /// </summary>
             Disabled = 3
         }
 
@@ -40,37 +54,42 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             get
             {
-                return group;
+                return this.group;
             }
 
             set
             {
                 if (value == Groups.Original)
                 {
-                    Restore();
+                    this.Restore();
                 }
                 else
                 {
-                    SetLimits(value);
+                    this.SetLimits(value);
                 }
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is usable.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is usable; otherwise, <c>false</c>.
+        /// </value>
         public bool IsUsable
         {
             get
             {
-                return isInitialized && !isBroken;
+                return this.isInitialized && !this.isBroken;
             }
         }
 
         /// <summary>
         /// Initializes the slopes.
         /// </summary>
-        /// <returns>True on success.</returns>
         public void Initialize()
         {
-            if (isBroken || isInitialized)
+            if (this.isBroken || this.isInitialized)
             {
                 return;
             }
@@ -107,7 +126,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             continue;
                         }
 
-                        if (Log.LogToFile) LogNetInfo(this, "Initialize", netInfo);
+                        if (Log.LogToFile) this.LogNetInfo(this, "Initialize", netInfo);
 
                         string netName = netInfo.NetName();
 
@@ -154,13 +173,13 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                         Global.Settings.Save();
                     }
 
-                    isInitialized = true;
+                    this.isInitialized = true;
                 }
             }
             catch (Exception ex)
             {
                 Log.Error(this, "Initialize", ex);
-                isBroken = true;
+                this.isBroken = true;
             }
 
             Log.Debug(this, "Initialize", "End");
@@ -179,14 +198,14 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 {
                     foreach (NetInfo netInfo in netCollection.m_prefabs)
                     {
-                        LogNetInfo((caller == null) ? this : caller, String.IsNullOrEmpty(block) ? "LogNets" : block, netInfo);
+                        this.LogNetInfo((caller == null) ? this : caller, String.IsNullOrEmpty(block) ? "LogNets" : block, netInfo);
                     }
                 }
             }
             catch (Exception ex)
             {
                 Log.Error(this, "LogNets", ex);
-            };
+            }
         }
 
         /// <summary>
@@ -194,7 +213,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         public void Restore()
         {
-            if (!isInitialized || group == Groups.Original)
+            if (!this.isInitialized || this.group == Groups.Original)
             {
                 return;
             }
@@ -225,7 +244,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             continue;
                         }
 
-                        if (Log.LogToFile) LogNetInfo(this, "Restore", netInfo);
+                        if (Log.LogToFile) this.LogNetInfo(this, "Restore", netInfo);
 
                         string netName = netInfo.NetName();
 
@@ -255,11 +274,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             catch (Exception ex)
             {
                 Log.Error(this, "Restore", ex);
-                isBroken = true;
+                this.isBroken = true;
             }
             finally
             {
-                group = Groups.Original;
+                this.group = Groups.Original;
             }
 
             Log.Debug(this, "Restore", "End");
@@ -271,7 +290,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <param name="setToGroup">The limits group.</param>
         public void SetLimits(Groups setToGroup)
         {
-            if (isBroken || !isInitialized || group == setToGroup)
+            if (this.isBroken || !this.isInitialized || this.group == setToGroup)
             {
                 return;
             }
@@ -310,7 +329,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             continue;
                         }
 
-                        if (Log.LogToFile) LogNetInfo(this, "SetLimits", netInfo);
+                        if (Log.LogToFile) this.LogNetInfo(this, "SetLimits", netInfo);
 
                         string netName = netInfo.NetName();
 
@@ -428,11 +447,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     Global.Settings.Save();
                 }
 
-                group = setToGroup;
+                this.group = setToGroup;
             }
             catch (Exception ex)
             {
-                isBroken = true;
+                this.isBroken = true;
                 Log.Error(this, "SetLimits", ex);
             }
 
@@ -449,10 +468,22 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             try
             {
-                Log.Debug((caller == null) ? this : caller, String.IsNullOrEmpty(block) ? "LogNetInfo" : block,
-                          "netInfo", netInfo.NetName(), netInfo.CanBeBuilt(), netInfo.m_canCrossLanes, netInfo.m_lanes.Length, netInfo.m_class.name, netInfo.name, netInfo.ToString(), netInfo.GetLocalizedTitle());
+                Log.Debug(
+                    (caller == null) ? this : caller,
+                    String.IsNullOrEmpty(block) ? "LogNetInfo" : block,
+                    "netInfo",
+                    netInfo.NetName(),
+                    netInfo.CanBeBuilt(),
+                    netInfo.m_canCrossLanes,
+                    netInfo.m_lanes.Length,
+                    netInfo.m_class.name,
+                    netInfo.name,
+                    netInfo.ToString(),
+                    netInfo.GetLocalizedTitle());
             }
-            catch { }
+            catch
+            {
+            }
         }
     }
 }

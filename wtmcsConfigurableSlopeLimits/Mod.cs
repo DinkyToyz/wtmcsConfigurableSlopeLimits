@@ -23,7 +23,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <value>
         /// The description.
         /// </value>
-        /// <exception cref="System.NotImplementedException"></exception>
         public string Description
         {
             get
@@ -91,35 +90,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
-        /// Comparer for SlopeLimitSlider.
-        /// </summary>
-        private class SlopeLimitSliderComparer : IComparer<SlopeLimitSlider>
-        {
-            /// <summary>
-            /// Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other.
-            /// </summary>
-            /// <param name="x">The first object to compare.</param>
-            /// <param name="y">The second object to compare.</param>
-            /// <returns>
-            /// A signed integer that indicates the relative values of <paramref name="x" /> and <paramref name="y" />, as shown in the following table.Value Meaning Less than zero<paramref name="x" /> is less than <paramref name="y" />.Zero<paramref name="x" /> equals <paramref name="y" />.Greater than zero<paramref name="x" /> is greater than <paramref name="y" />.
-            /// </returns>
-            /// <exception cref="System.NotImplementedException"></exception>
-            public int Compare(SlopeLimitSlider x, SlopeLimitSlider y)
-            {
-                int r = x.Order - y.Order;
-                if (r != 0)
-                {
-                    return r;
-                }
-                else
-                {
-                    return string.Compare(x.Name, y.Name, System.StringComparison.InvariantCultureIgnoreCase);
-                }
-                throw new System.NotImplementedException();
-            }
-        }
-
-        /// <summary>
         /// Slope limit config slider data.
         /// </summary>
         private struct SlopeLimitSlider
@@ -161,31 +131,40 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <param name="order">The sort order.</param>
             public SlopeLimitSlider(string name, int order)
             {
-                Name = name;
-                CurLimit = Global.Settings.SlopeLimits[name];
-                OrgLimit = Global.Settings.SlopeLimitsOriginal.ContainsKey(name) ? Global.Settings.SlopeLimitsOriginal[name] : CurLimit;
-                MinLimit = 0.01f;
-                MaxLimit = OrgLimit * 3;
-                Order = order;
+                this.Name = name;
+                this.CurLimit = Global.Settings.SlopeLimits[name];
+                this.OrgLimit = Global.Settings.SlopeLimitsOriginal.ContainsKey(name) ? Global.Settings.SlopeLimitsOriginal[name] : this.CurLimit;
+                this.MinLimit = 0.01f;
+                this.MaxLimit = this.OrgLimit * 3;
+                this.Order = order;
             }
         }
 
-        ///// <summary>
-        ///// Called when mod is enabled.
-        ///// </summary>
-        //public void OnEnabled()
-        //{
-        //    Log.Debug(this, "OnEnabled");
-        //}
-
-        ///// <summary>
-        ///// Called when mod is disabled.
-        ///// </summary>
-        //public void OnDisabled()
-        //{
-        //    Log.Debug(this, "OnDisabled", "Begin");
-
-        //    Global.RestoreLimits();
-        //}
+        /// <summary>
+        /// Comparer for SlopeLimitSlider.
+        /// </summary>
+        private class SlopeLimitSliderComparer : IComparer<SlopeLimitSlider>
+        {
+            /// <summary>
+            /// Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other.
+            /// </summary>
+            /// <param name="x">The first object to compare.</param>
+            /// <param name="y">The second object to compare.</param>
+            /// <returns>
+            /// A signed integer that indicates the relative values of <paramref name="x" /> and <paramref name="y" />, as shown in the following table.Value Meaning Less than zero<paramref name="x" /> is less than <paramref name="y" />.Zero<paramref name="x" /> equals <paramref name="y" />.Greater than zero<paramref name="x" /> is greater than <paramref name="y" />.
+            /// </returns>
+            public int Compare(SlopeLimitSlider x, SlopeLimitSlider y)
+            {
+                int r = x.Order - y.Order;
+                if (r != 0)
+                {
+                    return r;
+                }
+                else
+                {
+                    return string.Compare(x.Name, y.Name, System.StringComparison.InvariantCultureIgnoreCase);
+                }
+            }
+        }
     }
 }

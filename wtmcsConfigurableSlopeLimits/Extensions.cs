@@ -74,10 +74,10 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
-        /// Compacts the name. "AppleSauce" becomes "ApSa".
+        /// Compacts the name.
         /// </summary>
         /// <param name="text">The text.</param>
-        /// <returns></returns>
+        /// <returns>A compacted name.</returns>
         public static string CompactName(this string text)
         {
             StringBuilder compact = new StringBuilder();
@@ -112,7 +112,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// Conforms the newlines to the environment.
         /// </summary>
         /// <param name="text">The text.</param>
-        /// <returns>The comforming text.</returns>
+        /// <returns>The conforming text.</returns>
         public static string ConformNewlines(this string text)
         {
             return Regex.Replace(text, "[\r\n]+", Environment.NewLine);
@@ -122,7 +122,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// Conforms the newlines to the environment.
         /// </summary>
         /// <param name="text">The text.</param>
-        /// <returns>The comforming text.</returns>
+        /// <returns>The conforming text.</returns>
         public static string ConformNewlines(this StringBuilder text)
         {
             return text.ToString().ConformNewlines();

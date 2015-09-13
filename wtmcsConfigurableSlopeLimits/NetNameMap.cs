@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -50,17 +46,17 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
              * Network Extensions v0.6.1
              *
              * Small Road; Small Avenue; Small Avenue (NetInfo); Small Four-Lane Road
-             * 
+             *
              * NExtMediumAvenue; Medium Avenue; Medium Avenue (NetInfo); Four-Lane Road
              * NExtMediumAvenue; Medium Avenue TL; Medium Avenue TL (NetInfo); Four-Lane Road with Turning Lane
-             * 
+             *
              * NExtHighway; Small Rural Highway; Small Rural Highway (NetInfo); Rural Highway
              * Small Road; Rural Highway Elevated; Rural Highway Elevated (NetInfo); NET_TITLE[Rural Highway Elevated]:0
              * Small Road Tunnel; Rural Highway Tunnel; Rural Highway Tunnel (NetInfo); NET_TITLE[Rural Highway Tunnel]:0
              * Small Road; Rural Highway Slope; Rural Highway Slope (NetInfo); NET_TITLE[Rural Highway Slope]:0
-             * 
+             *
              * NExtHighway; Rural Highway; Rural Highway (NetInfo); Two-Lane Highway
-             * 
+             *
              * NExtHighway; Large Highway; Large Highway (NetInfo); Six-Lane Highway
              * Large Road; Large Highway Elevated; Large Highway Elevated (NetInfo); NET_TITLE[Large Highway Elevated]:0
              * Large Road; Large Highway Bridge; Large Highway Bridge (NetInfo); NET_TITLE[Large Highway Bridge]:0
@@ -68,22 +64,22 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
              * Large Road; Large Highway Slope; Large Highway Slope (NetInfo); NET_TITLE[Large Highway Slope]:0
              *
              */
-            
-            // Standard game. Separate ramp from highways.
+
             if (className == "Highway")
             {
+                // Standard game. Separate ramp from highways.
                 if (netInfo.name.Contains("Ramp"))
                 {
                     name = "Highway Ramp";
                 }
             }
-            // Order from Network Extensinion chaos.
             else if (className == "NExtMediumAvenue")
             {
                 name = "Medium Road";
             }
             else if (className == "Large Road")
             {
+                // Order from Network Extensinion chaos.
                 if (netInfo.name.Contains("Highway"))
                 {
                     name = "Highway";
@@ -91,6 +87,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
             else if (netInfo.name.Contains("Rural Highway"))
             {
+                // Order from Network Extensinion chaos.
                 if (netInfo.GetLocalizedTitle().Contains("Two-Lane Highway"))
                 {
                     name = "Highway";
