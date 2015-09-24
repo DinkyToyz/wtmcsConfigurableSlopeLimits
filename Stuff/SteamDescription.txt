@@ -19,6 +19,7 @@ The config file, wtmcsConfigurableSlopeLimits.xml, is stored in the folder "ModC
 
 [list]
 [*]Fix: In-game options changes.
+[*]Compatibility: Make button position changeable.
 [*]Compatibility: Apply to and list Network Extension roads correctly.
 [*]Compatibility: Apply to Traffic ++ roads.
 [/list]

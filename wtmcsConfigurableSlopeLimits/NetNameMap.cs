@@ -73,13 +73,26 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     name = "Highway Ramp";
                 }
             }
+            else if (className.Length >= 10 && className.Substring(0, 10) == "Pedestrian")
+            {
+                // Standard game. Separate bicyle from pedestrian.
+                if (tunnel)
+                {
+                    name = "Bicycle";
+                }
+                else
+                {
+                    name = "Bicycle Path";
+                }
+            }
             else if (className == "NExtMediumAvenue")
             {
+                // Network Extensions avenue.
                 name = "Medium Road";
             }
             else if (className == "Large Road")
             {
-                // Order from Network Extensinion chaos.
+                // Order from Network Extensions chaos.
                 if (netInfo.name.Contains("Highway"))
                 {
                     name = "Highway";
@@ -87,7 +100,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
             else if (netInfo.name.Contains("Rural Highway"))
             {
-                // Order from Network Extensinion chaos.
+                // Order from Network Extensions chaos.
                 if (netInfo.GetLocalizedTitle().Contains("Two-Lane Highway"))
                 {
                     name = "Highway";
@@ -99,6 +112,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
             else if (className == "NExtHighway")
             {
+                // Network Extensions highway.
                 name = "Highway";
             }
 

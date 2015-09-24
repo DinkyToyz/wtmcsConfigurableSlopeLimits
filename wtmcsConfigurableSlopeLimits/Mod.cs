@@ -57,7 +57,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                 foreach (string name in Global.Settings.SlopeLimits.Keys)
                 {
-                    if (!Global.Settings.SlopeLimitsIgnored.ContainsKey(name))
+                    Log.Debug(this, "OnSettingsUI", name, Global.Settings.SlopeLimitsIgnored.ContainsKey(name), Settings.IgnoreNet(name));
+
+                    if (!Global.Settings.SlopeLimitsIgnored.ContainsKey(name) && !Settings.IgnoreNet(name))
                     {
                         Settings.Generic generic = Global.Settings.GetGeneric(name);
 
@@ -136,6 +138,10 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 this.OrgLimit = Global.Settings.SlopeLimitsOriginal.ContainsKey(name) ? Global.Settings.SlopeLimitsOriginal[name] : this.CurLimit;
                 this.MinLimit = 0.01f;
                 this.MaxLimit = this.OrgLimit * 3;
+                //if (this.MaxLimit > 1.0f)
+                //{
+                //    this.MaxLimit = 1.0f;
+                //}
                 this.Order = order;
             }
         }

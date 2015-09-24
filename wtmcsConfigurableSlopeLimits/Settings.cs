@@ -28,16 +28,17 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             new Generic("Medium Road", "medium", "Roads", 3),
             new Generic("Small Road", "small", "Roads", 2),
             new Generic("Gravel Road", "gravel", "Roads", 1),
-            new Generic("Train Track", "track", "Railroads", 9),
-            new Generic("Metro Track", "track", "Railroads", 8),
+            new Generic("Train Track", "track", "Railroads", 10),
+            new Generic("Metro Track", "track", "Railroads", 9),
             new Generic("Pedestrian Path", "pedestrian", "Paths", 7),
-            new Generic("Airplane Runway", "runway", "Runways", 10)
+            new Generic("Bicycle Path", "bicycle", "Paths", 8),
+            new Generic("Airplane Runway", "runway", "Runways", 11)
         };
 
         /// <summary>
         /// The pattern for the nets that should be ignored.
         /// </summary>
-        public static readonly string IgnoreNetsPattern = "(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam)|(?<!Pedestrian) Path)$";
+        public static readonly string IgnoreNetsPattern = "(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam)|(?<!Pedestrian|Bicycle) Path|Bus Stop)$";
 
         /// <summary>
         /// The nets that should be ignored.
