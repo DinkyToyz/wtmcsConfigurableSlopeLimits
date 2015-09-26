@@ -1,8 +1,6 @@
 #Additions and Fixes
 
-- In-game options changes
-- Button position option.
-- Max 1.0f?
+- Text fields instead of or combined with sliders.
 - Compatibility: Network Extensions (moving target?)
 - Compatibility: Traffic ++
 

@@ -61,12 +61,26 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 if (value == Groups.Original)
                 {
-                    this.Restore();
+                    this.RestoreLimits();
                 }
                 else
                 {
                     this.SetLimits(value);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Limits"/> is initialized.
+        /// </summary>
+        /// <value>
+        ///   <c>True</c> if initialized; otherwise, <c>false</c>.
+        /// </value>
+        public bool Initialized
+        {
+            get
+            {
+                return this.isInitialized;
             }
         }
 
@@ -112,6 +126,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                         continue;
                     }
 
+                    if (Settings.IgnoreNetCollection(netCollection.name))
+                    {
+                        continue;
+                    }
+
                     if (netCollection.m_prefabs == null)
                     {
                         Log.Warning(this, "Initialize", "Null NetCollection.m_prefabs", netCollection);
@@ -126,7 +145,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             continue;
                         }
 
-                        if (Log.LogToFile) this.LogNetInfo(this, "Initialize", netInfo);
+                        if (Log.LogToFile)
+                            this.LogNetInfo(this, "Initialize", netInfo);
 
                         string netName = netInfo.NetName();
 
@@ -181,8 +201,46 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 Log.Error(this, "Initialize", ex);
                 this.isBroken = true;
             }
+            finally
+            {
+                if (Log.LogToFile)
+                {
+                    this.LogNetNames();
+                }
+            }
 
             Log.Debug(this, "Initialize", "End");
+        }
+
+        /// <summary>
+        /// Logs the net names.
+        /// </summary>
+        public void LogNetNames()
+        {
+            try
+            {
+                foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
+                {
+                    if (netCollection != null)
+                    {
+                        Log.Debug(this, "LogNets", "netCollection", netCollection, netCollection.name, Settings.IgnoreNetCollectionText(netCollection.name));
+                        if (netCollection.m_prefabs != null)
+                        {
+                            Log.Debug(this, "LogNets", "Prefabs", netCollection.m_prefabs);
+                            foreach (NetInfo netInfo in netCollection.m_prefabs)
+                            {
+                                if (netInfo != null)
+                                {
+                                    Log.Debug(this, "LogNets", "NetInfo", netInfo, netInfo.m_class.name, netInfo.name, netInfo.GetLocalizedTitle(), netInfo.NetName(), Settings.IgnoreNetText(netInfo.NetName()));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
         }
 
         /// <summary>
@@ -196,9 +254,15 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
                 {
-                    foreach (NetInfo netInfo in netCollection.m_prefabs)
+                    if (netCollection != null && netCollection.m_prefabs != null && !Settings.IgnoreNetCollection(netCollection.name))
                     {
-                        this.LogNetInfo((caller == null) ? this : caller, String.IsNullOrEmpty(block) ? "LogNets" : block, netInfo);
+                        foreach (NetInfo netInfo in netCollection.m_prefabs)
+                        {
+                            if (netInfo != null && !Settings.IgnoreNet(netInfo.NetName()))
+                            {
+                                this.LogNetInfo((caller == null) ? this : caller, String.IsNullOrEmpty(block) ? "LogNets" : block, netInfo);
+                            }
+                        }
                     }
                 }
             }
@@ -211,9 +275,10 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// Restores the limits.
         /// </summary>
-        public void Restore()
+        /// <param name="allowReSet">If set to <c>true</c> set the limits even if group does not change].</param>
+        public void RestoreLimits(bool allowReSet = false)
         {
-            if (!this.isInitialized || this.group == Groups.Original)
+            if (!this.isInitialized || (this.group == Groups.Original && !allowReSet))
             {
                 return;
             }
@@ -227,6 +292,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     if (netCollection == null)
                     {
                         Log.Warning(this, "Restore", "Null NetCollection");
+                        continue;
+                    }
+
+                    if (Settings.IgnoreNetCollection(netCollection.name))
+                    {
                         continue;
                     }
 
@@ -244,7 +314,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             continue;
                         }
 
-                        if (Log.LogToFile) this.LogNetInfo(this, "Restore", netInfo);
+                        if (Log.LogToFile)
+                            this.LogNetInfo(this, "Restore", netInfo);
 
                         string netName = netInfo.NetName();
 
@@ -288,16 +359,18 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// Sets the limits.
         /// </summary>
         /// <param name="setToGroup">The limits group.</param>
-        public void SetLimits(Groups setToGroup)
+        /// <param name="allowReset">If set to <c>true</c> set the limits even if group does not change].</param>
+        /// <exception cref="System.ArgumentOutOfRangeException">Invalid group.</exception>
+        public void SetLimits(Groups setToGroup, bool allowReset = false)
         {
-            if (this.isBroken || !this.isInitialized || this.group == setToGroup)
+            if (this.isBroken || !this.isInitialized || (this.group == setToGroup && !allowReset))
             {
                 return;
             }
 
             if (setToGroup != Groups.Custom && setToGroup != Groups.Disabled)
             {
-                throw new ArgumentOutOfRangeException("setToGroup != Groups.Custom && setToGroup != Groups.Disabled");
+                throw new ArgumentOutOfRangeException("Invalid group");
             }
 
             Log.Debug(this, "SetLimits", "Begin");
@@ -315,6 +388,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                         continue;
                     }
 
+                    if (Settings.IgnoreNetCollection(netCollection.name))
+                    {
+                        continue;
+                    }
+
                     if (netCollection.m_prefabs == null)
                     {
                         Log.Warning(this, "SetLimits", "Null NetCollection.m_prefabs", netCollection);
@@ -329,7 +407,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             continue;
                         }
 
-                        if (Log.LogToFile) this.LogNetInfo(this, "SetLimits", netInfo);
+                        if (Log.LogToFile)
+                            this.LogNetInfo(this, "SetLimits", netInfo);
 
                         string netName = netInfo.NetName();
 

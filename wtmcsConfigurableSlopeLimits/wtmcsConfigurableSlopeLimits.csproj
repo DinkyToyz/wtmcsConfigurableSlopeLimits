@@ -84,11 +84,19 @@
     <Compile Include="UI.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ConfigurableSlopeLimitsButtonWeb.png" />
+    <Content Include="Info.txt" />
+    <Content Include="PreviewImage.png" />
+    <Content Include="SteamDescription.txt" />
     <EmbeddedResource Include="ConfigurableSlopeLimitsButton.png" />
     <Content Include="ConfigurableSlopeLimitsButton.ico" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Configurable Slope Limits.xcf" />
     <None Include="PostBuild.cmd" />
+    <None Include="ReadMe.head.md" />
+    <None Include="SteamBBCode2MarkDown.pl" />
+    <None Include="ToDo.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

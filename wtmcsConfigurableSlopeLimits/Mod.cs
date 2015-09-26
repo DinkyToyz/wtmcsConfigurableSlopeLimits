@@ -1,6 +1,6 @@
-﻿using ICities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using ICities;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -71,17 +71,41 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     }
                 }
 
+                UIHelperBase generalGroup = helper.AddGroup("General");
+                generalGroup.AddSlider(
+                    "Horizontal Button Position",
+                    -10,
+                    +50,
+                    1,
+                    Global.Settings.ButtonPositionHorizontal,
+                    value =>
+                    {
+                        Global.Settings.ButtonPositionHorizontal = (short)value;
+                        Global.SetToolButtonPositions();
+                    });
+
                 foreach (string groupName in sliders.Keys.OrderBy(g => Settings.NetGroups[g]))
                 {
                     UIHelperBase group = helper.AddGroup(groupName);
 
                     foreach (SlopeLimitSlider slider in sliders[groupName].OrderBy(s => s, new SlopeLimitSliderComparer()))
                     {
-                        string label = slider.Name + " (" + slider.MaxLimit.ToString("0.00") + ")";
+                        string label = slider.Label;
+                        ////+" (" + slider.MaxLimit.ToString("0.00") + ")";
 
-                        Log.Debug(this, "OnSettingsUI", slider.Order, label, groupName, slider.CurLimit, slider.MinLimit, slider.MaxLimit, slider.OrgLimit);
+                        Log.Debug(this, "OnSettingsUI", slider.Order, slider.Name, label, groupName, slider.CurLimit, slider.MinLimit, slider.MaxLimit, slider.OrgLimit);
 
-                        group.AddSlider(label, slider.MinLimit, slider.MaxLimit, 0.01f, slider.CurLimit, value => Global.Settings.SetLimit(slider.Name, value));
+                        group.AddSlider(
+                            label,
+                            slider.MinLimit,
+                            slider.MaxLimit,
+                            0.01f,
+                            slider.CurLimit,
+                            value =>
+                            {
+                                Global.Settings.SetLimit(slider.Name, value);
+                                Global.ReSetLimits();
+                            });
                     }
                 }
             }
@@ -137,12 +161,27 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 this.CurLimit = Global.Settings.SlopeLimits[name];
                 this.OrgLimit = Global.Settings.SlopeLimitsOriginal.ContainsKey(name) ? Global.Settings.SlopeLimitsOriginal[name] : this.CurLimit;
                 this.MinLimit = 0.01f;
-                this.MaxLimit = this.OrgLimit * 3;
-                //if (this.MaxLimit > 1.0f)
-                //{
-                //    this.MaxLimit = 1.0f;
-                //}
+                this.MaxLimit = 1.00f;
+                ////this.MaxLimit = this.OrgLimit * 3;
+                ////if (this.MaxLimit > 1.0f)
+                ////{
+                ////    this.MaxLimit = 1.0f;
+                ////}
                 this.Order = order;
+            }
+
+            /// <summary>
+            /// Gets the label.
+            /// </summary>
+            /// <value>
+            /// The label.
+            /// </value>
+            public string Label
+            {
+                get
+                {
+                    return Global.Settings.DisplayName(this.Name);
+                }
             }
         }
 

@@ -8,6 +8,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
     internal static class Global
     {
         /// <summary>
+        /// The threading extension.
+        /// </summary>
+        public static ThreadingExtension ThreadingExtension;
+
+        /// <summary>
         /// The limits instance.
         /// </summary>
         private static Limits limitsInstance = null;
@@ -129,7 +134,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 try
                 {
-                    limitsInstance.Restore();
+                    limitsInstance.RestoreLimits();
                 }
                 catch (Exception ex)
                 {
@@ -180,6 +185,33 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
+        /// Sets the limits for the current group.
+        /// </summary>
+        public static void ReSetLimits()
+        {
+            try
+            {
+                if (limitsInstance != null && Limits.Initialized)
+                {
+                    switch (Limits.Group)
+                    {
+                        case Limits.Groups.Original:
+                            Limits.RestoreLimits(true);
+                            break;
+
+                        default:
+                            Limits.SetLimits(Limits.Group, true);
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(typeof(Global), "ReSetLimits", ex);
+            }
+        }
+
+        /// <summary>
         /// Restores the limits.
         /// </summary>
         public static void RestoreLimits()
@@ -188,7 +220,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 try
                 {
-                    limitsInstance.Restore();
+                    limitsInstance.RestoreLimits();
                 }
                 catch (Exception ex)
                 {
@@ -211,6 +243,24 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             catch (Exception ex)
             {
                 Log.Error(typeof(Global), "SetLimits", ex);
+            }
+        }
+
+        /// <summary>
+        /// Sets the tool button positions.
+        /// </summary>
+        public static void SetToolButtonPositions()
+        {
+            try
+            {
+                if (ThreadingExtension != null)
+                {
+                    ThreadingExtension.SetToolButtonPositions();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(typeof(Global), "SetToolButtonPositions", ex);
             }
         }
     }

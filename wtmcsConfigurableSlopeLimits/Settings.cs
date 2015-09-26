@@ -18,34 +18,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public static readonly HashSet<String> GenericNames;
 
         /// <summary>
-        /// The generics.
-        /// </summary>
-        public static readonly List<Generic> Generics = new List<Generic>
-        {
-            new Generic("Highway Ramp", "ramp", "Roads", 5),
-            new Generic("Highway", "high", "Roads", 6),
-            new Generic("Large Road", "large", "Roads", 4),
-            new Generic("Medium Road", "medium", "Roads", 3),
-            new Generic("Small Road", "small", "Roads", 2),
-            new Generic("Gravel Road", "gravel", "Roads", 1),
-            new Generic("Train Track", "track", "Railroads", 10),
-            new Generic("Metro Track", "track", "Railroads", 9),
-            new Generic("Pedestrian Path", "pedestrian", "Paths", 7),
-            new Generic("Bicycle Path", "bicycle", "Paths", 8),
-            new Generic("Airplane Runway", "runway", "Runways", 11)
-        };
-
-        /// <summary>
-        /// The pattern for the nets that should be ignored.
-        /// </summary>
-        public static readonly string IgnoreNetsPattern = "(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam)|(?<!Pedestrian|Bicycle) Path|Bus Stop)$";
-
-        /// <summary>
-        /// The nets that should be ignored.
-        /// </summary>
-        public static readonly Regex IgnoreNetsRex = new Regex(IgnoreNetsPattern, RegexOptions.IgnoreCase);
-
-        /// <summary>
         /// The net groups.
         /// </summary>
         public static Dictionary<string, int> NetGroups = new Dictionary<string, int>
@@ -68,6 +40,62 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public uint SaveCount = 0;
 
         /// <summary>
+        /// The display names.
+        /// </summary>
+        private static readonly Dictionary<string, string> DisplayNames = new Dictionary<string, string>
+        {
+            { "Rural Highway", "National Road / Rural Highway" }
+        };
+
+        /// <summary>
+        /// The generics.
+        /// </summary>
+        private static readonly List<Generic> Generics = new List<Generic>
+        {
+            new Generic("Highway Ramp", "ramp", "Roads", 5),
+            new Generic("Highway", "high", "Roads", 6),
+            new Generic("Large Road", "large", "Roads", 4),
+            new Generic("Medium Road", "medium", "Roads", 3),
+            new Generic("Small Road", "small", "Roads", 2),
+            new Generic("Gravel Road", "gravel", "Roads", 1),
+            new Generic("Train Track", "track", "Railroads", 10),
+            new Generic("Metro Track", "track", "Railroads", 9),
+            new Generic("Pedestrian Path", "pedestrian", "Paths", 7),
+            new Generic("Bicycle Path", "bicycle", "Paths", 8),
+            new Generic("Airplane Runway", "runway", "Runways", 11)
+        };
+
+        /// <summary>
+        /// The pattern for the net collections that should be ignored.
+        /// </summary>
+        private static readonly string IgnoreNetCollectionsPattern = "^(?:Electricity|Water)$";
+
+        /// <summary>
+        /// The net collections that should be ignored.
+        /// </summary>
+        private static readonly Regex IgnoreNetCollectionsRex = new Regex(IgnoreNetCollectionsPattern, RegexOptions.IgnoreCase);
+
+        /// <summary>
+        /// The pattern for the nets that should be ignored.
+        /// </summary>
+        private static readonly string IgnoreNetsPattern = "(?:(?:^NExt)|(?:^Bus Stop$)|(?:(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam))|(?:(?<!Pedestrian|Bicycle) Path)$))";
+
+        /// <summary>
+        /// The nets that should be ignored.
+        /// </summary>
+        private static readonly Regex IgnoreNetsRex = new Regex(IgnoreNetsPattern, RegexOptions.IgnoreCase);
+
+        /// <summary>
+        /// The horizontal button position.
+        /// </summary>
+        private short buttonPositionX = 0;
+
+        /// <summary>
+        /// The instance is initializing.
+        /// </summary>
+        private bool initializing = false;
+
+        /// <summary>
         /// The settings version in the loaded file.
         /// </summary>
         private int? loadedVersion = null;
@@ -86,6 +114,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <param name="settings">The file settings.</param>
         public Settings(ConfigurableSlopeLimitsSettings settings = null)
         {
+            this.initializing = true;
+
             this.SlopeLimitsGeneric = new Dictionary<string, float>();
             this.SlopeLimitsOriginal = new Dictionary<string, float>();
             this.SlopeLimitsIgnored = new Dictionary<string, float>();
@@ -95,6 +125,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             if (settings != null)
             {
                 this.loadedVersion = settings.Version;
+
+                this.buttonPositionX = settings.ButtonPositionHorizontal;
 
                 try
                 {
@@ -129,6 +161,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 this.SlopeLimits = slopeLimits;
                 this.InitGenerics();
             }
+
+            this.initializing = false;
         }
 
         /// <summary>
@@ -142,6 +176,26 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             get
             {
                 return FileSystem.FilePathName(".xml");
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the horizontal button position.
+        /// </summary>
+        /// <value>
+        /// The horizontal button position.
+        /// </value>
+        public short ButtonPositionHorizontal
+        {
+            get
+            {
+                return this.buttonPositionX;
+            }
+
+            set
+            {
+                this.buttonPositionX = value;
+                this.Save();
             }
         }
 
@@ -165,7 +219,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <value>
         /// The slope limits.
         /// </value>
-        public Dictionary<string, float> SlopeLimits { get; private set; }
+        public Dictionary<string, float> SlopeLimits
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// Gets the generic slope limits.
@@ -173,7 +231,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <value>
         /// The generic slope limits.
         /// </value>
-        public Dictionary<string, float> SlopeLimitsGeneric { get; private set; }
+        public Dictionary<string, float> SlopeLimitsGeneric
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// Gets the ignored slope limits.
@@ -181,7 +243,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <value>
         /// The ignored slope limits.
         /// </value>
-        public Dictionary<string, float> SlopeLimitsIgnored { get; private set; }
+        public Dictionary<string, float> SlopeLimitsIgnored
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// Gets the original slope limits.
@@ -189,16 +255,50 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <value>
         /// The original slope limits.
         /// </value>
-        public Dictionary<string, float> SlopeLimitsOriginal { get; private set; }
+        public Dictionary<string, float> SlopeLimitsOriginal
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// Check if net should be ignored.
         /// </summary>
-        /// <param name="name">The name.</param>
+        /// <param name="name">The net name.</param>
         /// <returns>True if net should be ignored.</returns>
         public static bool IgnoreNet(string name)
         {
-            return IgnoreNetsRex.Match(name).Success;
+            return String.IsNullOrEmpty(name) ? true : IgnoreNetsRex.IsMatch(name);
+        }
+
+        /// <summary>
+        /// Check if net collection should be ignored.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>True if net should be ignored.</returns>
+        public static bool IgnoreNetCollection(string name)
+        {
+            return String.IsNullOrEmpty(name) ? true : IgnoreNetCollectionsRex.IsMatch(name);
+        }
+
+        /// <summary>
+        /// Get text showing whether net collection should be ignored.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>The text "Ignore" if net collection should be ignored, otherwise null.</returns>
+        public static string IgnoreNetCollectionText(string name)
+        {
+            return String.IsNullOrEmpty(name) ? (string)null : IgnoreNetCollectionsRex.IsMatch(name) ? "Ignore" : (string)null;
+        }
+
+        /// <summary>
+        /// Get text showing whether net should be ignored.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>The text "Ignore" if net should be ignored, otherwise null.</returns>
+        public static string IgnoreNetText(string name)
+        {
+            return String.IsNullOrEmpty(name) ? (string)null : IgnoreNetsRex.IsMatch(name) ? "Ignore" : (string)null;
         }
 
         /// <summary>
@@ -256,6 +356,24 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
+        /// Gets the net display name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>The display name.</returns>
+        public string DisplayName(string name)
+        {
+            if (name.Length > 6 && name.Substring(name.Length - 7, 7) == " Tunnel")
+            {
+                name = name.Substring(0, name.Length - 7);
+                return (DisplayNames.ContainsKey(name) ? DisplayNames[name] : name) + " Tunnel";
+            }
+            else
+            {
+                return DisplayNames.ContainsKey(name) ? DisplayNames[name] : name;
+            }
+        }
+
+        /// <summary>
         /// Gets the matching generic.
         /// </summary>
         /// <param name="name">The name.</param>
@@ -309,6 +427,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <param name="fileName">Name of the file.</param>
         public void Save(string fileName = null)
         {
+            if (this.initializing)
+            {
+                return;
+            }
+
             Log.Debug(this, "Save", "Begin");
 
             try
@@ -337,12 +460,15 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     ConfigurableSlopeLimitsSettings cfg = new ConfigurableSlopeLimitsSettings();
                     cfg.Version = this.Version;
                     cfg.SaveCount = this.SaveCount;
+                    cfg.ButtonPositionHorizontal = this.buttonPositionX;
                     cfg.IgnoreNetInfoPattern = IgnoreNetsPattern;
+                    cfg.IgnoreNetCollectionPattern = IgnoreNetCollectionsPattern;
                     cfg.GenericNetInfoNames = Generics;
                     cfg.SetSlopeLimits(this.SlopeLimits);
                     cfg.SetGenericSlopeLimits(this.SlopeLimitsGeneric);
                     cfg.SetOriginalSlopeLimits(this.SlopeLimitsOriginal);
                     cfg.SetIgnoredtSlopeLimits(this.SlopeLimitsIgnored);
+                    cfg.SetDisplayNames(DisplayNames);
 
                     XmlSerializer ser = new XmlSerializer(typeof(ConfigurableSlopeLimitsSettings));
                     ser.Serialize(file, cfg);
@@ -367,25 +493,32 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             Log.Debug(this, "SetLimit", name, limit);
 
-            string lowerName = name.ToLowerInvariant();
-
-            bool changed = false;
-
-            if (this.SlopeLimits[name] != limit)
+            try
             {
-                this.SlopeLimits[name] = limit;
-                changed = true;
+                string lowerName = name.ToLowerInvariant();
+
+                bool changed = false;
+
+                if (this.SlopeLimits[name] != limit)
+                {
+                    this.SlopeLimits[name] = limit;
+                    changed = true;
+                }
+
+                if (this.SlopeLimitsGeneric.ContainsKey(lowerName) && this.SlopeLimitsGeneric[lowerName] != limit)
+                {
+                    this.SlopeLimitsGeneric[lowerName] = limit;
+                    changed = true;
+                }
+
+                if (changed)
+                {
+                    this.Save();
+                }
             }
-
-            if (this.SlopeLimitsGeneric.ContainsKey(lowerName) && this.SlopeLimitsGeneric[lowerName] != limit)
+            catch (Exception ex)
             {
-                this.SlopeLimitsGeneric[lowerName] = limit;
-                changed = true;
-            }
-
-            if (changed)
-            {
-                this.Save();
+                Log.Error(this, "SetLimit", ex);
             }
         }
 
@@ -532,6 +665,16 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public class ConfigurableSlopeLimitsSettings
         {
             /// <summary>
+            /// The horizontal button position.
+            /// </summary>
+            public short ButtonPositionHorizontal = 0;
+
+            /// <summary>
+            /// The net display names.
+            /// </summary>
+            public List<DisplayName> DisplayNames = new List<DisplayName>();
+
+            /// <summary>
             /// The generic net information names.
             /// </summary>
             public List<Generic> GenericNetInfoNames = new List<Generic>();
@@ -545,6 +688,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// The ignored net information names.
             /// </summary>
             public List<SlopeLimit> IgnoredSlopeLimits = new List<SlopeLimit>();
+
+            /// <summary>
+            /// The net collections that are be ignored.
+            /// </summary>
+            public string IgnoreNetCollectionPattern = "";
 
             /// <summary>
             /// The net information that is be ignored.
@@ -598,6 +746,27 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             public Dictionary<string, float> GetSlopeLimits()
             {
                 return this.GetLimitsDictionary(this.SlopeLimits, "GetSlopeLimits");
+            }
+
+            /// <summary>
+            /// Sets the display names.
+            /// </summary>
+            /// <param name="displayNames">The display names.</param>
+            /// <param name="name">The name.</param>
+            public void SetDisplayNames(Dictionary<string, string> displayNames, string name = null)
+            {
+                try
+                {
+                    if (displayNames != null)
+                    {
+                        this.DisplayNames.Clear();
+                        this.DisplayNames.AddRange(displayNames.ToList().ConvertAll(kvp => new DisplayName(kvp.Key, kvp.Value)));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(this, String.IsNullOrEmpty(name) ? "SetDisplayNames" : name, ex);
+                }
             }
 
             /// <summary>
@@ -674,6 +843,41 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 catch (Exception ex)
                 {
                     Log.Error(this, String.IsNullOrEmpty(name) ? "SetLimitsDictionary" : name, ex);
+                }
+            }
+
+            /// <summary>
+            /// Display name map entry.
+            /// </summary>
+            [Serializable]
+            public class DisplayName
+            {
+                /// <summary>
+                /// The display name.
+                /// </summary>
+                public string Display;
+
+                /// <summary>
+                /// The name.
+                /// </summary>
+                public string Name;
+
+                /// <summary>
+                /// Initializes a new instance of the <see cref="DisplayName"/> class.
+                /// </summary>
+                public DisplayName()
+                {
+                }
+
+                /// <summary>
+                /// Initializes a new instance of the <see cref="DisplayName"/> class.
+                /// </summary>
+                /// <param name="name">The name.</param>
+                /// <param name="display">The display name.</param>
+                public DisplayName(string name, string display)
+                {
+                    this.Name = name;
+                    this.Display = display;
                 }
             }
 

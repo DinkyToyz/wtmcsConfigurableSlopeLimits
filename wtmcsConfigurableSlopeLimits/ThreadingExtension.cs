@@ -1,7 +1,7 @@
-﻿using ColossalFramework.UI;
-using ICities;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using ColossalFramework.UI;
+using ICities;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -97,6 +97,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             try
             {
+                Global.ThreadingExtension = this;
             }
             catch (Exception ex)
             {
@@ -172,6 +173,29 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
+        /// Sets the tool button positions.
+        /// </summary>
+        public void SetToolButtonPositions()
+        {
+            Log.Debug(this, "SetToolButtonPositions", "Begin");
+
+            try
+            {
+                foreach (ToolButton button in this.toolButtons.Values)
+                {
+                    button.SetPosition();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(this, "SetToolButtonPositions", ex);
+                this.isBroken = true;
+            }
+
+            Log.Debug(this, "SetToolButtonPositions", "End");
+        }
+
+        /// <summary>
         /// Uninitialize doer.
         /// </summary>
         protected void DeInitialize()
@@ -180,6 +204,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             try
             {
+                Global.ThreadingExtension = null;
                 this.DisposeToolButtons();
                 Global.DisposeUI();
             }
@@ -228,7 +253,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             try
             {
-                if (Log.LogToFile) Log.BufferFileWrites = true;
+                if (Log.LogToFile)
+                    Log.BufferFileWrites = true;
 
                 ////if (Log.LogToFile) Log.Debug(this, "CreateButtons", "Begin");
 
@@ -271,7 +297,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
             finally
             {
-                if (Log.LogToFile) Log.BufferFileWrites = false;
+                if (Log.LogToFile)
+                    Log.BufferFileWrites = false;
             }
         }
     }

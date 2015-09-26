@@ -1,5 +1,5 @@
-﻿using ColossalFramework.UI;
-using System;
+﻿using System;
+using ColossalFramework.UI;
 using UnityEngine;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
@@ -85,6 +85,26 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     pressed: "GradeSymbol")));
 
         /// <summary>
+        /// The base X position.
+        /// </summary>
+        private float basePositionX;
+
+        /// <summary>
+        /// The base Y position.
+        /// </summary>
+        private float basePositionY;
+
+        /// <summary>
+        /// The base X size.
+        /// </summary>
+        private float baseSizeX;
+
+        /// <summary>
+        /// The base Y size.
+        /// </summary>
+        private float baseSizeY;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ToolButton" /> class.
         /// </summary>
         /// <param name="parent">The parent.</param>
@@ -134,7 +154,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <value>
         /// The button control.
         /// </value>
-        public UIMultiStateButton Button { get; private set; }
+        public UIMultiStateButton Button
+        {
+            get;
+            private set;
+        }
 
         /// <summary>
         /// Gets a value indicating whether this instance is visible.
@@ -161,6 +185,48 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             get
             {
                 return (this.Parent == null) ? "~" : this.Parent.name;
+            }
+        }
+
+        /// <summary>
+        /// Gets the X position.
+        /// </summary>
+        /// <value>
+        /// The X position.
+        /// </value>
+        private float PositionX
+        {
+            get
+            {
+                return this.basePositionX + (Global.Settings.ButtonPositionHorizontal * this.baseSizeX);
+            }
+        }
+
+        /// <summary>
+        /// Gets the Y position.
+        /// </summary>
+        /// <value>
+        /// The Y position.
+        /// </value>
+        private float PositionY
+        {
+            get
+            {
+                return this.basePositionY;
+            }
+        }
+
+        /// <summary>
+        /// Gets the Z position.
+        /// </summary>
+        /// <value>
+        /// The X position.
+        /// </value>
+        private float PositionZ
+        {
+            get
+            {
+                return this.SnappingToggle.absolutePosition.z;
             }
         }
 
@@ -232,11 +298,22 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             Log.Debug(this, this.ParentName, "Initialize", "Create", this.Parent.name, this.ButtonName);
 
+            float sizeX = this.SnappingToggle.size.x;
+            float sizeY = this.SnappingToggle.size.y;
+
+            this.baseSizeX = sizeX + (sizeX / 18);
+            this.baseSizeY = sizeY + (sizeY / 18);
+
+            this.basePositionX = this.SnappingToggle.absolutePosition.x;
+            this.basePositionY = this.SnappingToggle.absolutePosition.y + this.baseSizeY;
+
+            this.LogPosition();
+
             this.Button = this.Parent.AddUIComponent<UIMultiStateButton>();
             this.Button.name = this.ButtonName;
             this.Button.tooltip = this.ToolTip;
-            this.Button.size = new Vector2(this.SnappingToggle.size.x, this.SnappingToggle.size.y);
-            this.Button.absolutePosition = new Vector3(this.SnappingToggle.absolutePosition.x, this.SnappingToggle.absolutePosition.y + 38, this.SnappingToggle.absolutePosition.z);
+            this.Button.size = new Vector2(sizeX, sizeY);
+            this.Button.absolutePosition = new Vector3(this.PositionX, this.PositionY, this.PositionZ);
             this.Button.playAudioEvents = true;
             this.Button.activeStateIndex = (Global.LimitsGroup == Limits.Groups.Custom) ? 1 : 0;
             this.Button.spritePadding = new RectOffset();
@@ -249,6 +326,16 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             Log.Debug(this, this.ParentName, "Initialize", "Button Created", this.Parent.name, this.Button.name);
 
             Log.Debug(this, this.ParentName, "Initialize", "End");
+        }
+
+        /// <summary>
+        /// Sets the button position.
+        /// </summary>
+        public void SetPosition()
+        {
+            this.LogPosition();
+
+            this.Button.absolutePosition = new Vector3(this.PositionX, this.PositionY, this.PositionZ);
         }
 
         /// <summary>
@@ -298,6 +385,14 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     this.Button.activeStateIndex = state;
                 }
             }
+        }
+
+        /// <summary>
+        /// Logs the position.
+        /// </summary>
+        private void LogPosition()
+        {
+            Log.Debug(this, "LogPostion", this.PositionX, this.PositionY, this.PositionZ, this.SnappingToggle.absolutePosition.x, this.SnappingToggle.absolutePosition.y, this.SnappingToggle.absolutePosition.z, Global.Settings.ButtonPositionHorizontal, this.baseSizeX, Global.Settings.ButtonPositionHorizontal * this.baseSizeX, this.SnappingToggle.size);
         }
     }
 }
