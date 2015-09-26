@@ -13,8 +13,8 @@ The config file, wtmcsConfigurableSlopeLimits.xml, is stored in the folder "ModC
 
 [list]
 [*]Text fields instead of or combined with sliders.
-[*]Apply to and list new Network Extension roads correctly.
-[*]Apply to Traffic ++ roads.
+[*]Apply to and list new [url=http://steamcommunity.com/sharedfiles/filedetails/?id=478820060]Network Extension[/url] roads correctly when it updates.
+[*]Apply to [url=http://steamcommunity.com/sharedfiles/filedetails/?id=409184143]Traffic++[/url] roads.
 [/list]
 
 [h1]Errors & Logging[/h1]
