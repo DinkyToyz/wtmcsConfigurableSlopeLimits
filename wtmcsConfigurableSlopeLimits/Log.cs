@@ -1,9 +1,9 @@
-﻿using ColossalFramework.Plugins;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using ColossalFramework.Plugins;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -16,11 +16,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// The log level.
         /// </summary>
         public static Level LogLevel = Level.Warning;
-
-        /// <summary>
-        /// True for logging to file.
-        /// </summary>
-        public static bool LogToFile = true;
 
         /// <summary>
         /// The file buffer.
@@ -52,6 +47,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 Log.LogLevel = Log.Level.Warning;
                 Log.LogToFile = false;
             }
+
+            Log.LogALot = Log.LogToFile && (Library.IsDebugBuild || FileSystem.Exists(".debug.dev"));
 
             try
             {
@@ -150,6 +147,30 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     fileBuffering = value;
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether to log a lot or not.
+        /// </summary>
+        /// <value>
+        ///   <c>True</c> if logging a lot; otherwise, <c>false</c>.
+        /// </value>
+        public static bool LogALot
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether to log to file.
+        /// </summary>
+        /// <value>
+        ///   <c>True</c> logging to file; otherwise, <c>false</c>.
+        /// </value>
+        public static bool LogToFile
+        {
+            get;
+            private set;
         }
 
         /// <summary>

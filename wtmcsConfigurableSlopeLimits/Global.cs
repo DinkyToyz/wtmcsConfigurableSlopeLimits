@@ -8,9 +8,14 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
     internal static class Global
     {
         /// <summary>
-        /// The threading extension.
+        /// The button position needs to be updated.
         /// </summary>
-        public static ThreadingExtension ThreadingExtension;
+        public static bool ButtonPositionUpdateNeeded = false;
+
+        /// <summary>
+        /// The net limit needs to be updated.
+        /// </summary>
+        public static bool LimitUpdateNeeded = false;
 
         /// <summary>
         /// The limits instance.
@@ -191,7 +196,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             try
             {
-                if (limitsInstance != null && Limits.Initialized)
+                if (limitsInstance != null && Global.Limits.IsUsable)
                 {
                     switch (Limits.Group)
                     {
@@ -243,24 +248,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             catch (Exception ex)
             {
                 Log.Error(typeof(Global), "SetLimits", ex);
-            }
-        }
-
-        /// <summary>
-        /// Sets the tool button positions.
-        /// </summary>
-        public static void SetToolButtonPositions()
-        {
-            try
-            {
-                if (ThreadingExtension != null)
-                {
-                    ThreadingExtension.SetToolButtonPositions();
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(typeof(Global), "SetToolButtonPositions", ex);
             }
         }
     }

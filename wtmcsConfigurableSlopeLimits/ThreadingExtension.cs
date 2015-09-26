@@ -33,14 +33,19 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         private bool isBroken = false;
 
         /// <summary>
-        /// The tool buttons.
+        /// The create time check.
         /// </summary>
-        private Dictionary<string, ToolButton> toolButtons = new Dictionary<string, ToolButton>();
+        private float timeCheckCreate = 0;
 
         /// <summary>
         /// The update time check.
         /// </summary>
-        private float updateTimeCheck = 0;
+        private float timeCheckUpdate = 0;
+
+        /// <summary>
+        /// The tool buttons.
+        /// </summary>
+        private Dictionary<string, ToolButton> toolButtons = new Dictionary<string, ToolButton>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThreadingExtension"/> class.
@@ -97,7 +102,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             try
             {
-                Global.ThreadingExtension = this;
             }
             catch (Exception ex)
             {
@@ -149,19 +153,44 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             try
             {
-                if (this.createButtonsOnUpdate && !this.isBroken && Global.Limits != null && Global.Limits.IsUsable)
+                if (!this.isBroken)
                 {
-                    this.updateTimeCheck += realTimeDelta;
-
-                    if (this.updateTimeCheck > 1.37)
+                    if (this.createButtonsOnUpdate && Global.Limits != null && Global.Limits.IsUsable)
                     {
-                        if (this.CreateButtons())
-                        {
-                            Log.Debug(this, "OnUpdate", "All Buttons Created");
-                            this.createButtonsOnUpdate = false;
-                        }
+                        this.timeCheckCreate += realTimeDelta;
 
-                        this.updateTimeCheck = 0;
+                        if (this.timeCheckCreate > 1.37)
+                        {
+                            if (this.CreateButtons())
+                            {
+                                Log.Debug(this, "OnUpdate", "All Buttons Created");
+                                this.createButtonsOnUpdate = false;
+                            }
+
+                            this.timeCheckCreate = 0;
+                        }
+                    }
+
+                    if (Global.ButtonPositionUpdateNeeded || Global.LimitUpdateNeeded)
+                    {
+                        this.timeCheckUpdate += realTimeDelta;
+
+                        if (this.timeCheckUpdate > 0.74)
+                        {
+                            if (Global.ButtonPositionUpdateNeeded)
+                            {
+                                Global.ButtonPositionUpdateNeeded = false;
+                                this.SetToolButtonPositions();
+                            }
+
+                            if (Global.LimitUpdateNeeded)
+                            {
+                                Global.LimitUpdateNeeded = false;
+                                Global.ReSetLimits();
+                            }
+
+                            this.timeCheckUpdate = 0;
+                        }
                     }
                 }
             }
@@ -204,7 +233,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             try
             {
-                Global.ThreadingExtension = null;
                 this.DisposeToolButtons();
                 Global.DisposeUI();
             }

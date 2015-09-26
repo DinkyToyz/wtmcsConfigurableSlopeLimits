@@ -81,7 +81,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     value =>
                     {
                         Global.Settings.ButtonPositionHorizontal = (short)value;
-                        Global.SetToolButtonPositions();
+                        Global.ButtonPositionUpdateNeeded = true;
                     });
 
                 foreach (string groupName in sliders.Keys.OrderBy(g => Settings.NetGroups[g]))
@@ -104,7 +104,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             value =>
                             {
                                 Global.Settings.SetLimit(slider.Name, value);
-                                Global.ReSetLimits();
+                                Global.LimitUpdateNeeded = Global.Limits != null && Global.Limits.Group != Limits.Groups.Original;
                             });
                     }
                 }

@@ -31,7 +31,7 @@ When reporting severe errors, please upload [the games complete log file](http:/
 
 The mod logs to [the games normal output log](http://steamcommunity.com/sharedfiles/filedetails/?id=463645931), and can also log to a separate log file, wtmcsConfigurableSlopeLimits.log, stored in the same directory as the settings.
 
-Create the file wtmcsConfigurableSlopeLimits.debug in the same directory in order to enable debug log stuff (wich might slow things down quite a bit) and logging to file.
+Create the file wtmcsConfigurableSlopeLimits.debug in the same directory in order to enable debug log stuff (wich might slow things down quite a bit) and logging to file. To log more stuff, also create the file wtmcsConfigurableSlopeLimits.debug.dev.
 
 ## Whatever
 

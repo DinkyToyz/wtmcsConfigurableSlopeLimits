@@ -195,7 +195,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             // Store in map and return.
             map[key] = name;
 
-            Log.Debug(typeof(NetNameMap), "NetName", netInfo.m_class.name, netInfo.name, netInfo.GetLocalizedTitle(), className, tunnel, name);
+            if (Log.LogToFile && Log.LogALot)
+            {
+                Log.Debug(typeof(NetNameMap), "NetName", netInfo.m_class.name, netInfo.name, netInfo.GetLocalizedTitle(), className, tunnel, name);
+            }
+
             return name;
         }
     }

@@ -145,8 +145,10 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             continue;
                         }
 
-                        if (Log.LogToFile)
+                        if (Log.LogToFile && Log.LogALot)
+                        {
                             this.LogNetInfo(this, "Initialize", netInfo);
+                        }
 
                         string netName = netInfo.NetName();
 
@@ -223,15 +225,15 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 {
                     if (netCollection != null)
                     {
-                        Log.Debug(this, "LogNets", "netCollection", netCollection, netCollection.name, Settings.IgnoreNetCollectionText(netCollection.name));
+                        Log.Debug(this, "LogNetNames", "NetCollection", netCollection, netCollection.name, Settings.IgnoreNetCollectionText(netCollection.name));
                         if (netCollection.m_prefabs != null)
                         {
-                            Log.Debug(this, "LogNets", "Prefabs", netCollection.m_prefabs);
+                            Log.Debug(this, "LogNetNames", "Prefabs", netCollection.m_prefabs);
                             foreach (NetInfo netInfo in netCollection.m_prefabs)
                             {
                                 if (netInfo != null)
                                 {
-                                    Log.Debug(this, "LogNets", "NetInfo", netInfo, netInfo.m_class.name, netInfo.name, netInfo.GetLocalizedTitle(), netInfo.NetName(), Settings.IgnoreNetText(netInfo.NetName()));
+                                    Log.Debug(this, "LogNetNames", "NetInfo", netInfo, netInfo.m_class.name, netInfo.name, netInfo.GetLocalizedTitle(), netInfo.NetName(), Settings.IgnoreNetText(netInfo.NetName()));
                                 }
                             }
                         }
@@ -314,8 +316,10 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             continue;
                         }
 
-                        if (Log.LogToFile)
+                        if (Log.LogToFile && Log.LogALot)
+                        {
                             this.LogNetInfo(this, "Restore", netInfo);
+                        }
 
                         string netName = netInfo.NetName();
 
@@ -407,8 +411,10 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             continue;
                         }
 
-                        if (Log.LogToFile)
+                        if (Log.LogToFile && Log.LogALot)
+                        {
                             this.LogNetInfo(this, "SetLimits", netInfo);
+                        }
 
                         string netName = netInfo.NetName();
 
