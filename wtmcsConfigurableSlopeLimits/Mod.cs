@@ -72,12 +72,25 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 }
 
                 UIHelperBase generalGroup = helper.AddGroup("General");
+
                 generalGroup.AddSlider(
                     "Horizontal Button Position",
                     -10,
                     +50,
                     1,
                     Global.Settings.ButtonPositionHorizontal,
+                    value =>
+                    {
+                        Global.Settings.ButtonPositionHorizontal = (short)value;
+                        Global.ButtonPositionUpdateNeeded = true;
+                    });
+
+                generalGroup.AddSlider(
+                    "Vertical Button Position",
+                    -25,
+                    +3,
+                    1,
+                    Global.Settings.ButtonPositionVertical,
                     value =>
                     {
                         Global.Settings.ButtonPositionHorizontal = (short)value;

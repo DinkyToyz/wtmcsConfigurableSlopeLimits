@@ -212,7 +212,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             get
             {
-                return this.basePositionY;
+                return this.basePositionY + (Global.Settings.ButtonPositionVertical * this.baseSizeY);
             }
         }
 
@@ -305,7 +305,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             this.baseSizeY = sizeY + (sizeY / 18);
 
             this.basePositionX = this.SnappingToggle.absolutePosition.x;
-            this.basePositionY = this.SnappingToggle.absolutePosition.y + this.baseSizeY;
+            this.basePositionY = this.SnappingToggle.absolutePosition.y;
 
             this.LogPosition();
 

@@ -1,8 +1,8 @@
-﻿using ColossalFramework.UI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using ColossalFramework.UI;
 using UnityEngine;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
@@ -33,6 +33,27 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public UI()
         {
             this.Components = new ComponentList(this);
+        }
+
+        /// <summary>
+        /// Direction in which to do recursive logging of components.
+        /// </summary>
+        private enum LogDirection
+        {
+            /// <summary>
+            /// Initial call.
+            /// </summary>
+            Init = 0,
+
+            /// <summary>
+            /// Logging parents.
+            /// </summary>
+            Parents = 1,
+
+            /// <summary>
+            /// Logging children.
+            /// </summary>
+            Children = 2
         }
 
         /// <summary>
@@ -76,6 +97,21 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
+        /// Logs the component data.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="block">The block.</param>
+        /// <param name="component">The component.</param>
+        /// <param name="componentName">Name of the component.</param>
+        /// <param name="connectedName">Name of the connected.</param>
+        /// <param name="logChildren">If set to <c>true</c> log children.</param>
+        /// <param name="logParents">If set to <c>true</c> log parent.</param>
+        public static void LogComponent(object source, string block, UIComponent component, string componentName = null, string connectedName = null, bool logChildren = true, bool logParents = false)
+        {
+            LogComponent(source, block, component, componentName, connectedName, logChildren, logParents, 0, LogDirection.Init);
+        }
+
+        /// <summary>
         /// Creates the atlas.
         /// </summary>
         /// <param name="atlasName">Name of the atlas.</param>
@@ -110,7 +146,12 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 float uw = 1.0f / imageNames.Length;
                 for (int i = 0; i < imageNames.Length; i++)
                 {
-                    atlas.AddSprite(new UITextureAtlas.SpriteInfo() { name = imageNames[i], texture = texture, region = new Rect(i * uw, 0, uw, 1) });
+                    atlas.AddSprite(new UITextureAtlas.SpriteInfo()
+                    {
+                        name = imageNames[i],
+                        texture = texture,
+                        region = new Rect(i * uw, 0, uw, 1)
+                    });
                 }
 
                 return atlas;
@@ -272,6 +313,105 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
+        /// Logs the components data.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="block">The block.</param>
+        /// <param name="component">The component.</param>
+        /// <param name="componentName">Name of the component.</param>
+        /// <param name="connectedName">Name of the connected component.</param>
+        /// <param name="logChildren">If set to <c>true</c> log children.</param>
+        /// <param name="logParents">If set to <c>true</c> log parent.</param>
+        /// <param name="depth">The recursion depth.</param>
+        /// <param name="direction">The recursion direction.</param>
+        private static void LogComponent(object source, string block, UIComponent component, string componentName, string connectedName, bool logChildren, bool logParents, int depth, LogDirection direction)
+        {
+            string componentPath = null;
+
+            try
+            {
+                if (component != null && component is UIComponent)
+                {
+                    Log.InfoList info = new Log.InfoList();
+
+                    componentPath = componentName;
+
+                    if (String.IsNullOrEmpty(componentPath))
+                    {
+                        componentPath = component.cachedName;
+
+                        if (String.IsNullOrEmpty(componentPath))
+                        {
+                            componentPath = "?";
+                        }
+                    }
+
+                    if (!String.IsNullOrEmpty(connectedName))
+                    {
+                        componentPath = connectedName + "/" + componentPath;
+                    }
+
+                    try
+                    {
+                        foreach (var property in component.GetType().GetProperties())
+                        {
+                            if (property != null)
+                            {
+                                try
+                                {
+                                    info.Add(property.Name, property.GetValue(component, null));
+                                }
+                                catch (Exception)
+                                {
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+
+                    Log.Debug(source, block, depth, componentPath, component.GetType(), component, info);
+
+                    if (depth < 32)
+                    {
+                        depth++;
+
+                        if (logChildren && (direction == LogDirection.Init || direction == LogDirection.Children))
+                        {
+                            foreach (UIComponent child in component.components)
+                            {
+                                if (child != null)
+                                {
+                                    LogComponent(source, block, child, null, componentPath, logChildren, logParents, depth, LogDirection.Children);
+                                }
+                            }
+                        }
+
+                        if (logParents && (direction == LogDirection.Init || direction == LogDirection.Parents))
+                        {
+                            if (component.parent != null)
+                            {
+                                LogComponent(source, block, component.parent, "..", componentPath, logChildren, logParents, depth, LogDirection.Parents);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (String.IsNullOrEmpty(componentPath))
+                {
+                    Log.Debug(source, block, connectedName, componentName, ex.GetType(), ex.Message);
+                }
+                else
+                {
+                    Log.Debug(source, block, componentPath, ex.GetType(), ex.Message);
+                }
+            }
+        }
+
+        /// <summary>
         /// Component info holder.
         /// </summary>
         public class ComponentInfo
@@ -339,7 +479,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <value>
             /// The name.
             /// </value>
-            public string Name { get; private set; }
+            public string Name
+            {
+                get;
+                private set;
+            }
 
             /// <summary>
             /// Gets the name of the parent.
@@ -347,7 +491,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <value>
             /// The name of the parent.
             /// </value>
-            public string ParentName { get; private set; }
+            public string ParentName
+            {
+                get;
+                private set;
+            }
 
             /// <summary>
             /// Gets the path name.
@@ -369,7 +517,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <value>
             /// The type.
             /// </value>
-            public Type Type { get; private set; }
+            public Type Type
+            {
+                get;
+                private set;
+            }
 
             /// <summary>
             /// Initializes the properties.
@@ -639,12 +791,20 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <summary>
             /// Gets the background sprites.
             /// </summary>
-            public MultiStateButtonSpriteSet Background { get; private set; }
+            public MultiStateButtonSpriteSet Background
+            {
+                get;
+                private set;
+            }
 
             /// <summary>
             /// Gets the foreground sprites.
             /// </summary>
-            public MultiStateButtonSpriteSet Foreground { get; private set; }
+            public MultiStateButtonSpriteSet Foreground
+            {
+                get;
+                private set;
+            }
         }
 
         /// <summary>

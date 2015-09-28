@@ -7,6 +7,8 @@ The limits can be configured using the mod options (unfortunately the options co
 In the game the slope limits can be toggled between stricter and looser with this button (near the snap toggle button):
 [img]http://www.truls.org/jonas/CS/ConfigurableSlopeLimitsButtonWeb.png[/img]
 
+The horizontal and vertical button position can be changed in the options (using the awkward slider for now).
+
 The config file, wtmcsConfigurableSlopeLimits.xml, is stored in the folder "ModConfig" wherever the game points to with <DataLocation.localApplicationData>. On a Windows system that'd usually be somewhere like "C:\Users\<UserName>\AppData\Local\Colossal Order\Cities_Skylines\ModConfig".
 
 [h1]To-do[/h1]

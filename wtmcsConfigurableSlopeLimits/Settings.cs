@@ -91,6 +91,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         private short buttonPositionX = 0;
 
         /// <summary>
+        /// The vertical button position.
+        /// </summary>
+        private short buttonPositionY = 1;
+
+        /// <summary>
         /// The instance is initializing.
         /// </summary>
         private bool initializing = false;
@@ -127,6 +132,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 this.loadedVersion = settings.Version;
 
                 this.buttonPositionX = settings.ButtonPositionHorizontal;
+                this.buttonPositionY = settings.ButtonPositionVertical;
 
                 try
                 {
@@ -195,6 +201,26 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             set
             {
                 this.buttonPositionX = value;
+                this.Save();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the vertical button position.
+        /// </summary>
+        /// <value>
+        /// The vertical button position.
+        /// </value>
+        public short ButtonPositionVertical
+        {
+            get
+            {
+                return this.buttonPositionY;
+            }
+
+            set
+            {
+                this.buttonPositionY = value;
                 this.Save();
             }
         }
@@ -461,6 +487,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     cfg.Version = this.Version;
                     cfg.SaveCount = this.SaveCount;
                     cfg.ButtonPositionHorizontal = this.buttonPositionX;
+                    cfg.ButtonPositionVertical = this.buttonPositionY;
                     cfg.IgnoreNetInfoPattern = IgnoreNetsPattern;
                     cfg.IgnoreNetCollectionPattern = IgnoreNetCollectionsPattern;
                     cfg.GenericNetInfoNames = Generics;
@@ -668,6 +695,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// The horizontal button position.
             /// </summary>
             public short ButtonPositionHorizontal = 0;
+
+            /// <summary>
+            /// The vertical button position.
+            /// </summary>
+            public short ButtonPositionVertical = 1;
 
             /// <summary>
             /// The net display names.

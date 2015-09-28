@@ -307,6 +307,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             else
                             {
                                 Log.Debug(this, "CreateButtons", parentName);
+                                ////if (Log.LogALot && Log.LogToFile)
+                                ////{
+                                UI.LogComponent(this, "CreateButtons", snappingToggle, null, parentName + "/SnappingToggle", false, true);
+                                ////}
+
                                 this.toolButtons[parentName] = new ToolButton(parentComponent, snappingToggle);
                             }
                         }
