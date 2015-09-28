@@ -1,5 +1,7 @@
 Allows slope limits to be configured separately for different network types.
 
+Compatible with [url=http://steamcommunity.com/sharedfiles/filedetails/?id=478820060]Network Extensions Project[/url], but may lag behind when that mod updates with new or changed road types.
+
 [h1]Usage[/h1]
 
 The limits can be configured using the mod options (unfortunately the options controls were quite limited, so there's just a bunch of sliders without any display of the numeric values for now), or a configuration file.
@@ -15,7 +17,6 @@ The config file, wtmcsConfigurableSlopeLimits.xml, is stored in the folder "ModC
 
 [list]
 [*]Text fields instead of or combined with sliders.
-[*]Apply to and list new [url=http://steamcommunity.com/sharedfiles/filedetails/?id=478820060]Network Extension[/url] roads correctly when it updates.
 [*]Apply to [url=http://steamcommunity.com/sharedfiles/filedetails/?id=409184143]Traffic++[/url] roads.
 [/list]
 
