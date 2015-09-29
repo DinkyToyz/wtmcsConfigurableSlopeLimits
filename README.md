@@ -14,18 +14,17 @@ Compatible with [Network Extensions Project](http://steamcommunity.com/sharedfil
 
 ## Usage
 
-The limits can be configured using the mod options (unfortunately the options controls were quite limited, so there's just a bunch of sliders without any display of the numeric values for now), or a configuration file.
+The limits can be configured using the mod options, or a configuration file.
 
 In the game the slope limits can be toggled between stricter and looser with this button (near the snap toggle button):
 ![Button](http://www.truls.org/jonas/CS/ConfigurableSlopeLimitsButtonWeb.png)
 
-The horizontal and vertical button position can be changed in the options (using awkward sliders for now).
+The horizontal and vertical button position can be changed in the options (the zero position is on top of the snapping toggle button).
 
 The config file, wtmcsConfigurableSlopeLimits.xml, is stored in the folder "ModConfig" wherever the game points to with [`DataLocation.localApplicationData`]. On a Windows system that'd usually be somewhere like "C:\Users\[`UserName`]\AppData\Local\Colossal Order\Cities\_Skylines\ModConfig".
 
 ## To-do
 
-- Text fields instead of or combined with sliders.
 - Apply to [Traffic++](http://steamcommunity.com/sharedfiles/filedetails/?id=409184143) roads.
 
 ## Errors & Logging

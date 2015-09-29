@@ -68,6 +68,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExtendedSlider.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="Global.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="ThreadingExtension.cs" />
     <Compile Include="ToolButton.cs" />
     <Compile Include="UI.cs" />
+    <Compile Include="UIExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ConfigurableSlopeLimitsButtonWeb.png" />
