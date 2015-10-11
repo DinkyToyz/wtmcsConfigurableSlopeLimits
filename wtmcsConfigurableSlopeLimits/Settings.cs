@@ -35,6 +35,16 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public readonly int Version = 1;
 
         /// <summary>
+        /// The maximum slope limit.
+        /// </summary>
+        public float MaximumLimit = 1.00f;
+
+        /// <summary>
+        /// The minimum slope limit.
+        /// </summary>
+        public float MinimumLimit = 0.01f;
+
+        /// <summary>
         /// The save count.
         /// </summary>
         public uint SaveCount = 0;
@@ -133,6 +143,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                 this.buttonPositionX = settings.ButtonPositionHorizontal;
                 this.buttonPositionY = settings.ButtonPositionVertical;
+
+                this.MinimumLimit = settings.MinimumLimit;
+                this.MaximumLimit = settings.MaximumLimit;
 
                 try
                 {
@@ -496,6 +509,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     cfg.SetOriginalSlopeLimits(this.SlopeLimitsOriginal);
                     cfg.SetIgnoredtSlopeLimits(this.SlopeLimitsIgnored);
                     cfg.SetDisplayNames(DisplayNames);
+                    cfg.MinimumLimit = this.MinimumLimit;
+                    cfg.MaximumLimit = this.MaximumLimit;
 
                     XmlSerializer ser = new XmlSerializer(typeof(ConfigurableSlopeLimitsSettings));
                     ser.Serialize(file, cfg);
@@ -730,6 +745,16 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// The net information that is be ignored.
             /// </summary>
             public string IgnoreNetInfoPattern = "";
+
+            /// <summary>
+            /// The maximum slope limit.
+            /// </summary>
+            public float MaximumLimit = 1.00f;
+
+            /// <summary>
+            /// The minimum slope limit.
+            /// </summary>
+            public float MinimumLimit = 0.00f;
 
             /// <summary>
             /// The original slope limits.

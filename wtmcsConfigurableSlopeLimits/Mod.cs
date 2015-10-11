@@ -177,12 +177,12 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 this.Name = name;
                 this.CurLimit = Global.Settings.SlopeLimits[name];
                 this.OrgLimit = Global.Settings.SlopeLimitsOriginal.ContainsKey(name) ? Global.Settings.SlopeLimitsOriginal[name] : this.CurLimit;
-                this.MinLimit = 0.00f;
-                this.MaxLimit = 1.00f;
+                this.MinLimit = Global.Settings.MinimumLimit;
+                this.MaxLimit = Global.Settings.MaximumLimit;
                 ////this.MaxLimit = this.OrgLimit * 3;
-                ////if (this.MaxLimit > 1.0f)
+                ////if (this.MaxLimit > Global.Settings.MaximumLimit)
                 ////{
-                ////    this.MaxLimit = 1.0f;
+                ////    this.MaxLimit = Global.Settings.MaximumLimit;
                 ////}
                 this.Order = order;
             }
