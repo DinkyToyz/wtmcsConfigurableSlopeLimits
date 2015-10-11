@@ -44,7 +44,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         private static readonly Dictionary<string, string> DisplayNames = new Dictionary<string, string>
         {
-            { "Rural Highway", "National Road / Rural Highway" }
+            { "Rural Highway", "National Road" }
         };
 
         /// <summary>

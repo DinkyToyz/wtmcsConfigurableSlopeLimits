@@ -253,6 +253,23 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
+        /// Hides the text field label.
+        /// </summary>
+        private void HideTextFieldLabel()
+        {
+            if (this.textField != null)
+            {
+                UIComponent parent = this.textField.parent;
+                UILabel label = parent.Find<UILabel>("Label");
+                if (label != null)
+                {
+                    parent.RemoveUIComponent(label);
+                    label.Hide();
+                }
+            }
+        }
+
+        /// <summary>
         /// Initializes this instance.
         /// </summary>
         /// <param name="helper">The UI helper.</param>
@@ -343,13 +360,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             this.textField.numericalOnly = true;
             this.textField.allowFloats = this.AllowFloats;
             this.textField.submitOnFocusLost = this.submitOnFocusLost;
+            this.textField.eventVisibilityChanged += (component, value) => { this.HideTextFieldLabel(); };
 
-            UIComponent parent = this.textField.parent;
-            UILabel label = parent.Find<UILabel>("Label");
-            if (label != null)
-            {
-                parent.RemoveUIComponent(label);
-            }
+            this.HideTextFieldLabel();
         }
 
         /// <summary>
