@@ -26,7 +26,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             { "Paths", 2 },
             { "Railroads", 3 },
             { "Runways", 4 },
-            { "Others", 5 }
+            { "Other", 5 }
         };
 
         /// <summary>
@@ -58,21 +58,31 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         };
 
         /// <summary>
+        /// The display orders.
+        /// </summary>
+        private static readonly Dictionary<string, int> DisplayOrders = new Dictionary<string, int>
+        {
+            { "Small Heavy Road", 250 },
+            { "Rural Highway", 450 },
+            { "National", 450 }
+        };
+
+        /// <summary>
         /// The generics.
         /// </summary>
         private static readonly List<Generic> Generics = new List<Generic>
         {
-            new Generic("Highway Ramp", "ramp", "Roads", 5),
-            new Generic("Highway", "high", "Roads", 6),
-            new Generic("Large Road", "large", "Roads", 4),
-            new Generic("Medium Road", "medium", "Roads", 3),
-            new Generic("Small Road", "small", "Roads", 2),
-            new Generic("Gravel Road", "gravel", "Roads", 1),
-            new Generic("Train Track", "track", "Railroads", 10),
-            new Generic("Metro Track", "track", "Railroads", 9),
-            new Generic("Pedestrian Path", "pedestrian", "Paths", 7),
-            new Generic("Bicycle Path", "bicycle", "Paths", 8),
-            new Generic("Airplane Runway", "runway", "Runways", 11)
+            new Generic("Highway Ramp", "ramp", "Roads", 500),
+            new Generic("Highway", "high", "Roads", 600),
+            new Generic("Large Road", "large", "Roads", 400),
+            new Generic("Medium Road", "medium", "Roads", 300),
+            new Generic("Small Road", "small", "Roads", 200),
+            new Generic("Gravel Road", "gravel", "Roads", 100),
+            new Generic("Train Track", "track", "Railroads", 1000),
+            new Generic("Metro Track", "track", "Railroads", 900),
+            new Generic("Pedestrian Path", "pedestrian", "Paths", 700),
+            new Generic("Bicycle Path", "bicycle", "Paths", 800),
+            new Generic("Airplane Runway", "runway", "Runways", 1100)
         };
 
         /// <summary>
@@ -419,13 +429,15 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <returns>A generic.</returns>
         public Generic GetGeneric(string name)
         {
+            int order = this.GetOrder(name);
+
             string lowerName = name.ToLowerInvariant();
 
             foreach (Generic generic in Generics)
             {
                 if (generic.LowerCaseName == lowerName)
                 {
-                    return generic;
+                    return (order >= 0) ? generic.Copy(order) : generic;
                 }
             }
 
@@ -433,7 +445,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 if (lowerName.Contains(generic.LowerCaseName))
                 {
-                    return generic;
+                    return generic.Copy(name, (order >= 0) ? order : generic.Order);
                 }
             }
 
@@ -441,7 +453,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 if (lowerName.Contains(generic.Part))
                 {
-                    return generic;
+                    return generic.Copy(name, (order >= 0) ? order : generic.Order);
                 }
             }
 
@@ -456,7 +468,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 }
             }
 
-            result.Order += 1000;
+            result.Order = (order >= 0) ? order : result.Order + 10000;
             return result;
         }
 
@@ -509,6 +521,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     cfg.SetOriginalSlopeLimits(this.SlopeLimitsOriginal);
                     cfg.SetIgnoredtSlopeLimits(this.SlopeLimitsIgnored);
                     cfg.SetDisplayNames(DisplayNames);
+                    cfg.SetDisplayOrders(DisplayOrders);
                     cfg.MinimumLimit = this.MinimumLimit;
                     cfg.MaximumLimit = this.MaximumLimit;
 
@@ -570,6 +583,28 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public void Update()
         {
             this.InitGenerics();
+        }
+
+        /// <summary>
+        /// Gets the order.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>The order.</returns>
+        private int GetOrder(string name)
+        {
+            int order;
+
+            if (DisplayOrders.TryGetValue(name, out order))
+            {
+                return order;
+            }
+
+            if (name.Length > 7 && name.Substring(name.Length - 7, 7) == " Tunnel" && DisplayOrders.TryGetValue(name.Substring(0, name.Length - 7), out order))
+            {
+                return order;
+            }
+
+            return -1;
         }
 
         /// <summary>
@@ -698,6 +733,52 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 this.Order = order;
                 this.LowerCaseName = name.ToLowerInvariant();
             }
+
+            /// <summary>
+            /// Copies this instance.
+            /// </summary>
+            /// <returns>A copy of this instance.</returns>
+            public Generic Copy()
+            {
+                return this.Copy(this.Name, this.Order);
+            }
+
+            /// <summary>
+            /// Copies this instance.
+            /// </summary>
+            /// <param name="order">The order.</param>
+            /// <returns>
+            /// A copy of this instance.
+            /// </returns>
+            public Generic Copy(int order)
+            {
+                return this.Copy(this.Name, order);
+            }
+
+            /// <summary>
+            /// Copies this instance.
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <returns>
+            /// A copy of this instance.
+            /// </returns>
+            public Generic Copy(string name)
+            {
+                return this.Copy(name, this.Order);
+            }
+
+            /// <summary>
+            /// Copies this instance.
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <param name="order">The order.</param>
+            /// <returns>
+            /// A copy of this instance.
+            /// </returns>
+            public Generic Copy(string name, int order)
+            {
+                return new Generic(name, this.Part, this.Group, order);
+            }
         }
 
         /// <summary>
@@ -720,6 +801,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// The net display names.
             /// </summary>
             public List<DisplayName> DisplayNames = new List<DisplayName>();
+
+            /// <summary>
+            /// The net display orders.
+            /// </summary>
+            public List<DisplayOrder> DisplayOrders = new List<DisplayOrder>();
 
             /// <summary>
             /// The generic net information names.
@@ -823,6 +909,27 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 catch (Exception ex)
                 {
                     Log.Error(this, String.IsNullOrEmpty(name) ? "SetDisplayNames" : name, ex);
+                }
+            }
+
+            /// <summary>
+            /// Sets the display orders.
+            /// </summary>
+            /// <param name="displayOrders">The display orders.</param>
+            /// <param name="name">The name.</param>
+            public void SetDisplayOrders(Dictionary<string, int> displayOrders, string name = null)
+            {
+                try
+                {
+                    if (displayOrders != null)
+                    {
+                        this.DisplayOrders.Clear();
+                        this.DisplayOrders.AddRange(displayOrders.ToList().ConvertAll(kvp => new DisplayOrder(kvp.Key, kvp.Value)));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(this, String.IsNullOrEmpty(name) ? "SetDisplayOrders" : name, ex);
                 }
             }
 
@@ -935,6 +1042,41 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 {
                     this.Name = name;
                     this.Display = display;
+                }
+            }
+
+            /// <summary>
+            /// Display order map entry.
+            /// </summary>
+            [Serializable]
+            public class DisplayOrder
+            {
+                /// <summary>
+                /// The name.
+                /// </summary>
+                public string Name;
+
+                /// <summary>
+                /// The display order.
+                /// </summary>
+                public int Order;
+
+                /// <summary>
+                /// Initializes a new instance of the <see cref="DisplayOrder"/> class.
+                /// </summary>
+                public DisplayOrder()
+                {
+                }
+
+                /// <summary>
+                /// Initializes a new instance of the <see cref="DisplayOrder" /> class.
+                /// </summary>
+                /// <param name="name">The name.</param>
+                /// <param name="order">The order.</param>
+                public DisplayOrder(string name, int order)
+                {
+                    this.Name = name;
+                    this.Order = order;
                 }
             }
 

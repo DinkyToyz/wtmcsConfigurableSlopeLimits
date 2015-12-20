@@ -53,6 +53,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             try
             {
+                if (Log.LogToFile)
+                    Log.BufferFileWrites = true;
+
                 Dictionary<string, List<SlopeLimitSlider>> sliders = new Dictionary<string, List<SlopeLimitSlider>>();
 
                 foreach (string name in Global.Settings.SlopeLimits.Keys)
@@ -129,6 +132,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             catch (System.Exception ex)
             {
                 Log.Error(this, "OnSettingsUI", ex);
+            }
+            finally
+            {
+                if (Log.LogToFile)
+                    Log.BufferFileWrites = false;
             }
         }
 

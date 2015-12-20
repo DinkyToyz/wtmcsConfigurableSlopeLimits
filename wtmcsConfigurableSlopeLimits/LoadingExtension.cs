@@ -27,6 +27,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             try
             {
+                if (Log.LogToFile)
+                {
+                    Log.BufferFileWrites = true;
+                }
+
                 Global.InitializeLimits();
             }
             catch (Exception ex)
@@ -37,6 +42,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 Log.Debug(this, "OnCreated", "Base");
                 base.OnCreated(loading);
+
+                if (Log.LogToFile)
+                {
+                    Log.BufferFileWrites = false;
+                }
             }
 
             Log.Debug(this, "OnCreated", "End");
@@ -52,6 +62,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             try
             {
+                if (Log.LogToFile)
+                {
+                    Log.BufferFileWrites = true;
+                }
+
                 Global.SetLimits(Limits.Groups.Custom);
             }
             catch (Exception ex)
@@ -62,6 +77,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 Log.Debug(this, "OnLevelLoaded", "Base");
                 base.OnLevelLoaded(mode);
+
+                if (Log.LogToFile)
+                {
+                    Log.BufferFileWrites = false;
+                }
             }
 
             Log.Debug(this, "OnLevelLoaded", "End");
@@ -76,6 +96,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             try
             {
+                if (Log.LogToFile)
+                {
+                    Log.BufferFileWrites = true;
+                }
+
                 Global.RestoreLimits();
             }
             catch (Exception ex)
@@ -86,6 +111,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 Log.Debug(this, "OnLevelUnloading", "Base");
                 base.OnLevelUnloading();
+
+                if (Log.LogToFile)
+                {
+                    Log.BufferFileWrites = false;
+                }
             }
 
             Log.Debug(this, "OnLevelUnloading", "End");
@@ -100,6 +130,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             try
             {
+                if (Log.LogToFile)
+                {
+                    Log.BufferFileWrites = true;
+                }
+
                 Global.DisposeLimits();
             }
             catch (Exception ex)
@@ -110,6 +145,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 Log.Debug(this, "OnReleased", "Base");
                 base.OnReleased();
+
+                if (Log.LogToFile)
+                {
+                    Log.BufferFileWrites = false;
+                }
             }
 
             Log.Debug(this, "OnReleased", "End");

@@ -1,0 +1,111 @@
+﻿
+Network Extensions v1.1.1
+
+ToString								m_class.name				name							GetLocalizedTitle						NetName
+
+BasicRoadTL (NetInfo)					NExtSmall3LRoad				BasicRoadTL						Basic Road with Turning Lane			Small Road
+BasicRoadTL Elevated (NetInfo)			NExtSmall3LRoad				BasicRoadTL Elevated													Small Road
+BasicRoadTL Bridge (NetInfo)			NExtSmall3LRoad				BasicRoadTL Bridge														Small Road
+BasicRoadTL Tunnel (NetInfo)			NExtSmall3LRoadTunnel		BasicRoadTL Tunnel														NExtSmall3LRoadTunnel
+BasicRoadTL Slope (NetInfo)				NExtSmall3LRoad				BasicRoadTL Slope														Small Road
+
+Oneway3L (NetInfo)						NExtSmall3LRoad				Oneway3L						Three-Lane Oneway						Small Road
+Oneway3L Elevated (NetInfo)				NExtSmall3LRoad				Oneway3L Elevated														Small Road
+Oneway3L Bridge (NetInfo)				NExtSmall3LRoad				Oneway3L Bridge															Small Road
+Oneway3L Tunnel (NetInfo)				NExtSmall3LRoadTunnel		Oneway3L Tunnel															NExtSmall3LRoadTunnel
+Oneway3L Slope (NetInfo)				NExtSmall3LRoad				Oneway3L Slope															Small Road
+
+Oneway4L (NetInfo)						NExtSmall3LRoad				Oneway4L						Small Four-Lane Oneway					Small Road
+Oneway4L Elevated (NetInfo)				NExtSmall3LRoad				Oneway4L Elevated														Small Road
+Oneway4L Bridge (NetInfo)				NExtSmall3LRoad				Oneway4L Bridge															Small Road
+Oneway4L Tunnel (NetInfo)				NExtSmall3LRoadTunnel		Oneway4L Tunnel															NExtSmall3LRoadTunnel
+Oneway4L Slope (NetInfo)				NExtSmall3LRoad				Oneway4L Slope															Small Road
+
+Small Avenue (NetInfo)					NExtSmall3LRoad				Small Avenue					Small Four-Lane Road					Small Road
+Small Avenue Elevated (NetInfo)			NExtSmall3LRoad				Small Avenue Elevated													Small Road
+Small Avenue Bridge (NetInfo)			NExtSmall3LRoad				Small Avenue Bridge														Small Road
+Small Avenue Tunnel (NetInfo)			NExtSmall3LRoadTunnel		Small Avenue Tunnel														NExtSmall3LRoadTunnel
+Small Avenue Slope (NetInfo)			NExtSmall3LRoad				Small Avenue Slope														Small Road
+
+Medium Avenue (NetInfo)					NExtMediumRoad				Medium Avenue					Four-Lane Road							Medium Road
+Medium Avenue TL (NetInfo)				NExtMediumRoad				Medium Avenue TL				Four-Lane Road with Turning Lane		Medium Road
+
+Small Rural Highway (NetInfo)			NExtHighway1L				Small Rural Highway				National Road							Rural Highway
+Small Rural Highway Elevated (NetInfo)	NExtHighway1L				Small Rural Highway Elevated											Rural Highway
+Small Rural Highway Bridge (NetInfo)	NExtHighway1L				Small Rural Highway Bridge												Rural Highway
+Small Rural Highway Tunnel (NetInfo)	NExtHighwayTunnel1LTunnel	Small Rural Highway Tunnel												Rural Highway Tunnel
+Small Rural Highway Slope (NetInfo)		NExtHighway1L				Small Rural Highway Slope												Rural Highway
+
+Rural Highway (NetInfo)					NExtHighway2L				Rural Highway					Two-Lane Highway						Highway
+Rural Highway Elevated (NetInfo)		NExtHighway2L				Rural Highway Elevated													Rural Highway
+Rural Highway Bridge (NetInfo)			NExtHighway2L				Rural Highway Bridge													Rural Highway
+Rural Highway Tunnel (NetInfo)			NExtHighwayTunnel2LTunnel	Rural Highway Tunnel													Rural Highway Tunnel
+Rural Highway Slope (NetInfo)			NExtHighway2L				Rural Highway Slope														Rural Highway
+
+Four-Lane Highway (NetInfo)				NExtHighway4L				Four-Lane Highway				Four-Lane Highway						NExtHighway4L
+Four-Lane Highway Elevated (NetInfo)	NExtHighway4L				Four-Lane Highway Elevated												NExtHighway4L
+Four-Lane Highway Bridge (NetInfo)		NExtHighway4L				Four-Lane Highway Bridge												NExtHighway4L
+Four-Lane Highway Tunnel (NetInfo)		NExtHighwayTunnel4LTunnel	Four-Lane Highway Tunnel												NExtHighwayTunnel4LTunnel
+Four-Lane Highway Slope (NetInfo)		NExtHighway4L				Four-Lane Highway Slope													NExtHighway4L
+
+Five-Lane Highway (NetInfo)				NExtHighway5L				Five-Lane Highway				Five-Lane Highway						NExtHighway5L
+Five-Lane Highway Elevated (NetInfo)	NExtHighway5L				Five-Lane Highway Elevated												NExtHighway5L
+Five-Lane Highway Bridge (NetInfo)		NExtHighway5L				Five-Lane Highway Bridge												NExtHighway5L
+Five-Lane Highway Tunnel (NetInfo)		NExtHighwayTunnel5LTunnel	Five-Lane Highway Tunnel												NExtHighwayTunnel5LTunnel
+Five-Lane Highway Slope (NetInfo)		NExtHighway5L				Five-Lane Highway Slope													NExtHighway5L
+
+Large Highway (NetInfo)					NExtHighway6L				Large Highway					Six-Lane Highway						NExtHighway6L
+Large Highway Elevated (NetInfo)		NExtHighway6L				Large Highway Elevated													NExtHighway6L
+Large Highway Bridge (NetInfo)			NExtHighway6L				Large Highway Bridge													NExtHighway6L
+Large Highway Tunnel (NetInfo)			NExtHighwayTunnel6LTunnel	Large Highway Tunnel													NExtHighwayTunnel6LTunnel
+Large Highway Slope (NetInfo)			NExtHighway6L				Large Highway Slope														NExtHighway6L
+
+
+----------
+
+Network Extensions v0.8
+
+ToString                         m_class.name        name                    GetLocalizedTitle                       NetName
+
+Oneway3L (NetInfo)               NExtSmall3LRoad     Oneway3L                Three-Lane Oneway                       NExtSmall3LRoad
+Oneway4L (NetInfo)               NExtSmall4LRoad     Oneway4L                Small Four-Lane Oneway                  NExtSmall4LRoad
+Small Avenue (NetInfo)           NExtSmall4LRoad     Small Avenue            Small Four-Lane Road                    NExtSmall4LRoad
+
+Medium Avenue (NetInfo)          NExtMediumRoad      Medium Avenue           Four-Lane Road                          NExtMediumRoad
+Medium Avenue TL (NetInfo)       NExtMediumRoad      Medium Avenue TL        Four-Lane Road with Turning Lane        NExtMediumRoad
+
+Small Rural Highway (NetInfo)    NExtHighway         Small Rural Highway     National Road                           Rural Highway
+Rural Highway (NetInfo)          NExtHighway         Rural Highway           Two-Lane Highway                        Highway
+Large Highway (NetInfo)          NExtHighway         Large Highway           Six-Lane Highway                        Highway
+
+Rural Highway Elevated (NetInfo) Small Road          Rural Highway Elevated  NET_TITLE[Rural Highway Elevated]:0     Rural Highway
+Rural Highway Bridge (NetInfo)   Small Road          Rural Highway Bridge    NET_TITLE[Rural Highway Bridge]:0       Rural Highway
+Rural Highway Tunnel (NetInfo)   Small Road Tunnel   Rural Highway Tunnel    NET_TITLE[Rural Highway Tunnel]:0       Rural Highway Tunnel
+Rural Highway Slope (NetInfo)    Small Road          Rural Highway Slope     NET_TITLE[Rural Highway Slope]:0        Rural Highway
+Large Highway Elevated (NetInfo) Large Road          Large Highway Elevated  NET_TITLE[Large Highway Elevated]:0     Highway
+Large Highway Bridge (NetInfo)   Large Road          Large Highway Bridge    NET_TITLE[Large Highway Bridge]:0       Highway
+Large Highway Tunnel (NetInfo)   Large Road Tunnel   Large Highway Tunnel    NET_TITLE[Large Highway Tunnel]:0       Highway Tunnel
+Large Highway Slope (NetInfo)    Large Road          Large Highway Slope     NET_TITLE[Large Highway Slope]:0        Highway
+
+
+----------
+
+Network Extensions v0.6.1
+
+Small Road; Small Avenue; Small Avenue (NetInfo); Small Four-Lane Road
+
+NExtMediumAvenue; Medium Avenue; Medium Avenue (NetInfo); Four-Lane Road
+NExtMediumAvenue; Medium Avenue TL; Medium Avenue TL (NetInfo); Four-Lane Road with Turning Lane
+
+NExtHighway; Small Rural Highway; Small Rural Highway (NetInfo); Rural Highway
+Small Road; Rural Highway Elevated; Rural Highway Elevated (NetInfo); NET_TITLE[Rural Highway Elevated]:0
+Small Road Tunnel; Rural Highway Tunnel; Rural Highway Tunnel (NetInfo); NET_TITLE[Rural Highway Tunnel]:0
+Small Road; Rural Highway Slope; Rural Highway Slope (NetInfo); NET_TITLE[Rural Highway Slope]:0
+
+NExtHighway; Rural Highway; Rural Highway (NetInfo); Two-Lane Highway
+
+NExtHighway; Large Highway; Large Highway (NetInfo); Six-Lane Highway
+Large Road; Large Highway Elevated; Large Highway Elevated (NetInfo); NET_TITLE[Large Highway Elevated]:0
+Large Road; Large Highway Bridge; Large Highway Bridge (NetInfo); NET_TITLE[Large Highway Bridge]:0
+Large Road Tunnel; Large Highway Tunnel; Large Highway Tunnel (NetInfo); NET_TITLE[Large Highway Tunnel]:0
+Large Road; Large Highway Slope; Large Highway Slope (NetInfo); NET_TITLE[Large Highway Slope]:0

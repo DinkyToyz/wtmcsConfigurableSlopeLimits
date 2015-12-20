@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -103,100 +104,120 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         public void Initialize()
         {
-            if (this.isBroken || this.isInitialized)
-            {
-                return;
-            }
-
-            Log.Debug(this, "Initialize", "Begin");
-
+            bool locked = false;
             try
             {
-                bool missing = false;
-                bool found = false;
+                locked = Global.Lock();
 
-                Global.Settings.SlopeLimitsOriginal.Clear();
-                Global.Settings.SlopeLimitsIgnored.Clear();
-
-                foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
+                if (this.isBroken || this.isInitialized)
                 {
-                    if (netCollection == null)
-                    {
-                        Log.Warning(this, "Initialize", "Null NetCollection");
-                        continue;
-                    }
+                    return;
+                }
 
-                    if (Settings.IgnoreNetCollection(netCollection.name))
-                    {
-                        continue;
-                    }
+                Log.Debug(this, "Initialize", "Begin");
 
-                    if (netCollection.m_prefabs == null)
-                    {
-                        Log.Warning(this, "Initialize", "Null NetCollection.m_prefabs", netCollection);
-                        continue;
-                    }
+                try
+                {
+                    bool missing = false;
+                    bool found = false;
 
-                    foreach (NetInfo netInfo in netCollection.m_prefabs)
+                    Global.Settings.SlopeLimitsOriginal.Clear();
+                    Global.Settings.SlopeLimitsIgnored.Clear();
+
+                    foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
                     {
-                        if (netInfo == null)
+                        if (netCollection == null)
                         {
-                            Log.Warning(this, "Initialize", "Null NetInfo", netCollection, netCollection.m_prefabs);
+                            Log.Warning(this, "Initialize", "Null NetCollection");
                             continue;
                         }
 
-                        if (Log.LogToFile && Log.LogALot)
+                        if (Settings.IgnoreNetCollection(netCollection.name))
                         {
-                            this.LogNetInfo(this, "Initialize", netInfo);
+                            continue;
                         }
 
-                        string netName = netInfo.NetName();
-
-                        if (Settings.IgnoreNet(netName))
+                        if (netCollection.m_prefabs == null)
                         {
-                            if (!Global.Settings.SlopeLimitsIgnored.ContainsKey(netName))
+                            Log.Warning(this, "Initialize", "Null NetCollection.m_prefabs", netCollection);
+                            continue;
+                        }
+
+                        foreach (NetInfo netInfo in netCollection.m_prefabs)
+                        {
+                            if (netInfo == null)
                             {
-                                Log.Info(null, null, "NotLimit", netName, netInfo.m_maxSlope);
-                                Global.Settings.SlopeLimitsIgnored[netName] = netInfo.m_maxSlope;
+                                Log.Warning(this, "Initialize", "Null NetInfo", netCollection, netCollection.m_prefabs);
+                                continue;
+                            }
+
+                            if (Log.LogToFile && Log.LogALot)
+                            {
+                                this.LogNetInfo(this, "Initialize", netInfo);
+                            }
+
+                            string netName = netInfo.NetName();
+
+                            if (Settings.IgnoreNet(netName))
+                            {
+                                if (!Global.Settings.SlopeLimitsIgnored.ContainsKey(netName))
+                                {
+                                    Log.Info(null, null, "NotLimit", netName, netInfo.m_maxSlope);
+                                    Global.Settings.SlopeLimitsIgnored[netName] = netInfo.m_maxSlope;
+                                    found = true;
+                                }
+
+                                continue;
+                            }
+
+                            if (Settings.GenericNames.Contains(netName))
+                            {
+                                if (!Global.Settings.SlopeLimits.ContainsKey(netName))
+                                {
+                                    Log.Info(null, null, "NewLimit", netName, netInfo.m_maxSlope);
+                                    Global.Settings.SlopeLimits[netName] = netInfo.m_maxSlope;
+                                    missing = true;
+                                }
+                            }
+
+                            if (!Global.Settings.SlopeLimitsOriginal.ContainsKey(netName))
+                            {
+                                Log.Info(null, null, "OrgLimit", netName, netInfo.m_maxSlope);
+                                Global.Settings.SlopeLimitsOriginal[netName] = netInfo.m_maxSlope;
                                 found = true;
                             }
-
-                            continue;
-                        }
-
-                        if (Settings.GenericNames.Contains(netName))
-                        {
-                            if (!Global.Settings.SlopeLimits.ContainsKey(netName))
-                            {
-                                Log.Info(null, null, "NewLimit", netName, netInfo.m_maxSlope);
-                                Global.Settings.SlopeLimits[netName] = netInfo.m_maxSlope;
-                                missing = true;
-                            }
-                        }
-
-                        if (!Global.Settings.SlopeLimitsOriginal.ContainsKey(netName))
-                        {
-                            Log.Info(null, null, "OrgLimit", netName, netInfo.m_maxSlope);
-                            Global.Settings.SlopeLimitsOriginal[netName] = netInfo.m_maxSlope;
-                            found = true;
                         }
                     }
-                }
 
-                if (Global.Settings.SlopeLimitsOriginal.Count > 0)
-                {
-                    if (missing || found)
+                    if (Global.Settings.SlopeLimitsOriginal.Count > 0)
                     {
-                        if (missing)
+                        if (missing || found)
                         {
-                            Global.Settings.Update();
+                            if (missing)
+                            {
+                                Global.Settings.Update();
+                            }
+
+                            Global.Settings.Save();
                         }
 
-                        Global.Settings.Save();
+                        this.isInitialized = true;
                     }
-
-                    this.isInitialized = true;
                 }
+                catch (Exception ex)
+                {
+                    Log.Error(this, "Initialize", ex);
+                    this.isBroken = true;
+                }
+                finally
+                {
+                    if (Log.LogToFile)
+                    {
+                        this.LogNetNames();
+                    }
+                }
+
+                Log.Debug(this, "Initialize", "End");
             }
             catch (Exception ex)
             {
@@ -205,13 +226,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
             finally
             {
-                if (Log.LogToFile)
-                {
-                    this.LogNetNames();
-                }
+                Global.Release(locked);
             }
-
-            Log.Debug(this, "Initialize", "End");
         }
 
         /// <summary>
@@ -280,83 +296,98 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <param name="allowReSet">If set to <c>true</c> set the limits even if group does not change].</param>
         public void RestoreLimits(bool allowReSet = false)
         {
-            if (!this.isInitialized || (this.group == Groups.Original && !allowReSet))
-            {
-                return;
-            }
-
-            Log.Debug(this, "Restore", "Begin");
-
+            bool locked = false;
             try
             {
-                foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
+                locked = Global.Lock();
+
+                if (!this.isInitialized || (this.group == Groups.Original && !allowReSet))
                 {
-                    if (netCollection == null)
-                    {
-                        Log.Warning(this, "Restore", "Null NetCollection");
-                        continue;
-                    }
+                    return;
+                }
 
-                    if (Settings.IgnoreNetCollection(netCollection.name))
-                    {
-                        continue;
-                    }
+                Log.Debug(this, "Restore", "Begin");
 
-                    if (netCollection.m_prefabs == null)
+                try
+                {
+                    foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
                     {
-                        Log.Warning(this, "Restore", "Null NetCollection.m_prefabs", netCollection);
-                        continue;
-                    }
-
-                    foreach (NetInfo netInfo in netCollection.m_prefabs)
-                    {
-                        if (netInfo == null)
+                        if (netCollection == null)
                         {
-                            Log.Warning(this, "Restore", "Null NetInfo", netCollection, netCollection.m_prefabs);
+                            Log.Warning(this, "Restore", "Null NetCollection");
                             continue;
                         }
 
-                        if (Log.LogToFile && Log.LogALot)
+                        if (Settings.IgnoreNetCollection(netCollection.name))
                         {
-                            this.LogNetInfo(this, "Restore", netInfo);
+                            continue;
                         }
 
-                        string netName = netInfo.NetName();
-
-                        if (Settings.IgnoreNet(netName))
+                        if (netCollection.m_prefabs == null)
                         {
-                            if (!Global.Settings.SlopeLimitsIgnored.ContainsKey(netName))
+                            Log.Warning(this, "Restore", "Null NetCollection.m_prefabs", netCollection);
+                            continue;
+                        }
+
+                        foreach (NetInfo netInfo in netCollection.m_prefabs)
+                        {
+                            if (netInfo == null)
                             {
-                                Log.Info(null, null, "NotLimit", netName, netInfo.m_maxSlope);
-                                Global.Settings.SlopeLimitsIgnored[netName] = netInfo.m_maxSlope;
+                                Log.Warning(this, "Restore", "Null NetInfo", netCollection, netCollection.m_prefabs);
+                                continue;
                             }
 
-                            continue;
-                        }
+                            if (Log.LogToFile && Log.LogALot)
+                            {
+                                this.LogNetInfo(this, "Restore", netInfo);
+                            }
 
-                        if (Global.Settings.SlopeLimitsOriginal.ContainsKey(netName))
-                        {
-                            netInfo.m_maxSlope = Global.Settings.SlopeLimitsOriginal[netName];
-                            Log.Info(null, null, "OldLimit", netName, netInfo.m_maxSlope);
-                        }
-                        else
-                        {
-                            Log.Info(null, null, "NonLimit", netName, netInfo.m_maxSlope);
+                            string netName = netInfo.NetName();
+
+                            if (Settings.IgnoreNet(netName))
+                            {
+                                if (!Global.Settings.SlopeLimitsIgnored.ContainsKey(netName))
+                                {
+                                    Log.Info(null, null, "NotLimit", netName, netInfo.m_maxSlope);
+                                    Global.Settings.SlopeLimitsIgnored[netName] = netInfo.m_maxSlope;
+                                }
+
+                                continue;
+                            }
+
+                            if (Global.Settings.SlopeLimitsOriginal.ContainsKey(netName))
+                            {
+                                netInfo.m_maxSlope = Global.Settings.SlopeLimitsOriginal[netName];
+                                Log.Info(null, null, "OldLimit", netName, netInfo.m_maxSlope);
+                            }
+                            else
+                            {
+                                Log.Info(null, null, "NonLimit", netName, netInfo.m_maxSlope);
+                            }
                         }
                     }
                 }
+                catch (Exception ex)
+                {
+                    Log.Error(this, "Restore", ex);
+                    this.isBroken = true;
+                }
+                finally
+                {
+                    this.group = Groups.Original;
+                }
+
+                Log.Debug(this, "Restore", "End");
             }
             catch (Exception ex)
             {
-                Log.Error(this, "Restore", ex);
+                Log.Error(this, "Initialize", ex);
                 this.isBroken = true;
             }
             finally
             {
-                this.group = Groups.Original;
+                Global.Release(locked);
             }
-
-            Log.Debug(this, "Restore", "End");
         }
 
         /// <summary>
@@ -367,180 +398,195 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <exception cref="System.ArgumentOutOfRangeException">Invalid group.</exception>
         public void SetLimits(Groups setToGroup, bool allowReset = false)
         {
-            if (this.isBroken || !this.isInitialized || (this.group == setToGroup && !allowReset))
-            {
-                return;
-            }
-
-            if (setToGroup != Groups.Custom && setToGroup != Groups.Disabled)
-            {
-                throw new ArgumentOutOfRangeException("Invalid group");
-            }
-
-            Log.Debug(this, "SetLimits", "Begin");
-
+            bool locked = false;
             try
             {
-                bool missing = false;
-                bool found = false;
+                locked = Global.Lock();
 
-                foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
+                if (this.isBroken || !this.isInitialized || (this.group == setToGroup && !allowReset))
                 {
-                    if (netCollection == null)
-                    {
-                        Log.Warning(this, "SetLimits", "Null NetCollection");
-                        continue;
-                    }
+                    return;
+                }
 
-                    if (Settings.IgnoreNetCollection(netCollection.name))
-                    {
-                        continue;
-                    }
+                if (setToGroup != Groups.Custom && setToGroup != Groups.Disabled)
+                {
+                    throw new ArgumentOutOfRangeException("Invalid group");
+                }
 
-                    if (netCollection.m_prefabs == null)
-                    {
-                        Log.Warning(this, "SetLimits", "Null NetCollection.m_prefabs", netCollection);
-                        continue;
-                    }
+                Log.Debug(this, "SetLimits", "Begin");
 
-                    foreach (NetInfo netInfo in netCollection.m_prefabs)
+                try
+                {
+                    bool missing = false;
+                    bool found = false;
+
+                    foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
                     {
-                        if (netInfo == null)
+                        if (netCollection == null)
                         {
-                            Log.Warning(this, "SetLimits", "Null NetInfo", netCollection, netCollection.m_prefabs);
+                            Log.Warning(this, "SetLimits", "Null NetCollection");
                             continue;
                         }
 
-                        if (Log.LogToFile && Log.LogALot)
+                        if (Settings.IgnoreNetCollection(netCollection.name))
                         {
-                            this.LogNetInfo(this, "SetLimits", netInfo);
+                            continue;
                         }
 
-                        string netName = netInfo.NetName();
-
-                        if (Settings.IgnoreNet(netName))
+                        if (netCollection.m_prefabs == null)
                         {
-                            if (!Global.Settings.SlopeLimitsIgnored.ContainsKey(netName))
+                            Log.Warning(this, "SetLimits", "Null NetCollection.m_prefabs", netCollection);
+                            continue;
+                        }
+
+                        foreach (NetInfo netInfo in netCollection.m_prefabs)
+                        {
+                            if (netInfo == null)
                             {
-                                Log.Info(null, null, "NotLimit", netName, netInfo.m_maxSlope);
-                                Global.Settings.SlopeLimitsIgnored[netName] = netInfo.m_maxSlope;
+                                Log.Warning(this, "SetLimits", "Null NetInfo", netCollection, netCollection.m_prefabs);
+                                continue;
+                            }
+
+                            if (Log.LogToFile && Log.LogALot)
+                            {
+                                this.LogNetInfo(this, "SetLimits", netInfo);
+                            }
+
+                            string netName = netInfo.NetName();
+
+                            if (Settings.IgnoreNet(netName))
+                            {
+                                if (!Global.Settings.SlopeLimitsIgnored.ContainsKey(netName))
+                                {
+                                    Log.Info(null, null, "NotLimit", netName, netInfo.m_maxSlope);
+                                    Global.Settings.SlopeLimitsIgnored[netName] = netInfo.m_maxSlope;
+                                    found = true;
+                                }
+
+                                continue;
+                            }
+
+                            if (!Global.Settings.SlopeLimitsOriginal.ContainsKey(netName))
+                            {
+                                Log.Info(null, null, "OrgLimit", netName, netInfo.m_maxSlope);
+                                Global.Settings.SlopeLimitsOriginal[netName] = netInfo.m_maxSlope;
                                 found = true;
                             }
 
-                            continue;
-                        }
+                            string match = null;
+                            float? cfgLimit = null;
 
-                        if (!Global.Settings.SlopeLimitsOriginal.ContainsKey(netName))
-                        {
-                            Log.Info(null, null, "OrgLimit", netName, netInfo.m_maxSlope);
-                            Global.Settings.SlopeLimitsOriginal[netName] = netInfo.m_maxSlope;
-                            found = true;
-                        }
-
-                        string match = null;
-                        float? cfgLimit = null;
-
-                        if (Global.Settings.SlopeLimits.ContainsKey(netName))
-                        {
-                            netInfo.m_maxSlope = Global.Settings.SlopeLimits[netName];
-                            match = "name";
-                            cfgLimit = Global.Settings.SlopeLimits[netName];
-                        }
-                        else
-                        {
-                            string name = netName.ToLowerInvariant();
-                            if (Global.Settings.SlopeLimitsGeneric.ContainsKey(name))
+                            if (Global.Settings.SlopeLimits.ContainsKey(netName))
                             {
-                                netInfo.m_maxSlope = Global.Settings.SlopeLimitsGeneric[name];
-                                cfgLimit = Global.Settings.SlopeLimitsGeneric[name];
-                                match = "generic";
+                                netInfo.m_maxSlope = Global.Settings.SlopeLimits[netName];
+                                match = "name";
+                                cfgLimit = Global.Settings.SlopeLimits[netName];
                             }
                             else
                             {
-                                foreach (string generic in Global.Settings.SlopeLimitsGeneric.Keys.ToList().OrderBy(sName => name.Length).Reverse())
+                                string name = netName.ToLowerInvariant();
+                                if (Global.Settings.SlopeLimitsGeneric.ContainsKey(name))
                                 {
-                                    if (name.Contains(generic))
+                                    netInfo.m_maxSlope = Global.Settings.SlopeLimitsGeneric[name];
+                                    cfgLimit = Global.Settings.SlopeLimitsGeneric[name];
+                                    match = "generic";
+                                }
+                                else
+                                {
+                                    foreach (string generic in Global.Settings.SlopeLimitsGeneric.Keys.ToList().OrderBy(sName => name.Length).Reverse())
                                     {
-                                        netInfo.m_maxSlope = Global.Settings.SlopeLimitsGeneric[generic];
-                                        cfgLimit = Global.Settings.SlopeLimitsGeneric[generic];
-                                        match = "part";
-                                        break;
+                                        if (name.Contains(generic))
+                                        {
+                                            netInfo.m_maxSlope = Global.Settings.SlopeLimitsGeneric[generic];
+                                            cfgLimit = Global.Settings.SlopeLimitsGeneric[generic];
+                                            match = "part";
+                                            break;
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        if (match == null || match != "name")
-                        {
-                            if (match == null)
+                            if (match == null || match != "name")
                             {
-                                Log.Info(null, null, "NewLimit", netName, netInfo.m_maxSlope);
-                            }
-                            else
-                            {
-                                Log.Info(null, null, "NewLimit", netName, netInfo.m_maxSlope, match);
-                            }
-
-                            Global.Settings.SlopeLimits[netName] = netInfo.m_maxSlope;
-                            missing = true;
-                        }
-
-                        if (setToGroup == Groups.Custom)
-                        {
-                            if (cfgLimit != null && cfgLimit.HasValue)
-                            {
-                                Log.Info(null, null, "SetLimit", netName, cfgLimit.Value);
-                                netInfo.m_maxSlope = cfgLimit.Value;
-                            }
-                        }
-                        else if (setToGroup == Groups.Disabled)
-                        {
-                            float orgLimit = Global.Settings.SlopeLimitsOriginal[netName];
-
-                            if (cfgLimit == null || !cfgLimit.HasValue)
-                            {
-                                cfgLimit = orgLimit;
-                            }
-
-                            float disLimit;
-                            if (cfgLimit.Value < orgLimit)
-                            {
-                                disLimit = orgLimit + (cfgLimit.Value * 2);
-                                if (disLimit > orgLimit * 3)
+                                if (match == null)
                                 {
-                                    disLimit = orgLimit * 3;
+                                    Log.Info(null, null, "NewLimit", netName, netInfo.m_maxSlope);
+                                }
+                                else
+                                {
+                                    Log.Info(null, null, "NewLimit", netName, netInfo.m_maxSlope, match);
+                                }
+
+                                Global.Settings.SlopeLimits[netName] = netInfo.m_maxSlope;
+                                missing = true;
+                            }
+
+                            if (setToGroup == Groups.Custom)
+                            {
+                                if (cfgLimit != null && cfgLimit.HasValue)
+                                {
+                                    Log.Info(null, null, "SetLimit", netName, cfgLimit.Value);
+                                    netInfo.m_maxSlope = cfgLimit.Value;
                                 }
                             }
-                            else
+                            else if (setToGroup == Groups.Disabled)
                             {
-                                disLimit = orgLimit;
-                            }
+                                float orgLimit = Global.Settings.SlopeLimitsOriginal[netName];
 
-                            Log.Info(null, null, "DisLimit", netName, disLimit, orgLimit, cfgLimit.Value);
-                            netInfo.m_maxSlope = disLimit;
+                                if (cfgLimit == null || !cfgLimit.HasValue)
+                                {
+                                    cfgLimit = orgLimit;
+                                }
+
+                                float disLimit;
+                                if (cfgLimit.Value < orgLimit)
+                                {
+                                    disLimit = orgLimit + (cfgLimit.Value * 2);
+                                    if (disLimit > orgLimit * 3)
+                                    {
+                                        disLimit = orgLimit * 3;
+                                    }
+                                }
+                                else
+                                {
+                                    disLimit = orgLimit;
+                                }
+
+                                Log.Info(null, null, "DisLimit", netName, disLimit, orgLimit, cfgLimit.Value);
+                                netInfo.m_maxSlope = disLimit;
+                            }
                         }
                     }
-                }
 
-                if (found || missing)
-                {
-                    if (missing)
+                    if (found || missing)
                     {
-                        Global.Settings.Update();
+                        if (missing)
+                        {
+                            Global.Settings.Update();
+                        }
+
+                        Global.Settings.Save();
                     }
 
-                    Global.Settings.Save();
+                    this.group = setToGroup;
+                }
+                catch (Exception ex)
+                {
+                    this.isBroken = true;
+                    Log.Error(this, "SetLimits", ex);
                 }
 
-                this.group = setToGroup;
+                Log.Debug(this, "SetLimits", "End");
             }
             catch (Exception ex)
             {
+                Log.Error(this, "Initialize", ex);
                 this.isBroken = true;
-                Log.Error(this, "SetLimits", ex);
             }
-
-            Log.Debug(this, "SetLimits", "End");
+            finally
+            {
+                Global.Release(locked);
+            }
         }
 
         /// <summary>

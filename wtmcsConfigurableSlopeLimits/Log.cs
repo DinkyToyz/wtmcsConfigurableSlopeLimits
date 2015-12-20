@@ -115,38 +115,46 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 if (value != fileBuffering)
                 {
-                    if (value)
+                    try
                     {
-                        if (LogToFile && fileBuffer == null)
+                        if (value)
                         {
-                            fileBuffer = new List<string>();
-                        }
-                    }
-                    else
-                    {
-                        if (fileBuffer != null && fileBuffer.Count > 0)
-                        {
-                            if (LogToFile)
+                            if (LogToFile && fileBuffer == null)
                             {
-                                try
-                                {
-                                    using (StreamWriter logFile = new StreamWriter(FileSystem.FilePathName(".log"), logFileCreated))
-                                    {
-                                        logFile.Write(String.Join("", fileBuffer.ToArray()).ConformNewlines());
-                                        logFile.Close();
-                                    }
-
-                                    logFileCreated = true;
-                                }
-                                catch
-                                {
-                                }
+                                fileBuffer = new List<string>();
                             }
-
-                            fileBuffer.Clear();
                         }
+                        else
+                        {
+                            if (fileBuffer != null && fileBuffer.Count > 0)
+                            {
+                                if (LogToFile)
+                                {
+                                    try
+                                    {
+                                        using (StreamWriter logFile = new StreamWriter(FileSystem.FilePathName(".log"), logFileCreated))
+                                        {
+                                            logFile.Write(String.Join("", fileBuffer.ToArray()).ConformNewlines());
+                                            logFile.Close();
+                                        }
+
+                                        logFileCreated = true;
+                                    }
+                                    catch
+                                    {
+                                    }
+                                }
+
+                                fileBuffer.Clear();
+                            }
+                        }
+
+                        fileBuffering = value;
                     }
-                    fileBuffering = value;
+                    catch
+                    {
+                        fileBuffering = false;
+                    }
                 }
             }
         }

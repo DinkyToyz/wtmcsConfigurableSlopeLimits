@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -16,6 +17,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// The net limit needs to be updated.
         /// </summary>
         public static bool LimitUpdateNeeded = false;
+
+        /// <summary>
+        /// The data lock instance.
+        /// </summary>
+        private static readonly object LockInstance = new object();
 
         /// <summary>
         /// The limits instance.
@@ -186,6 +192,34 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             catch (Exception ex)
             {
                 Log.Error(typeof(Global), "InitializeLimits", ex);
+            }
+        }
+
+        /// <summary>
+        /// Locks the data.
+        /// </summary>
+        /// <returns>Tue when locked.</returns>
+        public static bool Lock()
+        {
+            Monitor.Enter(LockInstance);
+            return true;
+        }
+
+        /// <summary>
+        /// Release the data.
+        /// </summary>
+        /// <param name="locked">Set to <c>true</c> if locked.</param>
+        public static void Release(bool locked = true)
+        {
+            if (locked)
+            {
+                try
+                {
+                    Monitor.Exit(LockInstance);
+                }
+                catch
+                {
+                }
             }
         }
 

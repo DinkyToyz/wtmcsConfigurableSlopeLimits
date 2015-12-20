@@ -102,6 +102,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             try
             {
+                if (Log.LogToFile)
+                    Log.BufferFileWrites = true;
             }
             catch (Exception ex)
             {
@@ -112,6 +114,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 Log.Debug(this, "OnCreated", "Base");
                 base.OnCreated(threading);
+
+                if (Log.LogToFile)
+                    Log.BufferFileWrites = false;
             }
 
             Log.Debug(this, "OnCreated", "End");
@@ -126,6 +131,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             try
             {
+                if (Log.LogToFile)
+                    Log.BufferFileWrites = true;
+
                 this.DeInitialize();
             }
             catch (Exception ex)
@@ -137,6 +145,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 Log.Debug(this, "OnReleased", "Base");
                 base.OnReleased();
+
+                if (Log.LogToFile)
+                    Log.BufferFileWrites = false;
             }
 
             Log.Debug(this, "OnReleased", "End");
@@ -153,6 +164,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             try
             {
+                if (Log.LogToFile)
+                {
+                    Log.BufferFileWrites = true;
+                }
+
                 if (!this.isBroken)
                 {
                     if (this.createButtonsOnUpdate && Global.Limits != null && Global.Limits.IsUsable)
@@ -198,6 +214,13 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 Log.Error(this, "OnUpdate", ex);
                 this.isBroken = true;
+            }
+            finally
+            {
+                if (Log.LogToFile)
+                {
+                    Log.BufferFileWrites = false;
+                }
             }
         }
 
@@ -281,9 +304,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             try
             {
-                if (Log.LogToFile)
-                    Log.BufferFileWrites = true;
-
                 ////if (Log.LogToFile) Log.Debug(this, "CreateButtons", "Begin");
 
                 ////if (Log.LogToFile) Log.Debug(this, "CreateButtons", "FindComponents");
@@ -327,11 +347,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 Log.Error(this, "CreateButtun", ex);
                 this.isBroken = true;
                 return false;
-            }
-            finally
-            {
-                if (Log.LogToFile)
-                    Log.BufferFileWrites = false;
             }
         }
     }
