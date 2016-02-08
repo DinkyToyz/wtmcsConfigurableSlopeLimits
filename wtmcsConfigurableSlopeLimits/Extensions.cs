@@ -127,5 +127,67 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             return text.ToString().ConformNewlines();
         }
+
+        /// <summary>
+        /// Retrieves a substring from this instance. The substring starts at a specified character position.
+        /// </summary>
+        /// <param name="text">The string instance.</param>
+        /// <param name="startIndex">The zero-based starting character position of a substring in this instance.</param>
+        /// <returns>A String object equivalent to the substring that begins at startIndex in this instance, or Empty if startIndex is out of range.</returns>
+        public static string SafeSubstring(this string text, int startIndex)
+        {
+            if (text == null)
+            {
+                return null;
+            }
+            else if (startIndex >= text.Length)
+            {
+                return "";
+            }
+            else
+            {
+                if (startIndex < 0)
+                {
+                    startIndex = 0;
+                }
+
+                return text.Substring(startIndex);
+            }
+        }
+
+        /// <summary>
+        /// Retrieves a substring from this instance. The substring starts at a specified character position and has a specified maximum length.
+        /// </summary>
+        /// <param name="text">The string instance.</param>
+        /// <param name="startIndex">The zero-based starting character position of a substring in this instance.</param>
+        /// <param name="maxLength">The maximum number of characters in the substring.</param>
+        /// <returns>A String equivalent to a substring of maximum length length that begins at startIndex in this instance, or Empty if startIndex is out of range.</returns>
+        public static string SafeSubstring(this string text, int startIndex, int maxLength)
+        {
+            if (text == null)
+            {
+                return null;
+            }
+            else if (startIndex >= text.Length || maxLength <= 0)
+            {
+                return String.Empty;
+            }
+            else
+            {
+                if (startIndex < 0)
+                {
+                    startIndex = 0;
+                }
+
+                if (text.Length - startIndex < maxLength)
+                {
+                    return text.Substring(startIndex);
+                }
+                else
+                {
+                    return text.Substring(startIndex, maxLength);
+                }
+            }
+        }
     }
 }
