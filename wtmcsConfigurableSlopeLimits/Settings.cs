@@ -62,9 +62,21 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         private static readonly Dictionary<string, int> DisplayOrders = new Dictionary<string, int>
         {
+            { "Tiny Road", 150 },
             { "Small Heavy Road", 250 },
             { "Rural Highway", 450 },
-            { "National", 450 }
+            { "National Road", 450 }
+        };
+
+        /// <summary>
+        /// The fall back limits.
+        /// </summary>
+        private static readonly Dictionary<string, string> FallBackNames = new Dictionary<string, string>
+        {
+            { "Tiny Road", "Small Road" },
+            { "Small Heavy Road", "Small Road" },
+            { "Rural Highway", "Highway" },
+            { "National Road", "Highway" }
         };
 
         /// <summary>
@@ -423,6 +435,48 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
+        /// Gets the fall back limit.
+        /// </summary>
+        /// <param name="name">The mapped net name.</param>
+        /// <returns>The fall back limit.</returns>
+        public float GetFallBackLimit(string name)
+        {
+            float limit;
+            if (this.SlopeLimits.TryGetValue(name, out limit))
+            {
+                return limit;
+            }
+
+            string tuff = "";
+
+            if (name.SafeSubstring(name.Length - 7) == " Tunnel")
+            {
+                name = name.Substring(0, name.Length - 7);
+                tuff = " Tunnel";
+
+                if (this.SlopeLimits.TryGetValue(name, out limit))
+                {
+                    return limit;
+                }
+            }
+
+            string fallBack;
+            if (FallBackNames.TryGetValue(name, out fallBack))
+            {
+                if (this.SlopeLimits.TryGetValue(fallBack + tuff, out limit))
+                {
+                    return limit;
+                }
+                else if (this.SlopeLimits.TryGetValue(fallBack, out limit))
+                {
+                    return limit;
+                }
+            }
+
+            return float.NaN;
+        }
+
+        /// <summary>
         /// Gets the matching generic.
         /// </summary>
         /// <param name="name">The name.</param>
@@ -431,6 +485,10 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             int order = this.GetOrder(name);
 
+            if (name.SafeSubstring(name.Length - 7) == " Tunnel")
+            {
+                name = name.Substring(0, name.Length - 7);
+            }
             string lowerName = name.ToLowerInvariant();
 
             foreach (Generic generic in Generics)
@@ -438,6 +496,20 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 if (generic.LowerCaseName == lowerName)
                 {
                     return (order >= 0) ? generic.Copy(order) : generic;
+                }
+            }
+
+            string fallBackName = null;
+            if (FallBackNames.TryGetValue(name, out fallBackName))
+            {
+                fallBackName = fallBackName.ToLowerInvariant();
+
+                foreach (Generic generic in Generics)
+                {
+                    if (generic.LowerCaseName == fallBackName)
+                    {
+                        return (order >= 0) ? generic.Copy(order) : generic;
+                    }
                 }
             }
 
@@ -449,11 +521,33 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 }
             }
 
+            if (!String.IsNullOrEmpty(fallBackName))
+            {
+                foreach (Generic generic in Generics)
+                {
+                    if (fallBackName.Contains(generic.LowerCaseName))
+                    {
+                        return generic.Copy(name, (order >= 0) ? order : generic.Order);
+                    }
+                }
+            }
+
             foreach (Generic generic in Generics)
             {
                 if (lowerName.Contains(generic.Part))
                 {
                     return generic.Copy(name, (order >= 0) ? order : generic.Order);
+                }
+            }
+
+            if (!String.IsNullOrEmpty(fallBackName))
+            {
+                foreach (Generic generic in Generics)
+                {
+                    if (fallBackName.Contains(generic.Part))
+                    {
+                        return generic.Copy(name, (order >= 0) ? order : generic.Order);
+                    }
                 }
             }
 
@@ -599,7 +693,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 return order;
             }
 
-            if (name.Length > 7 && name.Substring(name.Length - 7, 7) == " Tunnel" && DisplayOrders.TryGetValue(name.Substring(0, name.Length - 7), out order))
+            if (name.SafeSubstring(name.Length - 7) == " Tunnel" && DisplayOrders.TryGetValue(name.Substring(0, name.Length - 7), out order))
             {
                 return order;
             }

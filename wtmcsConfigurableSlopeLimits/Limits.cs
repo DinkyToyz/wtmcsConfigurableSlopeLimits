@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -170,13 +169,23 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                                 continue;
                             }
 
-                            if (Settings.GenericNames.Contains(netName))
+                            if (!Global.Settings.SlopeLimits.ContainsKey(netName))
                             {
-                                if (!Global.Settings.SlopeLimits.ContainsKey(netName))
+                                if (Settings.GenericNames.Contains(netName))
                                 {
                                     Log.Info(null, null, "NewLimit", netName, netInfo.m_maxSlope);
                                     Global.Settings.SlopeLimits[netName] = netInfo.m_maxSlope;
                                     missing = true;
+                                }
+                                else
+                                {
+                                    float fallBack = Global.Settings.GetFallBackLimit(netName);
+                                    if (fallBack != float.NaN)
+                                    {
+                                        Log.Info(null, null, "NewLimit", netName, fallBack);
+                                        Global.Settings.SlopeLimits[netName] = fallBack;
+                                        missing = true;
+                                    }
                                 }
                             }
 

@@ -12,12 +12,12 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// Matches large road class name.
         /// </summary>
-        private static readonly Regex LargeRoad = new Regex("Large.*?(?:Road|Avenue)$");
+        private static readonly Regex LargeRoad = new Regex("Large.*?(?:Road|Avenue)(?:TL)?$");
 
         /// <summary>
         /// Matches medium road class name.
         /// </summary>
-        private static readonly Regex MediumRoad = new Regex("Medium.*?(?:Road|Avenue)$");
+        private static readonly Regex MediumRoad = new Regex("Medium.*?(?:Road|Avenue)(?:TL)?$");
 
         /// <summary>
         /// Matches Network Extensions double tunnel class name left-over.
@@ -32,27 +32,32 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// Matches Network Extensions large road class name.
         /// </summary>
-        private static readonly Regex NExtLargeRoad = new Regex("^NExt.*?Large.*?(?:Road|Avenue)$");
+        private static readonly Regex NExtLargeRoad = new Regex("^NExt.*?Large.*?(?:Road|Avenue)(?:TL)?$");
 
         /// <summary>
         /// Matches Network Extensions medium road class name.
         /// </summary>
-        private static readonly Regex NExtMediumRoad = new Regex("^NExt.*?Medium.*?(?:Road|Avenue)$");
+        private static readonly Regex NExtMediumRoad = new Regex("^NExt.*?Medium.*?(?:Road|Avenue)(?:TL)?$");
 
         /// <summary>
         /// Matches Network Extensions small heavy road class name.
         /// </summary>
-        private static readonly Regex NExtSmallHeavyRoad = new Regex("^NExt.*?Small3L(Road|Avenue)$");
+        private static readonly Regex NExtSmallHeavyRoad = new Regex("^NExt.*?Small[3-9]L(Road|Avenue)(?:TL)?$");
 
         /// <summary>
         /// Matches Network Extensions small road class name.
         /// </summary>
-        private static readonly Regex NExtSmallRoad = new Regex("^NExt.*?Small.*?(?:Road|Avenue)$");
+        private static readonly Regex NExtSmallRoad = new Regex("^NExt.*?Small.*?(?:Road|Avenue)(?:TL)?$");
+
+        /// <summary>
+        /// Matches Network Extensions tiny road class name.
+        /// </summary>
+        private static readonly Regex NExtTinyRoad = new Regex("^NExt.*?(?:[12]LAlley|1LOneway)(?:TL)?$");
 
         /// <summary>
         /// Matches small road class name.
         /// </summary>
-        private static readonly Regex SmallRoad = new Regex("Small.*?(?:Road|Avenue)$");
+        private static readonly Regex SmallRoad = new Regex("Small.*?(?:Road|Avenue)(?:TL)?$");
 
         /// <summary>
         /// The map.
@@ -126,6 +131,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 {
                     // Network Extensions small.
                     name = "Small Road";
+                }
+                else if (NExtTinyRoad.IsMatch(className))
+                {
+                    // Network Extensions tiny.
+                    name = "Tiny Road";
                 }
                 else if (NExtMediumRoad.IsMatch(className))
                 {

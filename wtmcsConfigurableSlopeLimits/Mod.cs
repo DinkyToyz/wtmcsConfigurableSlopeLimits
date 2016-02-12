@@ -54,7 +54,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             try
             {
                 if (Log.LogToFile)
+                {
                     Log.BufferFileWrites = true;
+                }
 
                 Dictionary<string, List<SlopeLimitSlider>> sliders = new Dictionary<string, List<SlopeLimitSlider>>();
 
