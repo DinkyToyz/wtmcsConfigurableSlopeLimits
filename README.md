@@ -23,10 +23,6 @@ The horizontal and vertical button position can be changed in the options (the z
 
 The config file, wtmcsConfigurableSlopeLimits.xml, is stored in the folder "ModConfig" wherever the game points to with [`DataLocation.localApplicationData`]. On a Windows system that'd usually be somewhere like "C:\Users\[`UserName`]\AppData\Local\Colossal Order\Cities\_Skylines\ModConfig".
 
-## To-do
-
-- Apply to [Traffic++](http://steamcommunity.com/sharedfiles/filedetails/?id=409184143) roads.
-
 ## Errors & Logging
 
 When reporting severe errors, please upload [the games complete log file](http://steamcommunity.com/sharedfiles/filedetails/?id=463645931) and/or the separate log file (see below) somewhere and post a link.
