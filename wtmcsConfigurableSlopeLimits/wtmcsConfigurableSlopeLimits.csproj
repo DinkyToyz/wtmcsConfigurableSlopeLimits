@@ -33,7 +33,7 @@
     <DocumentationFile>bin\Release\wtmcsConfigurableSlopeLimits.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>ConfigurableSlopeLimitsButton.ico</ApplicationIcon>
+    <ApplicationIcon>UI\ConfigurableSlopeLimitsButton.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -68,42 +68,43 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExtendedSlider.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="FileSystem.cs" />
-    <Compile Include="Global.cs" />
-    <Compile Include="Library.cs" />
-    <Compile Include="Limits.cs" />
-    <Compile Include="LoadingExtension.cs" />
-    <Compile Include="Log.cs" />
-    <Compile Include="Mod.cs" />
-    <Compile Include="NetNameMap.cs" />
+    <Compile Include="UI\ExtendedSlider.cs" />
+    <Compile Include="Util\Extensions.cs" />
+    <Compile Include="Util\FileSystem.cs" />
+    <Compile Include="Pieces\Global.cs" />
+    <Compile Include="Pieces\Library.cs" />
+    <Compile Include="Pieces\Limits.cs" />
+    <Compile Include="API\LoadingExtension.cs" />
+    <Compile Include="Util\Log.cs" />
+    <Compile Include="API\Mod.cs" />
+    <Compile Include="Pieces\NetNameMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="ThreadingExtension.cs" />
-    <Compile Include="ToolButton.cs" />
-    <Compile Include="UI.cs" />
-    <Compile Include="UIExtensions.cs" />
+    <Compile Include="Pieces\Settings.cs" />
+    <Compile Include="API\ThreadingExtension.cs" />
+    <Compile Include="UI\ToolButton.cs" />
+    <Compile Include="UI\UI.cs" />
+    <Compile Include="UI\UIExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ConfigurableSlopeLimitsButtonWeb.png" />
+    <Content Include="Dox\ConfigurableSlopeLimitsButtonWeb.png" />
     <Content Include="Info.txt" />
     <Content Include="NetInfo.txt" />
-    <Content Include="PreviewImage.png" />
-    <Content Include="SteamDescription.txt" />
-    <EmbeddedResource Include="ConfigurableSlopeLimitsButton.png" />
-    <Content Include="ConfigurableSlopeLimitsButton.ico" />
+    <Content Include="Dox\PreviewImage.png" />
+    <Content Include="Dox\SteamDescription.txt" />
+    <EmbeddedResource Include="UI\ConfigurableSlopeLimitsButton.png" />
+    <Content Include="UI\ConfigurableSlopeLimitsButton.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Configurable Slope Limits.xcf" />
-    <None Include="PostBuild.cmd" />
-    <None Include="ReadMe.head.md" />
-    <None Include="SteamBBCode2MarkDown.pl" />
+    <None Include="UI\Configurable Slope Limits.xcf" />
+    <None Include="Build\PostBuild.cmd" />
+    <None Include="Dox\ReadMe.head.md" />
+    <None Include="Build\SteamBBCode2MarkDown.pl" />
     <None Include="ToDo.md" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"$(ProjectDir)PostBuild.cmd" 512194601 $(SolutionName) $(TargetFileName)
+    <PostBuildEvent>"$(ProjectDir)Build\PostBuild.cmd" 512194601 $(SolutionName) $(TargetFileName) $(Configuration)
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
