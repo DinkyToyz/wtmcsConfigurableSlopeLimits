@@ -161,7 +161,15 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             {
                                 if (!Global.Settings.SlopeLimitsIgnored.ContainsKey(netName))
                                 {
-                                    Log.Info(null, null, "NotLimit", netName, netInfo.m_maxSlope);
+                                    if (Settings.WarnAboutIgnoredNet(netCollection.name, netName))
+                                    {
+                                        Log.Warning(null, null, "NotLimit", netName, netInfo.m_maxSlope);
+                                    }
+                                    else
+                                    {
+                                        Log.Info(null, null, "NotLimit", netName, netInfo.m_maxSlope);
+                                    }
+
                                     Global.Settings.SlopeLimitsIgnored[netName] = netInfo.m_maxSlope;
                                     found = true;
                                 }
@@ -258,7 +266,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             {
                                 if (netInfo != null)
                                 {
-                                    Log.Debug(this, "LogNetNames", "NetInfo", netInfo, netInfo.m_class.name, netInfo.name, netInfo.GetLocalizedTitle(), netInfo.NetName(), Settings.IgnoreNetText(netInfo.NetName()));
+                                    String netName = Settings.IgnoreNetCollection(netCollection.name) ? netInfo.m_class.name : netInfo.NetName();
+                                    Log.Debug(this, "LogNetNames", "NetInfo", netInfo, netInfo.m_class.name, netInfo.name, netInfo.GetLocalizedTitle(), netName, Settings.IgnoreNetText(netName));
                                 }
                             }
                         }

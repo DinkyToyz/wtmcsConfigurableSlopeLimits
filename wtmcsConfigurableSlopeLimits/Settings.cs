@@ -98,6 +98,16 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         };
 
         /// <summary>
+        /// The pattern for the net collections and nets combinations for wich to warn about ignored nets.
+        /// </summary>
+        private static readonly string WarnIgnoreNetCollectionsNetsPattern = "^(?:(?:[^;]*?Road|Beautification);.*|Expansion \\d+;.*(?:Road|Path|Tunnel|Track)|Public Transport;(?:Road|Tunnel|Track))$";
+
+        /// <summary>
+        /// The net collections and nets combinations for wich to warn about ignored nets.
+        /// </summary>
+        private static readonly Regex WarnIgnoreNetCollectionsNetsRex = new Regex(WarnIgnoreNetCollectionsNetsPattern, RegexOptions.IgnoreCase);
+
+        /// <summary>
         /// The pattern for the net collections that should be ignored.
         /// </summary>
         private static readonly string IgnoreNetCollectionsPattern = "^(?:Electricity|Water)$";
@@ -340,6 +350,14 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public static bool IgnoreNetCollection(string name)
         {
             return String.IsNullOrEmpty(name) ? true : IgnoreNetCollectionsRex.IsMatch(name);
+        }
+
+        /// <summary>
+        /// Check if warning shoud be issued for ignored net.
+        /// </summary>
+        public static bool WarnAboutIgnoredNet(string collectionName, string netName)
+        {
+            return String.IsNullOrEmpty(collectionName) ? false : String.IsNullOrEmpty(netName) ? false : WarnIgnoreNetCollectionsNetsRex.IsMatch(collectionName + ";" + netName);
         }
 
         /// <summary>
