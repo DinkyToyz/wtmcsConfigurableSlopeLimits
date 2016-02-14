@@ -51,7 +51,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// The sprite resource name.
         /// </summary>
-        private static readonly string SpriteResourceName = "ConfigurableSlopeLimitsButton.png";
+        private static readonly string SpriteResourceName = "UI.ConfigurableSlopeLimitsButton.png";
 
         /// <summary>
         /// The sprite sets.
