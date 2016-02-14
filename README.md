@@ -17,7 +17,7 @@ Compatible with [Network Extensions Project](http://steamcommunity.com/sharedfil
 The limits can be configured using the mod options, or a configuration file.
 
 In the game the slope limits can be toggled between stricter and looser with this button (near the snap toggle button):
-![Button](http://www.truls.org/jonas/CS/ConfigurableSlopeLimitsButtonWeb.png)
+![Button](https://raw.githubusercontent.com/DinkyToyz/wtmcsConfigurableSlopeLimits/master/wtmcsConfigurableSlopeLimits/Dox/Button.png)
 
 The horizontal and vertical button position can be changed in the options (the zero position is on top of the snapping toggle button).
 

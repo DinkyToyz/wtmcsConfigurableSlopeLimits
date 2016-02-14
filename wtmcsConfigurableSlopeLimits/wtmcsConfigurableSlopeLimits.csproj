@@ -86,7 +86,7 @@
     <Compile Include="UI\UIExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Dox\ConfigurableSlopeLimitsButtonWeb.png" />
+    <Content Include="Dox\Button.png" />
     <Content Include="Info.txt" />
     <Content Include="NetInfo.txt" />
     <Content Include="Dox\PreviewImage.png" />
