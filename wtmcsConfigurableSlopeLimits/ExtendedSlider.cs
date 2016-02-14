@@ -263,8 +263,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 UILabel label = parent.Find<UILabel>("Label");
                 if (label != null)
                 {
-                    parent.RemoveUIComponent(label);
-                    label.Hide();
+                    label.text = "";
+                    label.height = 0;
+
+                    ////parent.RemoveUIComponent(label);
+                    ////label.Hide();
                 }
             }
         }
