@@ -60,6 +60,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         private static readonly Regex SmallRoad = new Regex("Small.*?(?:Road|Avenue)(?:TL)?$");
 
         /// <summary>
+        /// Matches tram track/road object name.
+        /// </summary>
+        private static readonly Regex TramTrackRoad = new Regex("(?:(^| )Road(?: .*?)? Tram( |$)|(?:^| )Tram(?: Depot)? (?:Track|Road)( |$))");
+
+        /// <summary>
         /// The map.
         /// </summary>
         private static Dictionary<string, string> map = new Dictionary<string, string>();
@@ -79,16 +84,15 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 return map[key];
             }
 
+            string className = netInfo.m_class.name;
+            string objectName = netInfo.name;
+
             string name = null;
             bool tunnel = false;
-            string className = null;
 
             // Figure out name.
             try
             {
-                tunnel = false;
-                className = netInfo.m_class.name;
-
                 if (className.SafeSubstring(className.Length - 6, 6) == "Tunnel")
                 {
                     className = className.SafeSubstring(0, className.Length - 6).TrimEnd(' ');
@@ -97,15 +101,19 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     // Order from Network Extensions chaos.
                     className = NExtDoubleTunnelRest.Replace(className, "$1");
                 }
-                else if (netInfo.name.Contains("Tunnel"))
+                else if (objectName.Contains("Tunnel"))
                 {
                     tunnel = true;
                 }
 
-                if (className == "Highway")
+                if (TramTrackRoad.IsMatch(objectName))
+                {
+                    name = "Tram Track";
+                }
+                else if (className == "Highway")
                 {
                     // Standard game. Separate ramp from highways.
-                    if (netInfo.name.Contains("Ramp"))
+                    if (objectName.Contains("Ramp"))
                     {
                         name = "Highway Ramp";
                     }
@@ -150,7 +158,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 else if (NExtHighway.IsMatch(className))
                 {
                     // Network Extensions highways.
-                    if ((netInfo.name.Contains("Small") && netInfo.name.Contains("Rural")) || netInfo.GetLocalizedTitle().Contains("National"))
+                    if ((objectName.Contains("Small") && objectName.Contains("Rural")) || netInfo.GetLocalizedTitle().Contains("National"))
                     {
                         // Rural Highway (National Road).
                         name = "Rural Highway";
@@ -163,12 +171,12 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 else if (className == "Large Road")
                 {
                     // Order from Network Extensions chaos.
-                    if (netInfo.name.Contains("Highway"))
+                    if (objectName.Contains("Highway"))
                     {
                         name = "Highway";
                     }
                 }
-                else if (netInfo.name.Contains("Rural Highway"))
+                else if (objectName.Contains("Rural Highway"))
                 {
                     // Order from Network Extensions chaos.
                     if (className.SafeSubstring(className.Length - 2, 2) == "2L" || netInfo.GetLocalizedTitle().Contains("Two-Lane Highway"))
@@ -186,9 +194,12 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     // Use original name.
                     name = netInfo.m_class.name;
                 }
-                else if (tunnel)
+                else
                 {
-                    name += " Tunnel";
+                    if (tunnel && !name.Contains("Tunnel"))
+                    {
+                        name += " Tunnel";
+                    }
                 }
             }
             catch (Exception ex)
@@ -203,7 +214,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             if (Log.LogToFile && Log.LogALot)
             {
-                Log.Debug(typeof(NetNameMap), "NetName", netInfo.m_class.name, netInfo.name, netInfo.GetLocalizedTitle(), tunnel, className, name);
+                Log.Debug(typeof(NetNameMap), "NetName", netInfo.m_class.name, objectName, netInfo.GetLocalizedTitle(), tunnel, className, name);
             }
 
             return name;

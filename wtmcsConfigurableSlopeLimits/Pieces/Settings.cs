@@ -65,7 +65,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             { "Tiny Road", 150 },
             { "Small Heavy Road", 250 },
             { "Rural Highway", 450 },
-            { "National Road", 450 }
+            { "National Road", 450 },
+            { "Pedestrian Bridge", 701 },
+            { "Pedestrian Tunnel", 702 }
         };
 
         /// <summary>
@@ -84,17 +86,36 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         private static readonly List<Generic> Generics = new List<Generic>
         {
-            new Generic("Highway Ramp", "ramp", "Roads", 500),
-            new Generic("Highway", "high", "Roads", 600),
-            new Generic("Large Road", "large", "Roads", 400),
-            new Generic("Medium Road", "medium", "Roads", 300),
-            new Generic("Small Road", "small", "Roads", 200),
-            new Generic("Gravel Road", "gravel", "Roads", 100),
-            new Generic("Train Track", "track", "Railroads", 1000),
-            new Generic("Metro Track", "track", "Railroads", 900),
-            new Generic("Pedestrian Path", "pedestrian", "Paths", 700),
-            new Generic("Bicycle Path", "bicycle", "Paths", 800),
-            new Generic("Airplane Runway", "runway", "Runways", 1100)
+            new Generic("Highway Ramp", "ramp", "Roads", SteamHelper.DLC.None, 500),
+            new Generic("Highway", "high", "Roads", SteamHelper.DLC.None, 600),
+            new Generic("Large Road", "large", "Roads", SteamHelper.DLC.None, 400),
+            new Generic("Medium Road", "medium", "Roads", SteamHelper.DLC.None, 300),
+            new Generic("Small Road", "small", "Roads", SteamHelper.DLC.None, 200),
+            new Generic("Gravel Road", "gravel", "Roads", SteamHelper.DLC.None, 100),
+            new Generic("Train Track", "track", "Railroads", SteamHelper.DLC.None, 1200),
+            new Generic("Metro Track", "track", "Railroads", SteamHelper.DLC.None, 1000),
+            new Generic("Pedestrian Path", "pedestrian", "Paths", SteamHelper.DLC.None, 700),
+            new Generic("Bicycle Path", "bicycle", "Paths", SteamHelper.DLC.AfterDarkDLC, 800),
+            new Generic("Airplane Runway", "runway", "Runways", SteamHelper.DLC.None, 1200),
+            new Generic("Tram Track", "tram", "Railroads", SteamHelper.DLC.SnowFallDLC, 900),
+        };
+
+        /// <summary>
+        /// The generics.
+        /// </summary>
+        private static readonly List<Generic> GenericsDLCVariants = new List<Generic>
+        {
+            new Generic("Highway Ramp Tunnel", "ramp", "Roads", SteamHelper.DLC.None, 500),
+            new Generic("Highway Tunnel", "high", "Roads", SteamHelper.DLC.None, 600),
+            new Generic("Large Road Tunnel", "large", "Roads", SteamHelper.DLC.None, 400),
+            new Generic("Medium Road Tunnel", "medium", "Roads", SteamHelper.DLC.None, 300),
+            new Generic("Small Road Tunnel", "small", "Roads", SteamHelper.DLC.None, 200),
+            new Generic("Gravel Road Tunnel", "gravel", "Roads", SteamHelper.DLC.None, 100),
+            new Generic("Train Track Tunnel", "track", "Railroads", SteamHelper.DLC.None, 1200),
+            new Generic("Pedestrian Bridge", "pedestrian", "Paths", SteamHelper.DLC.None, 700),
+            new Generic("Pedestrian Tunnel", "pedestrian", "Paths", SteamHelper.DLC.None, 700),
+            new Generic("Bicycle Tunnel", "bicycle", "Paths", SteamHelper.DLC.AfterDarkDLC, 800),
+            new Generic("Tram Track Tunnel", "tram", "Railroads", SteamHelper.DLC.SnowFallDLC, 900),
         };
 
         /// <summary>
@@ -333,6 +354,20 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
+        /// Gets the supported generics.
+        /// </summary>
+        /// <value>
+        /// The supported generics.
+        /// </value>
+        public List<string> SupportedGenerics
+        {
+            get
+            {
+                return Generics.Union(GenericsDLCVariants).Where(g => IsDLCOwned(g.DLC)).Select(g => g.Name).ToList();
+            }
+        }
+
+        /// <summary>
         /// Check if net should be ignored.
         /// </summary>
         /// <param name="name">The net name.</param>
@@ -370,6 +405,25 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public static string IgnoreNetText(string name)
         {
             return String.IsNullOrEmpty(name) ? (string)null : IgnoreNetsRex.IsMatch(name) ? "Ignore" : (string)null;
+        }
+
+        /// <summary>
+        /// Check if expansion (DLC) is owned.
+        /// </summary>
+        /// <param name="dlc">The DLC.</param>
+        /// <returns>
+        /// True if expansion is owned.
+        /// </returns>
+        public static bool IsDLCOwned(SteamHelper.DLC? dlc)
+        {
+            if (dlc == null || !dlc.HasValue)
+            {
+                return false;
+            }
+            else
+            {
+                return SteamHelper.IsDLCOwned(dlc.Value);
+            }
         }
 
         /// <summary>
@@ -796,6 +850,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public struct Generic
         {
             /// <summary>
+            /// The expansion DLC.
+            /// </summary>
+            public SteamHelper.DLC? DLC;
+
+            /// <summary>
             /// The group.
             /// </summary>
             public string Group;
@@ -831,21 +890,24 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 this.Group = null;
                 this.Order = order;
                 this.LowerCaseName = null;
+                this.DLC = null;
             }
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="Generic"/> struct.
+            /// Initializes a new instance of the <see cref="Generic" /> struct.
             /// </summary>
             /// <param name="name">The name.</param>
             /// <param name="part">The part.</param>
             /// <param name="group">The group.</param>
+            /// <param name="dlc">The DLC.</param>
             /// <param name="order">The sort order.</param>
-            public Generic(string name, string part, string group, int order)
+            public Generic(string name, string part, string group, SteamHelper.DLC? dlc, int order)
             {
                 this.Name = name;
                 this.Part = part;
                 this.Group = group;
                 this.Order = order;
+                this.DLC = dlc;
                 this.LowerCaseName = name.ToLowerInvariant();
             }
 
@@ -892,7 +954,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// </returns>
             public Generic Copy(string name, int order)
             {
-                return new Generic(name, this.Part, this.Group, order);
+                return new Generic(name, this.Part, this.Group, this.DLC, order);
             }
         }
 
@@ -1094,7 +1156,18 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 try
                 {
-                    return limits.ToDictionary(l => l.Name, l => l.Limit);
+                    Dictionary<string, float> dict = limits.ToDictionary(l => l.Name, l => l.Limit);
+
+                    List<KeyValuePair<string, float>> lims = dict.ToList();
+                    foreach (KeyValuePair<string, float> lim in lims)
+                    {
+                        if (float.IsNaN(lim.Value) || float.IsInfinity(lim.Value))
+                        {
+                            dict.Remove(lim.Key);
+                        }
+                    }
+
+                    return dict;
                 }
                 catch (Exception ex)
                 {

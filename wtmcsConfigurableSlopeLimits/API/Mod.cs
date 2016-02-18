@@ -58,13 +58,14 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     Log.BufferFileWrites = true;
                 }
 
+                HashSet<string> keys = new HashSet<string>();
                 Dictionary<string, List<SlopeLimitSlider>> sliders = new Dictionary<string, List<SlopeLimitSlider>>();
 
                 foreach (string name in Global.Settings.SlopeLimits.Keys)
                 {
-                    Log.Debug(this, "OnSettingsUI", name, Global.Settings.SlopeLimitsIgnored.ContainsKey(name), Settings.IgnoreNet(name));
+                    Log.Debug(this, "OnSettingsUI", "SlopeLimitsKeys", name, Global.Settings.SlopeLimitsIgnored.ContainsKey(name), Settings.IgnoreNet(name));
 
-                    if (!Global.Settings.SlopeLimitsIgnored.ContainsKey(name) && !Settings.IgnoreNet(name))
+                    if (!keys.Contains(name) && !Global.Settings.SlopeLimitsIgnored.ContainsKey(name) && !Settings.IgnoreNet(name))
                     {
                         Settings.Generic generic = Global.Settings.GetGeneric(name);
 
@@ -73,6 +74,26 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             sliders.Add(generic.Group, new List<SlopeLimitSlider>());
                         }
                         sliders[generic.Group].Add(new SlopeLimitSlider(name, generic.Order));
+
+                        keys.Add(name);
+                    }
+                }
+
+                foreach (string name in Global.Settings.SupportedGenerics)
+                {
+                    Log.Debug(this, "OnSettingsUI", "SupportedGenerics", name, Global.Settings.SlopeLimitsIgnored.ContainsKey(name), Settings.IgnoreNet(name));
+
+                    if (!keys.Contains(name) && !Global.Settings.SlopeLimitsIgnored.ContainsKey(name) && !Settings.IgnoreNet(name))
+                    {
+                        Settings.Generic generic = Global.Settings.GetGeneric(name);
+
+                        if (!sliders.ContainsKey(generic.Group))
+                        {
+                            sliders.Add(generic.Group, new List<SlopeLimitSlider>());
+                        }
+                        sliders[generic.Group].Add(new SlopeLimitSlider(name, generic.Order));
+
+                        keys.Add(name);
                     }
                 }
 
@@ -184,16 +205,13 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <param name="order">The sort order.</param>
             public SlopeLimitSlider(string name, int order)
             {
+                float limit;
+
                 this.Name = name;
-                this.CurLimit = Global.Settings.SlopeLimits[name];
-                this.OrgLimit = Global.Settings.SlopeLimitsOriginal.ContainsKey(name) ? Global.Settings.SlopeLimitsOriginal[name] : this.CurLimit;
+                this.CurLimit = Global.Settings.SlopeLimits.TryGetValue(name, out limit) ? limit : 0.25f;
+                this.OrgLimit = Global.Settings.SlopeLimitsOriginal.TryGetValue(name, out limit) ? limit : this.CurLimit;
                 this.MinLimit = Global.Settings.MinimumLimit;
                 this.MaxLimit = Global.Settings.MaximumLimit;
-                ////this.MaxLimit = this.OrgLimit * 3;
-                ////if (this.MaxLimit > Global.Settings.MaximumLimit)
-                ////{
-                ////    this.MaxLimit = Global.Settings.MaximumLimit;
-                ////}
                 this.Order = order;
             }
 

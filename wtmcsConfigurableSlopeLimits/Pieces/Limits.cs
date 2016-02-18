@@ -188,7 +188,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                                 else
                                 {
                                     float fallBack = Global.Settings.GetFallBackLimit(netName);
-                                    if (fallBack != float.NaN)
+                                    if (!float.IsNaN(fallBack))
                                     {
                                         Log.Info(null, null, "NewLimit", netName, fallBack);
                                         Global.Settings.SlopeLimits[netName] = fallBack;
@@ -375,8 +375,15 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                             if (Global.Settings.SlopeLimitsOriginal.ContainsKey(netName))
                             {
-                                netInfo.m_maxSlope = Global.Settings.SlopeLimitsOriginal[netName];
-                                Log.Info(null, null, "OldLimit", netName, netInfo.m_maxSlope);
+                                if (float.IsNaN(Global.Settings.SlopeLimitsOriginal[netName]) || float.IsInfinity(Global.Settings.SlopeLimitsOriginal[netName]))
+                                {
+                                    Log.Info(null, null, "NaNLimit", netName);
+                                }
+                                else
+                                {
+                                    netInfo.m_maxSlope = Global.Settings.SlopeLimitsOriginal[netName];
+                                    Log.Info(null, null, "OldLimit", netName, netInfo.m_maxSlope);
+                                }
                             }
                             else
                             {
@@ -493,32 +500,37 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                             string match = null;
                             float? cfgLimit = null;
+                            float limit;
 
-                            if (Global.Settings.SlopeLimits.ContainsKey(netName))
+                            if (Global.Settings.SlopeLimits.TryGetValue(netName, out limit) && !float.IsNaN(limit) && !float.IsInfinity(limit))
                             {
-                                netInfo.m_maxSlope = Global.Settings.SlopeLimits[netName];
+                                netInfo.m_maxSlope = limit;
+                                cfgLimit = limit;
                                 match = "name";
-                                cfgLimit = Global.Settings.SlopeLimits[netName];
                             }
                             else
                             {
                                 string name = netName.ToLowerInvariant();
-                                if (Global.Settings.SlopeLimitsGeneric.ContainsKey(name))
+                                if (Global.Settings.SlopeLimitsGeneric.TryGetValue(name, out limit) && !float.IsNaN(limit) && !float.IsInfinity(limit))
                                 {
-                                    netInfo.m_maxSlope = Global.Settings.SlopeLimitsGeneric[name];
-                                    cfgLimit = Global.Settings.SlopeLimitsGeneric[name];
+                                    netInfo.m_maxSlope = limit;
+                                    cfgLimit = limit;
                                     match = "generic";
                                 }
                                 else
                                 {
                                     foreach (string generic in Global.Settings.SlopeLimitsGeneric.Keys.ToList().OrderBy(sName => name.Length).Reverse())
                                     {
-                                        if (name.Contains(generic))
+                                        limit = Global.Settings.SlopeLimitsGeneric[generic];
+                                        if (!float.IsNaN(limit) && !float.IsInfinity(limit))
                                         {
-                                            netInfo.m_maxSlope = Global.Settings.SlopeLimitsGeneric[generic];
-                                            cfgLimit = Global.Settings.SlopeLimitsGeneric[generic];
-                                            match = "part";
-                                            break;
+                                            if (name.Contains(generic))
+                                            {
+                                                netInfo.m_maxSlope = limit;
+                                                cfgLimit = limit;
+                                                match = "part";
+                                                break;
+                                            }
                                         }
                                     }
                                 }

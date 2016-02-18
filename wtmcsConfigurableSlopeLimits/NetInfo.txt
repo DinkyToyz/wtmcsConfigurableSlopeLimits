@@ -1,4 +1,37 @@
-﻿Network Extensions v1.5.2
+﻿Expansion 2 Snowfall
+
+ToString								m_class.name				name							GetLocalizedTitle						NetName						NetName
+
+Basic Road Tram (NetInfo)				Small Road					Basic Road Tram					Two-Lane Road with Tram Tracks			Small Road					Tram Track
+Tram Line (NetInfo)						Tram Line					Tram Line						ram Line								Tram Line <Ignore>
+Basic Road Elevated Tram (NetInfo)		Small Road					Basic Road Elevated Tram												Small Road					Tram Track
+Basic Road Bridge Tram (NetInfo)		Small Road					Basic Road Bridge Tram													Small Road					Tram Track
+Basic Road Slope Tram (NetInfo)			Small Road					Basic Road Slope Tram													Small Road					Tram Track
+Basic Road Tunnel Tram (NetInfo)		Small Road Tunnel			Basic Road Tunnel Tram													Small Road Tunnel			Tram Track Tunnel
+Medium Road Tram (NetInfo)				Medium Road					Medium Road Tram				Four-Lane Road with Tram Tracks			Medium Road					Tram Track
+Tram Depot Road (NetInfo)				Small Road					Tram Depot Road															Small Road					Tram Track
+Medium Road Elevated Tram (NetInfo)		Medium Road					Medium Road Elevated Tram												Medium Road					Tram Track
+Medium Road Bridge Tram (NetInfo)		Medium Road					Medium Road Bridge Tram													Medium Road					Tram Track
+Medium Road Slope Tram (NetInfo)		Medium Road					Medium Road Slope Tram													Medium Road					Tram Track
+Medium Road Tunnel Tram (NetInfo)		Medium Road Tunnel			Medium Road Tunnel Tram													Medium Road Tunnel			Tram Track Tunnel
+Heating Pipe (NetInfo)					Heating Pipe				Heating Pipe					Water Pipe with Heating Pipes			Heating Pipe <Ignore>
+Oneway Road Tram (NetInfo)				Small Road					Oneway Road Tram				Two-Lane One-Way Road with Tram Tracks	Small Road					Tram Track
+Oneway Road Bridge Tram (NetInfo)		Small Road					Oneway Road Bridge Tram													Small Road					Tram Track
+Oneway Road Elevated Tram (NetInfo)		Small Road					Oneway Road Elevated Tram												Small Road					Tram Track
+Oneway Road Slope Tram (NetInfo)		Small Road					Oneway Road Slope Tram													Small Road					Tram Track
+Oneway Road Tunnel Tram (NetInfo)		Small Road Tunnel			Oneway Road Tunnel Tram													Small Road Tunnel			Tram Track Tunnel
+Tram Track (NetInfo)					Small Road					Tram Track						Tram Track								Small Road					Tram Track
+Tram Track Bridge (NetInfo)				Small Road					Tram Track Bridge														Small Road					Tram Track
+Tram Track Elevated (NetInfo)			Small Road					Tram Track Elevated														Small Road					Tram Track
+Tram Track Slope (NetInfo)				Small Road					Tram Track Slope														Small Road					Tram Track
+Tram Track Tunnel (NetInfo)				Small Road Tunnel			Tram Track Tunnel														Small Road Tunnel			Tram Track Tunnel
+Oneway Tram Track (NetInfo)				Small Road					Oneway Tram Track				One-Way Tram Track						Small Road					Tram Track
+Oneway Tram Track Bridge (NetInfo)		Small Road					Oneway Tram Track Bridge												Small Road					Tram Track
+Oneway Tram Track Elevated (NetInfo)	Small Road					Oneway Tram Track Elevated												Small Road					Tram Track
+Oneway Tram Track Slope (NetInfo)		Small Road					Oneway Tram Track Slope													Small Road					Tram Track
+Oneway Tram Track Tunnel (NetInfo)		Small Road Tunnel			Oneway Tram Track Tunnel												Small Road Tunnel			Tram Track Tunnel
+
+Network Extensions v1.5.2
 
 ToString								m_class.name				name							GetLocalizedTitle						NetName						NetName
 
