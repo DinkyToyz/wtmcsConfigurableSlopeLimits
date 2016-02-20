@@ -1,8 +1,7 @@
 #Additions and Fixes
 
-- Compatibility: Network Extensions (moving target?)
-- Compatibility: Traffic ++
-- Compatibility: Airport Roads
+- Compatibility: Network Extensions (moving target)
+- Realtime button position update.
 
 #Changes and Experiments
 

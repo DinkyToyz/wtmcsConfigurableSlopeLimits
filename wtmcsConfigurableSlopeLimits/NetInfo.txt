@@ -1,4 +1,21 @@
-﻿Expansion 2 Snowfall
+﻿Expansion 1 Bycile
+
+ToString								m_class.name				name							GetLocalizedTitle						NetName						NetName
+
+Pedestrian Pavement Bicycle (NetInfo)	Pedestrian Path				Pedestrian Pavement Bicycle		Bicycle Path							Pedestrian Path
+Pedestrian Elevated Bicycle (NetInfo)	Pedestrian Bridge			Pedestrian Elevated Bicycle												Pedestrian Path
+Pedestrian Slope Bicycle (NetInfo)		Pedestrian Bridge			Pedestrian Slope Bicycle												Pedestrian Path
+Pedestrian Tunnel Bicycle (NetInfo)		Pedestrian Tunnel			Pedestrian Tunnel Bicycle												Pedestrian Tunnel
+
+Network Extensions Zonable Pedestrian
+
+ToString								m_class.name				name							GetLocalizedTitle						NetName						NetName
+
+Zonable Pedestrian Gravel (NetInfo)		Gravel Road					Zonable Pedestrian Gravel		[BETA] Zonable Pedestrian Gravel		Gravel Road					Tiny Road
+Zonable Pedestrian Pavement (NetInfo)	Gravel Road					Zonable Pedestrian Pavement		[BETA] Zonable Pedestrian Concrete		Gravel Road					Tiny Road
+Zonable Pedestrian Elevated (NetInfo)	Pedestrian Bridge			Zonable Pedestrian Elevated												Bicycle Path				Tiny Road
+
+Expansion 2 Snowfall
 
 ToString								m_class.name				name							GetLocalizedTitle						NetName						NetName
 

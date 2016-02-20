@@ -118,16 +118,26 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                         name = "Highway Ramp";
                     }
                 }
+                else if (objectName.SafeSubstring(0, 19) == "Zonable Pedestrian ")
+                {
+                    // Network Extensions zonable pedestrian.
+                    name = "Tiny Road";
+                }
                 else if (className.SafeSubstring(0, 10) == "Pedestrian")
                 {
                     // Standard game. Separate bicyle from pedestrian.
-                    if (tunnel)
+                    if (objectName.Contains("Bicycle"))
                     {
                         name = "Bicycle";
                     }
                     else
                     {
-                        name = "Bicycle Path";
+                        name = "Pedestrian";
+                    }
+
+                    if (!tunnel)
+                    {
+                        name += " Path";
                     }
                 }
                 else if (NExtSmallHeavyRoad.IsMatch(className))
