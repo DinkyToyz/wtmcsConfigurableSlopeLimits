@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
@@ -12,23 +11,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
     /// </summary>
     public class Settings
     {
-        /// <summary>
-        /// The generic names.
-        /// </summary>
-        public static readonly HashSet<String> GenericNames;
-
-        /// <summary>
-        /// The net groups.
-        /// </summary>
-        public static Dictionary<string, int> NetGroups = new Dictionary<string, int>
-        {
-            { "Roads", 1 },
-            { "Paths", 2 },
-            { "Railroads", 3 },
-            { "Runways", 4 },
-            { "Other", 5 }
-        };
-
         /// <summary>
         /// The settings version.
         /// </summary>
@@ -50,105 +32,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public uint SaveCount = 0;
 
         /// <summary>
-        /// The display names.
-        /// </summary>
-        private static readonly Dictionary<string, string> DisplayNames = new Dictionary<string, string>
-        {
-            { "Rural Highway", "National Road" }
-        };
-
-        /// <summary>
-        /// The display orders.
-        /// </summary>
-        private static readonly Dictionary<string, int> DisplayOrders = new Dictionary<string, int>
-        {
-            { "Tiny Road", 150 },
-            { "Small Heavy Road", 250 },
-            { "Rural Highway", 450 },
-            { "National Road", 450 },
-            { "Pedestrian Bridge", 701 },
-            { "Pedestrian Tunnel", 702 }
-        };
-
-        /// <summary>
-        /// The fall back limits.
-        /// </summary>
-        private static readonly Dictionary<string, string> FallBackNames = new Dictionary<string, string>
-        {
-            { "Tiny Road", "Small Road" },
-            { "Small Heavy Road", "Small Road" },
-            { "Rural Highway", "Highway" },
-            { "National Road", "Highway" }
-        };
-
-        /// <summary>
-        /// The generics.
-        /// </summary>
-        private static readonly List<Generic> Generics = new List<Generic>
-        {
-            new Generic("Highway Ramp", "ramp", "Roads", SteamHelper.DLC.None, 500),
-            new Generic("Highway", "high", "Roads", SteamHelper.DLC.None, 600),
-            new Generic("Large Road", "large", "Roads", SteamHelper.DLC.None, 400),
-            new Generic("Medium Road", "medium", "Roads", SteamHelper.DLC.None, 300),
-            new Generic("Small Road", "small", "Roads", SteamHelper.DLC.None, 200),
-            new Generic("Gravel Road", "gravel", "Roads", SteamHelper.DLC.None, 100),
-            new Generic("Train Track", "track", "Railroads", SteamHelper.DLC.None, 1200),
-            new Generic("Metro Track", "track", "Railroads", SteamHelper.DLC.None, 1000),
-            new Generic("Pedestrian Path", "pedestrian", "Paths", SteamHelper.DLC.None, 700),
-            new Generic("Bicycle Path", "bicycle", "Paths", SteamHelper.DLC.AfterDarkDLC, 800),
-            new Generic("Airplane Runway", "runway", "Runways", SteamHelper.DLC.None, 1200),
-            new Generic("Tram Track", "tram", "Railroads", SteamHelper.DLC.SnowFallDLC, 900),
-        };
-
-        /// <summary>
-        /// The generics.
-        /// </summary>
-        private static readonly List<Generic> GenericsDLCVariants = new List<Generic>
-        {
-            new Generic("Highway Ramp Tunnel", "ramp", "Roads", SteamHelper.DLC.None, 500),
-            new Generic("Highway Tunnel", "high", "Roads", SteamHelper.DLC.None, 600),
-            new Generic("Large Road Tunnel", "large", "Roads", SteamHelper.DLC.None, 400),
-            new Generic("Medium Road Tunnel", "medium", "Roads", SteamHelper.DLC.None, 300),
-            new Generic("Small Road Tunnel", "small", "Roads", SteamHelper.DLC.None, 200),
-            new Generic("Gravel Road Tunnel", "gravel", "Roads", SteamHelper.DLC.None, 100),
-            new Generic("Train Track Tunnel", "track", "Railroads", SteamHelper.DLC.None, 1200),
-            new Generic("Pedestrian Bridge", "pedestrian", "Paths", SteamHelper.DLC.None, 700),
-            new Generic("Pedestrian Tunnel", "pedestrian", "Paths", SteamHelper.DLC.None, 700),
-            new Generic("Bicycle Tunnel", "bicycle", "Paths", SteamHelper.DLC.AfterDarkDLC, 800),
-            new Generic("Tram Track Tunnel", "tram", "Railroads", SteamHelper.DLC.SnowFallDLC, 900),
-        };
-
-        /// <summary>
-        /// The pattern for the net collections that should be ignored.
-        /// </summary>
-        private static readonly string IgnoreNetCollectionsPattern = "^(?:Electricity|Water)$";
-
-        /// <summary>
-        /// The net collections that should be ignored.
-        /// </summary>
-        private static readonly Regex IgnoreNetCollectionsRex = new Regex(IgnoreNetCollectionsPattern, RegexOptions.IgnoreCase);
-
-        /// <summary>
-        /// The pattern for the nets that should be ignored.
-        /// </summary>
-        private static readonly string IgnoreNetsPattern = "(?:(?:^NExt)|(?:^Bus Stop$)|(?:(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam))|(?:(?<!Pedestrian|Bicycle) Path)$))";
-
-        /// <summary>
-        /// The nets that should be ignored.
-        /// </summary>
-        private static readonly Regex IgnoreNetsRex = new Regex(IgnoreNetsPattern, RegexOptions.IgnoreCase);
-
-        /// <summary>
-        /// The pattern for the net collections and nets combinations for which to warn about ignored nets.
-        /// </summary>
-        private static readonly string WarnIgnoreNetCollectionsNetsPattern = "^(?:(?:[^;]*?Road|Beautification);.*|Expansion \\d+;.*(?:Road|Path|Tunnel|Track)|Public Transport;(?:Road|Tunnel|Track))$";
-
-        /// <summary>
-        /// The net collections and nets combinations for which to warn about ignored nets.
-        /// </summary>
-        private static readonly Regex WarnIgnoreNetCollectionsNetsRex = new Regex(WarnIgnoreNetCollectionsNetsPattern, RegexOptions.IgnoreCase);
-
-        /// <summary>
         /// The horizontal button position.
         /// </summary>
         private short buttonPositionX = 0;
@@ -167,14 +50,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// The settings version in the loaded file.
         /// </summary>
         private int? loadedVersion = null;
-
-        /// <summary>
-        /// Initializes static members of the <see cref="Settings"/> class.
-        /// </summary>
-        static Settings()
-        {
-            GenericNames = new HashSet<string>(Generics.ConvertAll<string>(g => g.Name));
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Settings"/> class.
@@ -354,60 +229,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
-        /// Gets the supported generics.
-        /// </summary>
-        /// <value>
-        /// The supported generics.
-        /// </value>
-        public List<string> SupportedGenerics
-        {
-            get
-            {
-                return Generics.Union(GenericsDLCVariants).Where(g => IsDLCOwned(g.DLC)).Select(g => g.Name).ToList();
-            }
-        }
-
-        /// <summary>
-        /// Check if net should be ignored.
-        /// </summary>
-        /// <param name="name">The net name.</param>
-        /// <returns>True if net should be ignored.</returns>
-        public static bool IgnoreNet(string name)
-        {
-            return String.IsNullOrEmpty(name) ? true : IgnoreNetsRex.IsMatch(name);
-        }
-
-        /// <summary>
-        /// Check if net collection should be ignored.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns>True if net should be ignored.</returns>
-        public static bool IgnoreNetCollection(string name)
-        {
-            return String.IsNullOrEmpty(name) ? true : IgnoreNetCollectionsRex.IsMatch(name);
-        }
-
-        /// <summary>
-        /// Get text showing whether net collection should be ignored.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns>The text "Ignore" if net collection should be ignored, otherwise null.</returns>
-        public static string IgnoreNetCollectionText(string name)
-        {
-            return String.IsNullOrEmpty(name) ? (string)null : IgnoreNetCollectionsRex.IsMatch(name) ? "Ignore" : (string)null;
-        }
-
-        /// <summary>
-        /// Get text showing whether net should be ignored.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns>The text "Ignore" if net should be ignored, otherwise null.</returns>
-        public static string IgnoreNetText(string name)
-        {
-            return String.IsNullOrEmpty(name) ? (string)null : IgnoreNetsRex.IsMatch(name) ? "Ignore" : (string)null;
-        }
-
-        /// <summary>
         /// Check if expansion (DLC) is owned.
         /// </summary>
         /// <param name="dlc">The DLC.</param>
@@ -481,35 +302,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
-        /// Check if warning should be issued for ignored net.
-        /// </summary>
-        /// <param name="collectionName">Name of the collection.</param>
-        /// <param name="netName">Name of the net.</param>
-        /// <returns>True if warning should be issued.</returns>
-        public static bool WarnAboutIgnoredNet(string collectionName, string netName)
-        {
-            return String.IsNullOrEmpty(collectionName) ? false : String.IsNullOrEmpty(netName) ? false : WarnIgnoreNetCollectionsNetsRex.IsMatch(collectionName + ";" + netName);
-        }
-
-        /// <summary>
-        /// Gets the net display name.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns>The display name.</returns>
-        public string DisplayName(string name)
-        {
-            if (name.Length > 6 && name.Substring(name.Length - 7, 7) == " Tunnel")
-            {
-                name = name.Substring(0, name.Length - 7);
-                return (DisplayNames.ContainsKey(name) ? DisplayNames[name] : name) + " Tunnel";
-            }
-            else
-            {
-                return DisplayNames.ContainsKey(name) ? DisplayNames[name] : name;
-            }
-        }
-
-        /// <summary>
         /// Gets the fall back limit.
         /// </summary>
         /// <param name="name">The mapped net name.</param>
@@ -536,7 +328,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
 
             string fallBack;
-            if (FallBackNames.TryGetValue(name, out fallBack))
+            if (Global.NetNames.FallBackNames.TryGetValue(name, out fallBack))
             {
                 if (this.SlopeLimits.TryGetValue(fallBack + tuff, out limit))
                 {
@@ -549,96 +341,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
 
             return float.NaN;
-        }
-
-        /// <summary>
-        /// Gets the matching generic.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns>A generic.</returns>
-        public Generic GetGeneric(string name)
-        {
-            int order = this.GetOrder(name);
-
-            if (name.SafeSubstring(name.Length - 7) == " Tunnel")
-            {
-                name = name.Substring(0, name.Length - 7);
-            }
-            string lowerName = name.ToLowerInvariant();
-
-            foreach (Generic generic in Generics)
-            {
-                if (generic.LowerCaseName == lowerName)
-                {
-                    return (order >= 0) ? generic.Copy(order) : generic;
-                }
-            }
-
-            string fallBackName = null;
-            if (FallBackNames.TryGetValue(name, out fallBackName))
-            {
-                fallBackName = fallBackName.ToLowerInvariant();
-
-                foreach (Generic generic in Generics)
-                {
-                    if (generic.LowerCaseName == fallBackName)
-                    {
-                        return (order >= 0) ? generic.Copy(order) : generic;
-                    }
-                }
-            }
-
-            foreach (Generic generic in Generics)
-            {
-                if (lowerName.Contains(generic.LowerCaseName))
-                {
-                    return generic.Copy(name, (order >= 0) ? order : generic.Order);
-                }
-            }
-
-            if (!String.IsNullOrEmpty(fallBackName))
-            {
-                foreach (Generic generic in Generics)
-                {
-                    if (fallBackName.Contains(generic.LowerCaseName))
-                    {
-                        return generic.Copy(name, (order >= 0) ? order : generic.Order);
-                    }
-                }
-            }
-
-            foreach (Generic generic in Generics)
-            {
-                if (lowerName.Contains(generic.Part))
-                {
-                    return generic.Copy(name, (order >= 0) ? order : generic.Order);
-                }
-            }
-
-            if (!String.IsNullOrEmpty(fallBackName))
-            {
-                foreach (Generic generic in Generics)
-                {
-                    if (fallBackName.Contains(generic.Part))
-                    {
-                        return generic.Copy(name, (order >= 0) ? order : generic.Order);
-                    }
-                }
-            }
-
-            Generic result = new Generic(-1);
-
-            foreach (KeyValuePair<string, int> group in NetGroups)
-            {
-                if (group.Value > result.Order)
-                {
-                    result.Group = group.Key;
-                    result.Order = group.Value;
-                }
-            }
-
-            result.Order = (order >= 0) ? order : result.Order + 10000;
-            return result;
         }
 
         /// <summary>
@@ -682,15 +384,10 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     cfg.SaveCount = this.SaveCount;
                     cfg.ButtonPositionHorizontal = this.buttonPositionX;
                     cfg.ButtonPositionVertical = this.buttonPositionY;
-                    cfg.IgnoreNetInfoPattern = IgnoreNetsPattern;
-                    cfg.IgnoreNetCollectionPattern = IgnoreNetCollectionsPattern;
-                    cfg.GenericNetInfoNames = Generics;
                     cfg.SetSlopeLimits(this.SlopeLimits);
                     cfg.SetGenericSlopeLimits(this.SlopeLimitsGeneric);
                     cfg.SetOriginalSlopeLimits(this.SlopeLimitsOriginal);
                     cfg.SetIgnoredtSlopeLimits(this.SlopeLimitsIgnored);
-                    cfg.SetDisplayNames(DisplayNames);
-                    cfg.SetDisplayOrders(DisplayOrders);
                     cfg.MinimumLimit = this.MinimumLimit;
                     cfg.MaximumLimit = this.MaximumLimit;
 
@@ -755,28 +452,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
-        /// Gets the order.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns>The order.</returns>
-        private int GetOrder(string name)
-        {
-            int order;
-
-            if (DisplayOrders.TryGetValue(name, out order))
-            {
-                return order;
-            }
-
-            if (name.SafeSubstring(name.Length - 7) == " Tunnel" && DisplayOrders.TryGetValue(name.Substring(0, name.Length - 7), out order))
-            {
-                return order;
-            }
-
-            return -1;
-        }
-
-        /// <summary>
         /// Initializes a generic limit.
         /// </summary>
         /// <param name="name">The road type name.</param>
@@ -833,7 +508,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     }
                 }
 
-                foreach (Generic gen in Generics)
+                foreach (NetNameMap.Generic gen in Global.NetNames.Generics)
                 {
                     this.InitGeneric(gen.Name, gen.Part);
                 }
@@ -841,120 +516,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             catch (Exception ex)
             {
                 Log.Error(this, "InitGenerics", ex);
-            }
-        }
-
-        /// <summary>
-        /// Generic net thingy name-part pair.
-        /// </summary>
-        public struct Generic
-        {
-            /// <summary>
-            /// The expansion DLC.
-            /// </summary>
-            public SteamHelper.DLC? DLC;
-
-            /// <summary>
-            /// The group.
-            /// </summary>
-            public string Group;
-
-            /// <summary>
-            /// The lower case name.
-            /// </summary>
-            public string LowerCaseName;
-
-            /// <summary>
-            /// The name.
-            /// </summary>
-            public string Name;
-
-            /// <summary>
-            /// The order.
-            /// </summary>
-            public int Order;
-
-            /// <summary>
-            /// The part.
-            /// </summary>
-            public string Part;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Generic" /> struct.
-            /// </summary>
-            /// <param name="order">The order.</param>
-            public Generic(int order)
-            {
-                this.Name = null;
-                this.Part = null;
-                this.Group = null;
-                this.Order = order;
-                this.LowerCaseName = null;
-                this.DLC = null;
-            }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Generic" /> struct.
-            /// </summary>
-            /// <param name="name">The name.</param>
-            /// <param name="part">The part.</param>
-            /// <param name="group">The group.</param>
-            /// <param name="dlc">The DLC.</param>
-            /// <param name="order">The sort order.</param>
-            public Generic(string name, string part, string group, SteamHelper.DLC? dlc, int order)
-            {
-                this.Name = name;
-                this.Part = part;
-                this.Group = group;
-                this.Order = order;
-                this.DLC = dlc;
-                this.LowerCaseName = name.ToLowerInvariant();
-            }
-
-            /// <summary>
-            /// Copies this instance.
-            /// </summary>
-            /// <returns>A copy of this instance.</returns>
-            public Generic Copy()
-            {
-                return this.Copy(this.Name, this.Order);
-            }
-
-            /// <summary>
-            /// Copies this instance.
-            /// </summary>
-            /// <param name="order">The order.</param>
-            /// <returns>
-            /// A copy of this instance.
-            /// </returns>
-            public Generic Copy(int order)
-            {
-                return this.Copy(this.Name, order);
-            }
-
-            /// <summary>
-            /// Copies this instance.
-            /// </summary>
-            /// <param name="name">The name.</param>
-            /// <returns>
-            /// A copy of this instance.
-            /// </returns>
-            public Generic Copy(string name)
-            {
-                return this.Copy(name, this.Order);
-            }
-
-            /// <summary>
-            /// Copies this instance.
-            /// </summary>
-            /// <param name="name">The name.</param>
-            /// <param name="order">The order.</param>
-            /// <returns>
-            /// A copy of this instance.
-            /// </returns>
-            public Generic Copy(string name, int order)
-            {
-                return new Generic(name, this.Part, this.Group, this.DLC, order);
             }
         }
 
@@ -983,11 +544,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// The net display orders.
             /// </summary>
             public List<DisplayOrder> DisplayOrders = new List<DisplayOrder>();
-
-            /// <summary>
-            /// The generic net information names.
-            /// </summary>
-            public List<Generic> GenericNetInfoNames = new List<Generic>();
 
             /// <summary>
             /// The generic slope limits.

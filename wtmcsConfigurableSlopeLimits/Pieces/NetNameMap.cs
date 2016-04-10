@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
@@ -7,87 +8,475 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
     /// <summary>
     /// Network name map extension.
     /// </summary>
-    public static class NetNameMap
+    public class NetNameMap
     {
+        /// <summary>
+        /// The fall back limits.
+        /// </summary>
+        public readonly Dictionary<string, string> FallBackNames = new Dictionary<string, string>
+        {
+            { "Tiny Road", "Small Road" },
+            { "Small Heavy Road", "Small Road" },
+            { "Rural Highway", "Highway" },
+            { "National Road", "Highway" }
+        };
+
+        /// <summary>
+        /// The generic names.
+        /// </summary>
+        public readonly HashSet<String> GenericNames;
+
+        /// <summary>
+        /// The generics.
+        /// </summary>
+        public readonly List<Generic> Generics = new List<Generic>
+        {
+            new Generic("Highway Ramp", "ramp", "Roads", SteamHelper.DLC.None, 500),
+            new Generic("Highway", "high", "Roads", SteamHelper.DLC.None, 600),
+            new Generic("Large Road", "large", "Roads", SteamHelper.DLC.None, 400),
+            new Generic("Medium Road", "medium", "Roads", SteamHelper.DLC.None, 300),
+            new Generic("Small Road", "small", "Roads", SteamHelper.DLC.None, 200),
+            new Generic("Gravel Road", "gravel", "Roads", SteamHelper.DLC.None, 100),
+            new Generic("Train Track", "track", "Railroads", SteamHelper.DLC.None, 1200),
+            new Generic("Metro Track", "track", "Railroads", SteamHelper.DLC.None, 1000),
+            new Generic("Pedestrian Path", "pedestrian", "Paths", SteamHelper.DLC.None, 700),
+            new Generic("Bicycle Path", "bicycle", "Paths", SteamHelper.DLC.AfterDarkDLC, 800),
+            new Generic("Airplane Runway", "runway", "Runways", SteamHelper.DLC.None, 1200),
+            new Generic("Tram Track", "tram", "Railroads", SteamHelper.DLC.SnowFallDLC, 900),
+        };
+
+        /// <summary>
+        /// The net groups.
+        /// </summary>
+        public readonly Dictionary<string, int> NetGroups = new Dictionary<string, int>
+        {
+            { "Roads", 1 },
+            { "Paths", 2 },
+            { "Railroads", 3 },
+            { "Runways", 4 },
+            { "Other", 5 }
+        };
+
+        /// <summary>
+        /// The generic net information names.
+        /// </summary>
+        public List<Generic> GenericNetInfoNames = new List<Generic>();
+
+        /// <summary>
+        /// Matches canal names.
+        /// </summary>
+        private readonly Regex canal = new Regex("(?:^|Landscaping )?Canal(?: ?\\d+)?$");
+
+        /// <summary>
+        /// Matches castle wall names.
+        /// </summary>
+        private readonly Regex castleWall = new Regex("^Castle Walls?(?: ?\\d+)?$");
+
+        /// <summary>
+        /// The display names.
+        /// </summary>
+        private readonly Dictionary<string, string> displayNames = new Dictionary<string, string>
+        {
+            { "Rural Highway", "National Road" }
+        };
+
+        /// <summary>
+        /// The display orders.
+        /// </summary>
+        private readonly Dictionary<string, int> displayOrders = new Dictionary<string, int>
+        {
+            { "Tiny Road", 150 },
+            { "Small Heavy Road", 250 },
+            { "Rural Highway", 450 },
+            { "National Road", 450 },
+            { "Pedestrian Bridge", 701 },
+            { "Pedestrian Tunnel", 702 },
+            { "Canal", 2000 },
+            { "Quay", 2010 },
+            { "Flood Wall", 2020 },
+            { "Dam", 2030 },
+            { "Pipe", 3000 },
+            { "Wire", 3000 },
+            { "Castle Wall", 4000 },
+            { "Trench", 4000 }
+        };
+
+        /// <summary>
+        /// Matches castle wall names.
+        /// </summary>
+        private readonly Regex floodWall = new Regex("(?:^|Landscaping )?Flood Wall(?: ?\\d+)?$");
+
+        /// <summary>
+        /// The generics.
+        /// </summary>
+        private readonly List<Generic> genericsDLCVariants = new List<Generic>
+        {
+            new Generic("Highway Ramp Tunnel", "ramp", "Roads", SteamHelper.DLC.None, 500),
+            new Generic("Highway Tunnel", "high", "Roads", SteamHelper.DLC.None, 600),
+            new Generic("Large Road Tunnel", "large", "Roads", SteamHelper.DLC.None, 400),
+            new Generic("Medium Road Tunnel", "medium", "Roads", SteamHelper.DLC.None, 300),
+            new Generic("Small Road Tunnel", "small", "Roads", SteamHelper.DLC.None, 200),
+            new Generic("Gravel Road Tunnel", "gravel", "Roads", SteamHelper.DLC.None, 100),
+            new Generic("Train Track Tunnel", "track", "Railroads", SteamHelper.DLC.None, 1200),
+            new Generic("Pedestrian Bridge", "pedestrian", "Paths", SteamHelper.DLC.None, 700),
+            new Generic("Pedestrian Tunnel", "pedestrian", "Paths", SteamHelper.DLC.None, 700),
+            new Generic("Bicycle Tunnel", "bicycle", "Paths", SteamHelper.DLC.AfterDarkDLC, 800),
+            new Generic("Tram Track Tunnel", "tram", "Railroads", SteamHelper.DLC.SnowFallDLC, 900),
+        };
+
+        /// <summary>
+        /// The net collections that should be ignored.
+        /// </summary>
+        private readonly Regex ignoreNetCollectionsRex = new Regex("^(?:Electricity|Water)$", RegexOptions.IgnoreCase);
+
+        /// <summary>
+        /// The nets that should be ignored.
+        /// </summary>
+        private readonly Regex ignoreNetsRex = new Regex("(?:(?:^NExt)|(?:^Bus Stop$)|(?:(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam))|(?:(?<!Pedestrian|Bicycle) Path)$))", RegexOptions.IgnoreCase);
+
         /// <summary>
         /// Matches large road class name.
         /// </summary>
-        private static readonly Regex LargeRoad = new Regex("Large.*?(?:Road|Avenue)(?:TL)?$");
+        private readonly Regex largeRoad = new Regex("Large.*?(?:Road|Avenue)(?:TL)?$");
 
         /// <summary>
         /// Matches medium road class name.
         /// </summary>
-        private static readonly Regex MediumRoad = new Regex("Medium.*?(?:Road|Avenue)(?:TL)?$");
+        private readonly Regex mediumRoad = new Regex("Medium.*?(?:Road|Avenue)(?:TL)?$");
 
         /// <summary>
         /// Matches Network Extensions double tunnel class name left-over.
         /// </summary>
-        private static readonly Regex NExtDoubleTunnelRest = new Regex("Tunnel(\\d+L)$");
+        private readonly Regex nextDoubleTunnelRest = new Regex("Tunnel(\\d+L)$");
 
         /// <summary>
         /// Matches Network Extensions highway class name.
         /// </summary>
-        private static readonly Regex NExtHighway = new Regex("^NExt.*?Highway(?:\\d+L)$");
+        private readonly Regex nextHighway = new Regex("^NExt.*?Highway(?:\\d+L)$");
 
         /// <summary>
         /// Matches Network Extensions large road class name.
         /// </summary>
-        private static readonly Regex NExtLargeRoad = new Regex("^NExt.*?Large.*?(?:Road|Avenue)(?:TL)?$");
+        private readonly Regex nextLargeRoad = new Regex("^NExt.*?Large.*?(?:Road|Avenue)(?:TL)?$");
 
         /// <summary>
         /// Matches Network Extensions medium road class name.
         /// </summary>
-        private static readonly Regex NExtMediumRoad = new Regex("^NExt.*?Medium.*?(?:Road|Avenue)(?:TL)?$");
+        private readonly Regex nextMediumRoad = new Regex("^NExt.*?Medium.*?(?:Road|Avenue)(?:TL)?$");
 
         /// <summary>
         /// Matches Network Extensions small heavy road class name.
         /// </summary>
-        private static readonly Regex NExtSmallHeavyRoad = new Regex("^NExt.*?Small[3-9]L(Road|Avenue)(?:TL)?$");
+        private readonly Regex nextSmallHeavyRoad = new Regex("^NExt.*?Small[3-9]L(Road|Avenue)(?:TL)?$");
 
         /// <summary>
         /// Matches Network Extensions small road class name.
         /// </summary>
-        private static readonly Regex NExtSmallRoad = new Regex("^NExt.*?Small.*?(?:Road|Avenue)(?:TL)?$");
+        private readonly Regex nextSmallRoad = new Regex("^NExt.*?Small.*?(?:Road|Avenue)(?:TL)?$");
 
         /// <summary>
         /// Matches Network Extensions tiny road class name.
         /// </summary>
-        private static readonly Regex NExtTinyRoad = new Regex("^NExt.*?(?:[12]LAlley|1LOneway)(?:TL)?$");
+        private readonly Regex nextTinyRoad = new Regex("^NExt.*?(?:[12]LAlley|1LOneway)(?:TL)?$");
+
+        /// <summary>
+        /// Matches quay names.
+        /// </summary>
+        private readonly Regex quay = new Regex("(?:^|Landscaping )?Quay(?: ?\\d+)?$");
 
         /// <summary>
         /// Matches small road class name.
         /// </summary>
-        private static readonly Regex SmallRoad = new Regex("Small.*?(?:Road|Avenue)(?:TL)?$");
+        private readonly Regex smallRoad = new Regex("Small.*?(?:Road|Avenue)(?:TL)?$");
 
         /// <summary>
         /// Matches tram track/road object name.
         /// </summary>
-        private static readonly Regex TramTrackRoad = new Regex("(?:(^| )Road(?: .*?)? Tram( |$)|(?:^| )Tram(?: Depot)? (?:Track|Road)( |$))");
+        private readonly Regex tramTrackRoad = new Regex("(?:(^| )Road(?: .*?)? Tram( |$)|(?:^| )Tram(?: Depot)? (?:Track|Road)( |$))");
+
+        /// <summary>
+        /// Matches trench names.
+        /// </summary>
+        private readonly Regex trench = new Regex("^Trench Ruins?(?: ?\\d+)?$");
+
+        /// <summary>
+        /// The net collections and nets combinations for which to warn about ignored nets.
+        /// </summary>
+        private readonly Regex warnIgnoreNetCollectionsNetsRex = new Regex("^(?:(?:[^;]*?Road|Beautification);.*|Expansion \\d+;.*(?:Road|Path|Tunnel|Track)|Public Transport;(?:Road|Tunnel|Track))$", RegexOptions.IgnoreCase);
 
         /// <summary>
         /// The map.
         /// </summary>
-        private static Dictionary<string, string> map = new Dictionary<string, string>();
+        private Dictionary<string, string> map = new Dictionary<string, string>();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NetNameMap"/> class.
+        /// </summary>
+        public NetNameMap()
+        {
+            this.GenericNames = new HashSet<string>(Global.NetNames.Generics.ConvertAll<string>(g => g.Name));
+        }
+
+        /// <summary>
+        /// Gets the supported generics.
+        /// </summary>
+        /// <value>
+        /// The supported generics.
+        /// </value>
+        public List<string> SupportedGenerics
+        {
+            get
+            {
+                return this.Generics.Union(this.genericsDLCVariants).Where(g => Settings.IsDLCOwned(g.DLC)).Select(g => g.Name).ToList();
+            }
+        }
+
+        /// <summary>
+        /// Gets the mapped name for the specified net information.
+        /// </summary>
+        /// <value>
+        /// The mapped names.
+        /// </value>
+        /// <param name="netInfo">The net information.</param>
+        /// <returns>The mapped name.</returns>
+        public string this[NetInfo netInfo]
+        {
+            get
+            {
+                return this.NetName(netInfo);
+            }
+        }
+
+        /// <summary>
+        /// Gets the net display name.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>The display name.</returns>
+        public string DisplayName(string name)
+        {
+            string displayName;
+
+            if (name.Length > 6 && name.Substring(name.Length - 7, 7) == " Tunnel")
+            {
+                name = name.Substring(0, name.Length - 7);
+
+                if (this.displayNames.TryGetValue(name, out displayName))
+                {
+                    return displayName + " Tunnel";
+                }
+                else
+                {
+                    return name + " Tunnel";
+                }
+            }
+            else if (this.displayNames.TryGetValue(name, out displayName))
+            {
+                return displayName;
+            }
+            else
+            {
+                return name;
+            }
+        }
+
+        /// <summary>
+        /// Gets the matching generic.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>A generic.</returns>
+        public Generic GetGeneric(string name)
+        {
+            int order = this.GetOrder(name);
+
+            if (name.SafeSubstring(name.Length - 7) == " Tunnel")
+            {
+                name = name.Substring(0, name.Length - 7);
+            }
+            string lowerName = name.ToLowerInvariant();
+
+            foreach (Generic generic in this.Generics)
+            {
+                if (generic.LowerCaseName == lowerName)
+                {
+                    return (order >= 0) ? generic.Copy(order) : generic;
+                }
+            }
+
+            string fallBackName = null;
+            if (this.FallBackNames.TryGetValue(name, out fallBackName))
+            {
+                fallBackName = fallBackName.ToLowerInvariant();
+
+                foreach (Generic generic in this.Generics)
+                {
+                    if (generic.LowerCaseName == fallBackName)
+                    {
+                        return (order >= 0) ? generic.Copy(order) : generic;
+                    }
+                }
+            }
+
+            foreach (Generic generic in this.Generics)
+            {
+                if (lowerName.Contains(generic.LowerCaseName))
+                {
+                    return generic.Copy(name, (order >= 0) ? order : generic.Order);
+                }
+            }
+
+            if (!String.IsNullOrEmpty(fallBackName))
+            {
+                foreach (Generic generic in this.Generics)
+                {
+                    if (fallBackName.Contains(generic.LowerCaseName))
+                    {
+                        return generic.Copy(name, (order >= 0) ? order : generic.Order);
+                    }
+                }
+            }
+
+            foreach (Generic generic in this.Generics)
+            {
+                if (lowerName.Contains(generic.Part))
+                {
+                    return generic.Copy(name, (order >= 0) ? order : generic.Order);
+                }
+            }
+
+            if (!String.IsNullOrEmpty(fallBackName))
+            {
+                foreach (Generic generic in this.Generics)
+                {
+                    if (fallBackName.Contains(generic.Part))
+                    {
+                        return generic.Copy(name, (order >= 0) ? order : generic.Order);
+                    }
+                }
+            }
+
+            Generic result = new Generic(-1);
+
+            foreach (KeyValuePair<string, int> group in this.NetGroups)
+            {
+                if (group.Value > result.Order)
+                {
+                    result.Group = group.Key;
+                    result.Order = group.Value;
+                }
+            }
+
+            result.Order = (order >= 0) ? order : result.Order + 10000;
+            return result;
+        }
+
+        /// <summary>
+        /// Check if net should be ignored.
+        /// </summary>
+        /// <param name="name">The net name.</param>
+        /// <returns>True if net should be ignored.</returns>
+        public bool IgnoreNet(string name)
+        {
+            return String.IsNullOrEmpty(name) ? true : this.ignoreNetsRex.IsMatch(name);
+        }
+
+        /// <summary>
+        /// Check if net should be ignored.
+        /// </summary>
+        /// <param name="netInfo">The net information.</param>
+        /// <returns>
+        /// True if net should be ignored.
+        /// </returns>
+        public bool IgnoreNet(NetInfo netInfo)
+        {
+            return this.IgnoreNet(this.NetName(netInfo));
+        }
+
+        /// <summary>
+        /// Check if net collection should be ignored.
+        /// </summary>
+        /// <param name="netCollection">The net collection.</param>
+        /// <returns>
+        /// True if net should be ignored.
+        /// </returns>
+        public bool IgnoreNetCollection(NetCollection netCollection)
+        {
+            return (netCollection == null || String.IsNullOrEmpty(netCollection.name)) ? true : this.ignoreNetCollectionsRex.IsMatch(netCollection.name);
+        }
+
+        /// <summary>
+        /// Get text showing whether net collection should be ignored.
+        /// </summary>
+        /// <param name="netCollection">The net collection.</param>
+        /// <returns>
+        /// The text "Ignore" if net collection should be ignored, otherwise null.
+        /// </returns>
+        public string IgnoreNetCollectionText(NetCollection netCollection)
+        {
+            return (netCollection == null || String.IsNullOrEmpty(netCollection.name)) ? (string)null : this.ignoreNetCollectionsRex.IsMatch(netCollection.name) ? "Ignore" : (string)null;
+        }
+
+        /// <summary>
+        /// Get text showing whether net should be ignored.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>The text "Ignore" if net should be ignored, otherwise null.</returns>
+        public string IgnoreNetText(string name)
+        {
+            return String.IsNullOrEmpty(name) ? (string)null : this.ignoreNetsRex.IsMatch(name) ? "Ignore" : (string)null;
+        }
+
+        /// <summary>
+        /// Check if warning should be issued for ignored net.
+        /// </summary>
+        /// <param name="collectionName">Name of the collection.</param>
+        /// <param name="netName">Name of the net.</param>
+        /// <returns>True if warning should be issued.</returns>
+        public bool WarnAboutIgnoredNet(string collectionName, string netName)
+        {
+            return String.IsNullOrEmpty(collectionName) ? false : String.IsNullOrEmpty(netName) ? false : this.warnIgnoreNetCollectionsNetsRex.IsMatch(collectionName + ";" + netName);
+        }
+
+        /// <summary>
+        /// Gets the order.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>The order.</returns>
+        private int GetOrder(string name)
+        {
+            int order;
+
+            if (this.displayOrders.TryGetValue(name, out order))
+            {
+                return order;
+            }
+
+            if (name.SafeSubstring(name.Length - 7) == " Tunnel" && this.displayOrders.TryGetValue(name.Substring(0, name.Length - 7), out order))
+            {
+                return order;
+            }
+
+            return -1;
+        }
 
         /// <summary>
         /// Get the nets name.
         /// </summary>
         /// <param name="netInfo">The net information.</param>
         /// <returns>The name.</returns>
-        public static string NetName(this NetInfo netInfo)
+        private string NetName(NetInfo netInfo)
         {
-            string key = netInfo.m_class.name + "|" + netInfo.name;
-
-            // Return from map if exists.
-            if (map.ContainsKey(key))
-            {
-                return map[key];
-            }
-
             string className = netInfo.m_class.name;
             string objectName = netInfo.name;
 
+            string key = className + "|" + objectName;
             string name = null;
+
+            // Return from map if exists.
+            if (this.map.TryGetValue(key, out name))
+            {
+                return name;
+            }
+
             bool tunnel = false;
 
             // Figure out name.
@@ -99,14 +488,46 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     tunnel = true;
 
                     // Order from Network Extensions chaos.
-                    className = NExtDoubleTunnelRest.Replace(className, "$1");
+                    className = this.nextDoubleTunnelRest.Replace(className, "$1");
                 }
                 else if (objectName.Contains("Tunnel"))
                 {
                     tunnel = true;
                 }
 
-                if (TramTrackRoad.IsMatch(objectName))
+                if (className == "Water Pipe" || objectName == "Water Pipe")
+                {
+                    name = "Pipe";
+                }
+                else if (className == "Electricity Wire" || objectName == "Electricity Wire")
+                {
+                    name = "Wire";
+                }
+                else if (className == "Electricity Dam" || objectName == "Dam")
+                {
+                    name = "Dam";
+                }
+                else if (this.canal.IsMatch(objectName) || this.canal.IsMatch(className))
+                {
+                    name = "Canal";
+                }
+                else if (this.quay.IsMatch(objectName) || this.quay.IsMatch(className))
+                {
+                    name = "Quay";
+                }
+                else if (this.floodWall.IsMatch(objectName) || this.floodWall.IsMatch(className))
+                {
+                    name = "Flood Wall";
+                }
+                else if (this.castleWall.IsMatch(objectName) || this.castleWall.IsMatch(className))
+                {
+                    name = "Castle Wall";
+                }
+                else if (this.trench.IsMatch(objectName) || this.trench.IsMatch(className))
+                {
+                    name = "Trench";
+                }
+                else if (this.tramTrackRoad.IsMatch(objectName))
                 {
                     name = "Tram Track";
                 }
@@ -140,32 +561,32 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                         name += " Path";
                     }
                 }
-                else if (NExtSmallHeavyRoad.IsMatch(className))
+                else if (this.nextSmallHeavyRoad.IsMatch(className))
                 {
                     // Network Extensions small heavy.
                     name = "Small Heavy Road";
                 }
-                else if (NExtSmallRoad.IsMatch(className))
+                else if (this.nextSmallRoad.IsMatch(className))
                 {
                     // Network Extensions small.
                     name = "Small Road";
                 }
-                else if (NExtTinyRoad.IsMatch(className))
+                else if (this.nextTinyRoad.IsMatch(className))
                 {
                     // Network Extensions tiny.
                     name = "Tiny Road";
                 }
-                else if (NExtMediumRoad.IsMatch(className))
+                else if (this.nextMediumRoad.IsMatch(className))
                 {
                     // Network Extensions medium.
                     name = "Medium Road";
                 }
-                else if (NExtLargeRoad.IsMatch(className))
+                else if (this.nextLargeRoad.IsMatch(className))
                 {
                     // Network Extensions large.
                     name = "Large Road";
                 }
-                else if (NExtHighway.IsMatch(className))
+                else if (this.nextHighway.IsMatch(className))
                 {
                     // Network Extensions highways.
                     if ((objectName.Contains("Small") && objectName.Contains("Rural")) || netInfo.GetLocalizedTitle().Contains("National"))
@@ -220,7 +641,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
 
             // Store in map and return.
-            map[key] = name;
+            this.map[key] = name;
 
             if (Log.LogToFile && Log.LogALot)
             {
@@ -228,6 +649,120 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
 
             return name;
+        }
+
+        /// <summary>
+        /// Generic net thingy name-part pair.
+        /// </summary>
+        public struct Generic
+        {
+            /// <summary>
+            /// The expansion DLC.
+            /// </summary>
+            public SteamHelper.DLC? DLC;
+
+            /// <summary>
+            /// The group.
+            /// </summary>
+            public string Group;
+
+            /// <summary>
+            /// The lower case name.
+            /// </summary>
+            public string LowerCaseName;
+
+            /// <summary>
+            /// The name.
+            /// </summary>
+            public string Name;
+
+            /// <summary>
+            /// The order.
+            /// </summary>
+            public int Order;
+
+            /// <summary>
+            /// The part.
+            /// </summary>
+            public string Part;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Generic" /> struct.
+            /// </summary>
+            /// <param name="order">The order.</param>
+            public Generic(int order)
+            {
+                this.Name = null;
+                this.Part = null;
+                this.Group = null;
+                this.Order = order;
+                this.LowerCaseName = null;
+                this.DLC = null;
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Generic" /> struct.
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <param name="part">The part.</param>
+            /// <param name="group">The group.</param>
+            /// <param name="dlc">The DLC.</param>
+            /// <param name="order">The sort order.</param>
+            public Generic(string name, string part, string group, SteamHelper.DLC? dlc, int order)
+            {
+                this.Name = name;
+                this.Part = part;
+                this.Group = group;
+                this.Order = order;
+                this.DLC = dlc;
+                this.LowerCaseName = name.ToLowerInvariant();
+            }
+
+            /// <summary>
+            /// Copies this instance.
+            /// </summary>
+            /// <returns>A copy of this instance.</returns>
+            public Generic Copy()
+            {
+                return this.Copy(this.Name, this.Order);
+            }
+
+            /// <summary>
+            /// Copies this instance.
+            /// </summary>
+            /// <param name="order">The order.</param>
+            /// <returns>
+            /// A copy of this instance.
+            /// </returns>
+            public Generic Copy(int order)
+            {
+                return this.Copy(this.Name, order);
+            }
+
+            /// <summary>
+            /// Copies this instance.
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <returns>
+            /// A copy of this instance.
+            /// </returns>
+            public Generic Copy(string name)
+            {
+                return this.Copy(name, this.Order);
+            }
+
+            /// <summary>
+            /// Copies this instance.
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <param name="order">The order.</param>
+            /// <returns>
+            /// A copy of this instance.
+            /// </returns>
+            public Generic Copy(string name, int order)
+            {
+                return new Generic(name, this.Part, this.Group, this.DLC, order);
+            }
         }
     }
 }

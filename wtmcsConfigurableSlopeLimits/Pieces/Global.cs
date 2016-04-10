@@ -29,6 +29,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         private static Limits limitsInstance = null;
 
         /// <summary>
+        /// The net names map instance.
+        /// </summary>
+        private static NetNameMap netNamesInstance = null;
+
+        /// <summary>
         /// The settings instance.
         /// </summary>
         private static Settings settingsInstance = null;
@@ -77,6 +82,25 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     Log.Error(typeof(Global), "GetLimits", ex);
                     return Limits.Groups.Original;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets the net names map.
+        /// </summary>
+        /// <value>
+        /// The net names map.
+        /// </value>
+        public static NetNameMap NetNames
+        {
+            get
+            {
+                if (netNamesInstance == null)
+                {
+                    netNamesInstance = new NetNameMap();
+                }
+
+                return netNamesInstance;
             }
         }
 

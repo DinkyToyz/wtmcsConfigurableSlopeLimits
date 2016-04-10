@@ -131,7 +131,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             continue;
                         }
 
-                        if (Settings.IgnoreNetCollection(netCollection.name))
+                        if (Global.NetNames.IgnoreNetCollection(netCollection))
                         {
                             continue;
                         }
@@ -155,13 +155,13 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                                 this.LogNetInfo(this, "Initialize", netInfo);
                             }
 
-                            string netName = netInfo.NetName();
+                            string netName = Global.NetNames[netInfo];
 
-                            if (Settings.IgnoreNet(netName))
+                            if (Global.NetNames.IgnoreNet(netName))
                             {
                                 if (!Global.Settings.SlopeLimitsIgnored.ContainsKey(netName))
                                 {
-                                    if (Settings.WarnAboutIgnoredNet(netCollection.name, netName))
+                                    if (Global.NetNames.WarnAboutIgnoredNet(netCollection.name, netName))
                                     {
                                         Log.Warning(null, null, "NotLimit", netName, netInfo.m_maxSlope);
                                     }
@@ -179,7 +179,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                             if (!Global.Settings.SlopeLimits.ContainsKey(netName))
                             {
-                                if (Settings.GenericNames.Contains(netName))
+                                if (Global.NetNames.GenericNames.Contains(netName))
                                 {
                                     Log.Info(null, null, "NewLimit", netName, netInfo.m_maxSlope);
                                     Global.Settings.SlopeLimits[netName] = netInfo.m_maxSlope;
@@ -258,7 +258,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 {
                     if (netCollection != null)
                     {
-                        Log.Debug(this, "LogNetNames", "NetCollection", netCollection, netCollection.name, Settings.IgnoreNetCollectionText(netCollection.name));
+                        Log.Debug(this, "LogNetNames", "NetCollection", netCollection, netCollection.name, Global.NetNames.IgnoreNetCollectionText(netCollection));
                         if (netCollection.m_prefabs != null)
                         {
                             Log.Debug(this, "LogNetNames", "Prefabs", netCollection.m_prefabs);
@@ -266,8 +266,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             {
                                 if (netInfo != null)
                                 {
-                                    String netName = Settings.IgnoreNetCollection(netCollection.name) ? netInfo.m_class.name : netInfo.NetName();
-                                    Log.Debug(this, "LogNetNames", "NetInfo", netInfo, netInfo.m_class.name, netInfo.name, netInfo.GetLocalizedTitle(), netName, Settings.IgnoreNetText(netName));
+                                    String netName = Global.NetNames.IgnoreNetCollection(netCollection) ? netInfo.m_class.name : Global.NetNames[netInfo];
+                                    Log.Debug(this, "LogNetNames", "NetInfo", netInfo, netInfo.m_class.name, netInfo.name, netInfo.GetLocalizedTitle(), netName, Global.NetNames.IgnoreNetText(netName));
                                 }
                             }
                         }
@@ -290,11 +290,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
                 {
-                    if (netCollection != null && netCollection.m_prefabs != null && !Settings.IgnoreNetCollection(netCollection.name))
+                    if (netCollection != null && netCollection.m_prefabs != null && !Global.NetNames.IgnoreNetCollection(netCollection))
                     {
                         foreach (NetInfo netInfo in netCollection.m_prefabs)
                         {
-                            if (netInfo != null && !Settings.IgnoreNet(netInfo.NetName()))
+                            if (netInfo != null && !Global.NetNames.IgnoreNet(netInfo))
                             {
                                 this.LogNetInfo((caller == null) ? this : caller, String.IsNullOrEmpty(block) ? "LogNets" : block, netInfo);
                             }
@@ -336,7 +336,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             continue;
                         }
 
-                        if (Settings.IgnoreNetCollection(netCollection.name))
+                        if (Global.NetNames.IgnoreNetCollection(netCollection))
                         {
                             continue;
                         }
@@ -360,9 +360,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                                 this.LogNetInfo(this, "Restore", netInfo);
                             }
 
-                            string netName = netInfo.NetName();
+                            string netName = Global.NetNames[netInfo];
 
-                            if (Settings.IgnoreNet(netName))
+                            if (Global.NetNames.IgnoreNet(netName))
                             {
                                 if (!Global.Settings.SlopeLimitsIgnored.ContainsKey(netName))
                                 {
@@ -453,7 +453,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             continue;
                         }
 
-                        if (Settings.IgnoreNetCollection(netCollection.name))
+                        if (Global.NetNames.IgnoreNetCollection(netCollection))
                         {
                             continue;
                         }
@@ -477,9 +477,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                                 this.LogNetInfo(this, "SetLimits", netInfo);
                             }
 
-                            string netName = netInfo.NetName();
+                            string netName = Global.NetNames[netInfo];
 
-                            if (Settings.IgnoreNet(netName))
+                            if (Global.NetNames.IgnoreNet(netName))
                             {
                                 if (!Global.Settings.SlopeLimitsIgnored.ContainsKey(netName))
                                 {
@@ -633,7 +633,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     (caller == null) ? this : caller,
                     String.IsNullOrEmpty(block) ? "LogNetInfo" : block,
                     "netInfo",
-                    netInfo.NetName(),
+                    Global.NetNames[netInfo],
                     netInfo.CanBeBuilt(),
                     netInfo.m_canCrossLanes,
                     netInfo.m_lanes.Length,

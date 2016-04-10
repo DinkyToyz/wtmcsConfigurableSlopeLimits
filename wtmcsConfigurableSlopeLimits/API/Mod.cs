@@ -63,11 +63,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                 foreach (string name in Global.Settings.SlopeLimits.Keys)
                 {
-                    Log.Debug(this, "OnSettingsUI", "SlopeLimitsKeys", name, Global.Settings.SlopeLimitsIgnored.ContainsKey(name), Settings.IgnoreNet(name));
+                    Log.Debug(this, "OnSettingsUI", "SlopeLimitsKeys", name, Global.Settings.SlopeLimitsIgnored.ContainsKey(name), Global.NetNames.IgnoreNet(name));
 
-                    if (!keys.Contains(name) && !Global.Settings.SlopeLimitsIgnored.ContainsKey(name) && !Settings.IgnoreNet(name))
+                    if (!keys.Contains(name) && !Global.Settings.SlopeLimitsIgnored.ContainsKey(name) && !Global.NetNames.IgnoreNet(name))
                     {
-                        Settings.Generic generic = Global.Settings.GetGeneric(name);
+                        NetNameMap.Generic generic = Global.NetNames.GetGeneric(name);
 
                         if (!sliders.ContainsKey(generic.Group))
                         {
@@ -79,13 +79,13 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     }
                 }
 
-                foreach (string name in Global.Settings.SupportedGenerics)
+                foreach (string name in Global.NetNames.SupportedGenerics)
                 {
-                    Log.Debug(this, "OnSettingsUI", "SupportedGenerics", name, Global.Settings.SlopeLimitsIgnored.ContainsKey(name), Settings.IgnoreNet(name));
+                    Log.Debug(this, "OnSettingsUI", "SupportedGenerics", name, Global.Settings.SlopeLimitsIgnored.ContainsKey(name), Global.NetNames.IgnoreNet(name));
 
-                    if (!keys.Contains(name) && !Global.Settings.SlopeLimitsIgnored.ContainsKey(name) && !Settings.IgnoreNet(name))
+                    if (!keys.Contains(name) && !Global.Settings.SlopeLimitsIgnored.ContainsKey(name) && !Global.NetNames.IgnoreNet(name))
                     {
-                        Settings.Generic generic = Global.Settings.GetGeneric(name);
+                        NetNameMap.Generic generic = Global.NetNames.GetGeneric(name);
 
                         if (!sliders.ContainsKey(generic.Group))
                         {
@@ -125,7 +125,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                         Global.ButtonPositionUpdateNeeded = true;
                     });
 
-                foreach (string groupName in sliders.Keys.OrderBy(g => Settings.NetGroups[g]))
+                foreach (string groupName in sliders.Keys.OrderBy(g => Global.NetNames.NetGroups[g]))
                 {
                     UIHelperBase group = helper.AddGroup(groupName);
 
@@ -225,7 +225,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 get
                 {
-                    return Global.Settings.DisplayName(this.Name);
+                    return Global.NetNames.DisplayName(this.Name);
                 }
             }
         }
