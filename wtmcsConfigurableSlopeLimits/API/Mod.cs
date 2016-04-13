@@ -125,7 +125,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                         Global.ButtonPositionUpdateNeeded = true;
                     });
 
-                foreach (string groupName in sliders.Keys.OrderBy(g => Global.NetNames.NetGroups[g]))
+                foreach (string groupName in sliders.Keys.OrderBy(g => Global.NetNames.NetGroupOrder(g)))
                 {
                     UIHelperBase group = helper.AddGroup(groupName);
 
@@ -159,7 +159,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             finally
             {
                 if (Log.LogToFile)
+                {
                     Log.BufferFileWrites = false;
+                }
             }
         }
 

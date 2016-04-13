@@ -327,8 +327,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 }
             }
 
-            string fallBack;
-            if (Global.NetNames.FallBackNames.TryGetValue(name, out fallBack))
+            string fallBack = Global.NetNames.GetFallbackName(name);
+            if (fallBack != null)
             {
                 if (this.SlopeLimits.TryGetValue(fallBack + tuff, out limit))
                 {

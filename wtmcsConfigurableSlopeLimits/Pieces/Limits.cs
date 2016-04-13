@@ -179,7 +179,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                             if (!Global.Settings.SlopeLimits.ContainsKey(netName))
                             {
-                                if (Global.NetNames.GenericNames.Contains(netName))
+                                if (Global.NetNames.GenericExists(netName))
                                 {
                                     Log.Info(null, null, "NewLimit", netName, netInfo.m_maxSlope);
                                     Global.Settings.SlopeLimits[netName] = netInfo.m_maxSlope;
