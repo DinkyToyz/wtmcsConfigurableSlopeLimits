@@ -151,6 +151,15 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             });
                     }
                 }
+
+                UIHelperBase miscellaneousGroup = helper.AddGroup("Miscellaneous");
+
+                miscellaneousGroup.AddButton(
+                    "Dump network names",
+                    () =>
+                    {
+                        Limits.DumpNetNames();
+                    });
             }
             catch (System.Exception ex)
             {

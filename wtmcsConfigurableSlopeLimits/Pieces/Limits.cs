@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
@@ -95,6 +97,53 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             get
             {
                 return this.isInitialized && !this.isBroken;
+            }
+        }
+
+        /// <summary>
+        /// Dumps the nets.
+        /// </summary>
+        public static void DumpNetNames()
+        {
+            try
+            {
+                List<String> netNames = new List<string>();
+
+                foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
+                {
+                    if (netCollection != null)
+                    {
+                        netNames.Add(Log.MessageString("NetCollection", netCollection, netCollection.name, Global.NetNames.IgnoreNetCollectionText(netCollection)));
+                        if (netCollection.m_prefabs != null)
+                        {
+                            netNames.Add(Log.MessageString("Prefabs", netCollection.m_prefabs));
+                            foreach (NetInfo netInfo in netCollection.m_prefabs)
+                            {
+                                if (netInfo != null)
+                                {
+                                    String netName = Global.NetNames.IgnoreNetCollection(netCollection) ? netInfo.m_class.name : Global.NetNames[netInfo];
+                                    netNames.Add(Log.MessageString("NetInfo", netInfo, netInfo.m_class.name, netInfo.name, netInfo.GetLocalizedTitle(), netName, Global.NetNames.IgnoreNetText(netName)));
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (netNames.Count == 0)
+                {
+                    throw new InvalidDataException("No network objects");
+                }
+
+                netNames.Add("");
+                using (StreamWriter dumpFile = new StreamWriter(FileSystem.FilePathName(".NetNames.txt"), false))
+                {
+                    dumpFile.Write(String.Join("\n", netNames.ToArray()).ConformNewlines());
+                    dumpFile.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(typeof(Limits), "DumpNetNames", ex);
             }
         }
 

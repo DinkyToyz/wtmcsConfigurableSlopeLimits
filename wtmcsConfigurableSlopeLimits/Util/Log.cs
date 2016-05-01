@@ -218,6 +218,21 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
+        /// Combines the messages in a string.
+        /// </summary>
+        /// <param name="messages">The messages.</param>
+        /// <returns>The string.</returns>
+        public static string MessageString(params object[] messages)
+        {
+            StringBuilder msg = new StringBuilder();
+            int mc = 0;
+
+            AddMessages(ref msg, ref mc, messages);
+
+            return (mc == 0) ? (string)null : msg.ToString();
+        }
+
+        /// <summary>
         /// Convert log level to message type.
         /// </summary>
         /// <param name="level">The level.</param>
@@ -301,31 +316,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 }
 
                 int mc = 0;
-                for (int i = 0; i < messages.Length; i++)
-                {
-                    if (messages[i] == null)
-                    {
-                        continue;
-                    }
-
-                    string message = (messages[i] is string) ? (string)messages[i] : messages[i].ToString();
-                    if (message == null)
-                    {
-                        continue;
-                    }
-
-                    if (mc > 0)
-                    {
-                        msg.Append("; ");
-                    }
-                    else if (msg.Length > 0)
-                    {
-                        msg.Append(' ');
-                    }
-
-                    msg.Append(message.Trim());
-                    mc++;
-                }
+                AddMessages(ref msg, ref mc, messages);
 
                 if (exception != null)
                 {
@@ -439,6 +430,41 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public static void Warning(object sourceObject, string sourceBlock, params object[] messages)
         {
             Output(Level.Warning, sourceObject, sourceBlock, null, messages);
+        }
+
+        /// <summary>
+        /// Adds the messages to the string builder.
+        /// </summary>
+        /// <param name="stringBuilder">The string builder.</param>
+        /// <param name="messageCounter">The message counter.</param>
+        /// <param name="messages">The messages.</param>
+        private static void AddMessages(ref StringBuilder stringBuilder, ref int messageCounter, object[] messages)
+        {
+            for (int i = 0; i < messages.Length; i++)
+            {
+                if (messages[i] == null)
+                {
+                    continue;
+                }
+
+                string message = (messages[i] is string) ? (string)messages[i] : messages[i].ToString();
+                if (message == null)
+                {
+                    continue;
+                }
+
+                if (messageCounter > 0)
+                {
+                    stringBuilder.Append("; ");
+                }
+                else if (stringBuilder.Length > 0)
+                {
+                    stringBuilder.Append(' ');
+                }
+
+                stringBuilder.Append(message.Trim());
+                messageCounter++;
+            }
         }
 
         /// <summary>

@@ -215,7 +215,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             get
             {
-                return GenericList.Where(g => !g.IsVariant);
+                return this.GenericList.Where(g => !g.IsVariant);
             }
         }
 
@@ -288,7 +288,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <returns>True if generics exists.</returns>
         public bool GenericExists(string name)
         {
-            return GenericNames.Contains(name);
+            return this.GenericNames.Contains(name);
         }
 
         /// <summary>
@@ -299,7 +299,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public string GetFallbackName(string name)
         {
             string fallBackName;
-            return FallBackNameList.TryGetValue(name, out fallBackName) ? fallBackName : null;
+            return this.FallBackNameList.TryGetValue(name, out fallBackName) ? fallBackName : null;
         }
 
         /// <summary>
@@ -455,7 +455,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <returns>The order index.</returns>
         public int NetGroupOrder(string name)
         {
-            return NetGroupList[name];
+            int order;
+            return this.NetGroupList.TryGetValue(name, out order) ? order : 999999;
         }
 
         /// <summary>
