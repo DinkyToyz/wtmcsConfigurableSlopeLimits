@@ -103,6 +103,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// Dumps the nets.
         /// </summary>
+        /// <exception cref="InvalidDataException">No network objects.</exception>
         public static void DumpNetNames()
         {
             try
