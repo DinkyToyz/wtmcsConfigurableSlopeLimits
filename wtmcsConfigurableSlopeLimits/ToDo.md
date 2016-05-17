@@ -1,11 +1,8 @@
-#Issues
-
- - Example: scrolling down to edit the slope limit for Highway. Upon clicking the Highway input field, the UI automatically scrolls back up to the top of the list, rendering me unable to change the numbers unless I use the imprecise slider.
-
 #Additions and Fixes
 
-- Save individual original values at init.
 - Button to reset values to defaults/original.
+- Clean "other" stuff once after when mapped in new version.
+- Save individual original values at init.
 - Compatibility: Network Extensions (moving target)
 - Realtime button position update.
 
