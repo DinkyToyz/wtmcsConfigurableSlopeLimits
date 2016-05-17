@@ -68,6 +68,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     if (!keys.Contains(name) && !Global.Settings.SlopeLimitsIgnored.ContainsKey(name) && !Global.NetNames.IgnoreNet(name))
                     {
                         NetNameMap.Generic generic = Global.NetNames.GetGeneric(name);
+                        Log.Debug(this, "OnSettingsUI", "Generic", generic.Name, generic.Group);
 
                         if (!sliders.ContainsKey(generic.Group))
                         {
@@ -79,7 +80,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     }
                 }
 
-                foreach (string name in Global.NetNames.SupportedGenerics)
+                foreach (string name in NetNameMap.SupportedGenerics)
                 {
                     Log.Debug(this, "OnSettingsUI", "SupportedGenerics", name, Global.Settings.SlopeLimitsIgnored.ContainsKey(name), Global.NetNames.IgnoreNet(name));
 

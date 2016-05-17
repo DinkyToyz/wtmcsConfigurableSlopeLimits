@@ -327,7 +327,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 }
             }
 
-            string fallBack = Global.NetNames.GetFallbackName(name);
+            string fallBack = NetNameMap.GetFallbackName(name);
             if (fallBack != null)
             {
                 if (this.SlopeLimits.TryGetValue(fallBack + tuff, out limit))
@@ -508,7 +508,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     }
                 }
 
-                foreach (NetNameMap.Generic gen in Global.NetNames.Generics)
+                foreach (NetNameMap.Generic gen in NetNameMap.Generics)
                 {
                     this.InitGeneric(gen.Name, gen.Part);
                 }

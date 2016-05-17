@@ -363,7 +363,10 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             this.textField.numericalOnly = true;
             this.textField.allowFloats = this.AllowFloats;
             this.textField.submitOnFocusLost = this.submitOnFocusLost;
-            this.textField.eventVisibilityChanged += (component, value) => { this.HideTextFieldLabel(); };
+            this.textField.eventVisibilityChanged += (component, value) =>
+            {
+                this.HideTextFieldLabel();
+            };
 
             this.HideTextFieldLabel();
         }
