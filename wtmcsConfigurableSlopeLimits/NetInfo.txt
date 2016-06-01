@@ -1,4 +1,15 @@
-﻿Expansion 1 Bycile
+﻿Network Extensions Zonable Pedestrian Gravel & Promenade
+
+ToString											m_class.name									name									GetLocalizedTitle						NetName			NetName
+
+Zonable Pedestrian Gravel Tiny (NetInfo)			NExt Zonable Pedestrian Gravel Tiny				Zonable Pedestrian Gravel Tiny			Zonable Pedestrian Gravel Tiny Road		Tiny Road		Gravel Road
+Zonable Pedestrian Gravel Tiny Elevated (NetInfo)	NExt Zonable Pedestrian Gravel Tiny Elevated	Zonable Pedestrian Gravel Tiny Elevated	Zonable Pedestrian Gravel Tiny Elevated	Tiny Road		Gravel Road
+Zonable Pedestrian Gravel (NetInfo)					NExt Zonable Pedestrian Gravel					Zonable Pedestrian Gravel				Zonable Pedestrian Gravel Road			Tiny Road		Gravel Road
+Zonable Pedestrian Gravel Elevated (NetInfo)		NExt Zonable Pedestrian Gravel Elevated			Zonable Pedestrian Gravel Elevated		Zonable Pedestrian Gravel Elevated		Tiny Road		Gravel Road
+Zonable Promenade (NetInfo)							NExtPedRoad16m									Zonable Promenade						Zonable Promenade						NExtPedRoad16m	Tiny Road
+Zonable Promenade Elevated (NetInfo)				NExtPedRoad16m									Zonable Promenade Elevated				Zonable Promenade Elevated				NExtPedRoad16m	Tiny Road
+
+Expansion 1 Bycicle
 
 ToString								m_class.name				name							GetLocalizedTitle						NetName						NetName
 

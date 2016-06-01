@@ -48,17 +48,17 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// Matches canal names.
         /// </summary>
-        private readonly Regex canal = new Regex("(?:^|Landscaping )?Canal(?: ?\\d+)?$");
+        private readonly Regex canalNameRex = new Regex("(?:^|Landscaping )?Canal(?: ?\\d+)?$");
 
         /// <summary>
         /// Matches castle wall names.
         /// </summary>
-        private readonly Regex castleWall = new Regex("^Castle Walls?(?: ?\\d+)?$");
+        private readonly Regex castleWallNameRex = new Regex("^Castle Walls?(?: ?\\d+)?$");
 
         /// <summary>
         /// Matches castle wall names.
         /// </summary>
-        private readonly Regex floodWall = new Regex("(?:^|Landscaping )?Flood Wall(?: ?\\d+)?$");
+        private readonly Regex floodWallNameRex = new Regex("(?:^|Landscaping )?Flood Wall(?: ?\\d+)?$");
 
         /// <summary>
         /// The net collections that should be ignored.
@@ -73,67 +73,67 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// Matches large road class name.
         /// </summary>
-        private readonly Regex largeRoad = new Regex("Large.*?(?:Road|Avenue)(?:TL)?$");
+        private readonly Regex largeRoadClassNameRex = new Regex("Large.*?(?:Road|Avenue)(?:TL)?$");
 
         /// <summary>
         /// Matches medium road class name.
         /// </summary>
-        private readonly Regex mediumRoad = new Regex("Medium.*?(?:Road|Avenue)(?:TL)?$");
+        private readonly Regex mediumRoadClassNameRex = new Regex("Medium.*?(?:Road|Avenue)(?:TL)?$");
 
         /// <summary>
         /// Matches Network Extensions double tunnel class name left-over.
         /// </summary>
-        private readonly Regex nextDoubleTunnelRest = new Regex("Tunnel(\\d+L)$");
+        private readonly Regex nextDoubleTunnelClasNameRestRex = new Regex("Tunnel(\\d+L)$");
 
         /// <summary>
         /// Matches Network Extensions highway class name.
         /// </summary>
-        private readonly Regex nextHighway = new Regex("^NExt.*?Highway(?:\\d+L)$");
+        private readonly Regex nextHighwayClassNameRex = new Regex("^NExt.*?Highway(?:\\d+L)$");
 
         /// <summary>
         /// Matches Network Extensions large road class name.
         /// </summary>
-        private readonly Regex nextLargeRoad = new Regex("^NExt.*?Large.*?(?:Road|Avenue)(?:TL)?$");
+        private readonly Regex nextLargeRoadClassNameRex = new Regex("^NExt.*?Large.*?(?:Road|Avenue)(?:TL)?$");
 
         /// <summary>
         /// Matches Network Extensions medium road class name.
         /// </summary>
-        private readonly Regex nextMediumRoad = new Regex("^NExt.*?Medium.*?(?:Road|Avenue)(?:TL)?$");
+        private readonly Regex nextMediumRoadClassNameRex = new Regex("^NExt.*?Medium.*?(?:Road|Avenue)(?:TL)?$");
 
         /// <summary>
         /// Matches Network Extensions small heavy road class name.
         /// </summary>
-        private readonly Regex nextSmallHeavyRoad = new Regex("^NExt.*?Small[3-9]L(Road|Avenue)(?:TL)?$");
+        private readonly Regex nextSmallHeavyRoadClassNameRex = new Regex("^NExt.*?Small[3-9]L(Road|Avenue)(?:TL)?$");
 
         /// <summary>
         /// Matches Network Extensions small road class name.
         /// </summary>
-        private readonly Regex nextSmallRoad = new Regex("^NExt.*?Small.*?(?:Road|Avenue)(?:TL)?$");
+        private readonly Regex nextSmallRoadClassNameRex = new Regex("^NExt.*?Small.*?(?:Road|Avenue)(?:TL)?$");
 
         /// <summary>
         /// Matches Network Extensions tiny road class name.
         /// </summary>
-        private readonly Regex nextTinyRoad = new Regex("^NExt.*?(?:[12]LAlley|1LOneway)(?:TL)?$");
+        private readonly Regex nextTinyRoadClassNameRex = new Regex("^NExt.*?(?:[12]LAlley|1LOneway|PedRoad(?:\\d+m)?)(?:TL)?$");
 
         /// <summary>
         /// Matches quay names.
         /// </summary>
-        private readonly Regex quay = new Regex("(?:^|Landscaping )?Quay(?: ?\\d+)?$");
+        private readonly Regex quayNameRex = new Regex("(?:^|Landscaping )?Quay(?: ?\\d+)?$");
 
         /// <summary>
         /// Matches small road class name.
         /// </summary>
-        private readonly Regex smallRoad = new Regex("Small.*?(?:Road|Avenue)(?:TL)?$");
+        private readonly Regex smallRoadClassNameRex = new Regex("Small.*?(?:Road|Avenue)(?:TL)?$");
 
         /// <summary>
         /// Matches tram track/road object name.
         /// </summary>
-        private readonly Regex tramTrackRoad = new Regex("(?:(^| )Road(?: .*?)? Tram( |$)|(?:^| )Tram(?: Depot)? (?:Track|Road)( |$))");
+        private readonly Regex tramTrackRoadObjectNameRex = new Regex("(?:(^| )Road(?: .*?)? Tram( |$)|(?:^| )Tram(?: Depot)? (?:Track|Road)( |$))");
 
         /// <summary>
         /// Matches trench names.
         /// </summary>
-        private readonly Regex trench = new Regex("^Trench Ruins?(?: ?\\d+)?$");
+        private readonly Regex trenchNameRex = new Regex("^Trench Ruins?(?: ?\\d+)?$");
 
         /// <summary>
         /// The net collections and nets combinations for which to warn about ignored nets.
@@ -621,7 +621,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     tunnel = true;
 
                     // Order from Network Extensions chaos.
-                    className = this.nextDoubleTunnelRest.Replace(className, "$1");
+                    className = this.nextDoubleTunnelClasNameRestRex.Replace(className, "$1");
                 }
                 else if (objectName.Contains("Tunnel"))
                 {
@@ -640,27 +640,27 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 {
                     name = "Dam";
                 }
-                else if (this.canal.IsMatch(objectName) || this.canal.IsMatch(className))
+                else if (this.canalNameRex.IsMatch(objectName) || this.canalNameRex.IsMatch(className))
                 {
                     name = "Canal";
                 }
-                else if (this.quay.IsMatch(objectName) || this.quay.IsMatch(className))
+                else if (this.quayNameRex.IsMatch(objectName) || this.quayNameRex.IsMatch(className))
                 {
                     name = "Quay";
                 }
-                else if (this.floodWall.IsMatch(objectName) || this.floodWall.IsMatch(className))
+                else if (this.floodWallNameRex.IsMatch(objectName) || this.floodWallNameRex.IsMatch(className))
                 {
                     name = "Flood Wall";
                 }
-                else if (this.castleWall.IsMatch(objectName) || this.castleWall.IsMatch(className))
+                else if (this.castleWallNameRex.IsMatch(objectName) || this.castleWallNameRex.IsMatch(className))
                 {
                     name = "Castle Wall";
                 }
-                else if (this.trench.IsMatch(objectName) || this.trench.IsMatch(className))
+                else if (this.trenchNameRex.IsMatch(objectName) || this.trenchNameRex.IsMatch(className))
                 {
                     name = "Trench";
                 }
-                else if (this.tramTrackRoad.IsMatch(objectName))
+                else if (this.tramTrackRoadObjectNameRex.IsMatch(objectName))
                 {
                     name = "Tram Track";
                 }
@@ -675,7 +675,14 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 else if (objectName.SafeSubstring(0, 19) == "Zonable Pedestrian ")
                 {
                     // Network Extensions zonable pedestrian.
-                    name = "Tiny Road";
+                    if (objectName.SafeSubstring(19, 1) == "Gravel")
+                    {
+                        name = "Gravel Road";
+                    }
+                    else
+                    {
+                        name = "Tiny Road";
+                    }
                 }
                 else if (className.SafeSubstring(0, 10) == "Pedestrian")
                 {
@@ -694,32 +701,32 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                         name += " Path";
                     }
                 }
-                else if (this.nextSmallHeavyRoad.IsMatch(className))
+                else if (this.nextSmallHeavyRoadClassNameRex.IsMatch(className))
                 {
                     // Network Extensions small heavy.
                     name = "Small Heavy Road";
                 }
-                else if (this.nextSmallRoad.IsMatch(className))
+                else if (this.nextSmallRoadClassNameRex.IsMatch(className))
                 {
                     // Network Extensions small.
                     name = "Small Road";
                 }
-                else if (this.nextTinyRoad.IsMatch(className))
+                else if (this.nextTinyRoadClassNameRex.IsMatch(className))
                 {
                     // Network Extensions tiny.
                     name = "Tiny Road";
                 }
-                else if (this.nextMediumRoad.IsMatch(className))
+                else if (this.nextMediumRoadClassNameRex.IsMatch(className))
                 {
                     // Network Extensions medium.
                     name = "Medium Road";
                 }
-                else if (this.nextLargeRoad.IsMatch(className))
+                else if (this.nextLargeRoadClassNameRex.IsMatch(className))
                 {
                     // Network Extensions large.
                     name = "Large Road";
                 }
-                else if (this.nextHighway.IsMatch(className))
+                else if (this.nextHighwayClassNameRex.IsMatch(className))
                 {
                     // Network Extensions highways.
                     if ((objectName.Contains("Small") && objectName.Contains("Rural")) || netInfo.GetLocalizedTitle().Contains("National"))
