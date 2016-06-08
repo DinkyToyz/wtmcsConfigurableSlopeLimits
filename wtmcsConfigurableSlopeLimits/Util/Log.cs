@@ -132,7 +132,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                                 {
                                     try
                                     {
-                                        using (StreamWriter logFile = new StreamWriter(FileSystem.FilePathName(".log"), logFileCreated))
+                                        using (StreamWriter logFile = OpenLogFile())
                                         {
                                             logFile.Write(String.Join("", fileBuffer.ToArray()).ConformNewlines());
                                             logFile.Close();
@@ -402,7 +402,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                         }
                         else
                         {
-                            using (StreamWriter logFile = new StreamWriter(FileSystem.FilePathName(".log"), logFileCreated))
+                            using (StreamWriter logFile = OpenLogFile())
                             {
                                 logFile.Write(msg.ConformNewlines());
                                 logFile.Close();
@@ -465,6 +465,22 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 stringBuilder.Append(message.Trim());
                 messageCounter++;
             }
+        }
+
+        /// <summary>
+        /// Opens the log file.
+        /// </summary>
+        /// <returns>The open log file writer.</returns>
+        private static StreamWriter OpenLogFile()
+        {
+            string filePathName = FileSystem.FilePathName(".log");
+            string filePath = Path.GetDirectoryName(filePathName);
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+
+            return new StreamWriter(filePathName, logFileCreated);
         }
 
         /// <summary>
