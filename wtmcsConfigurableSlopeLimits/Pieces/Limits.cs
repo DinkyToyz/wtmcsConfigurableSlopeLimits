@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -108,6 +109,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             try
             {
+                StringBuilder newNetNames = new StringBuilder();
                 List<String> netNames = new List<string>();
 
                 foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
@@ -123,7 +125,19 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                                 if (netInfo != null)
                                 {
                                     String netName = Global.NetNames.IgnoreNetCollection(netCollection) ? netInfo.m_class.name : Global.NetNames[netInfo];
-                                    netNames.Add(Log.MessageString("NetInfo", netInfo, netInfo.m_class.name, netInfo.name, netInfo.GetLocalizedTitle(), netName, Global.NetNames.IgnoreNetText(netName)));
+
+                                    string match = null;
+                                    float? cfgLimit = null;
+                                    float limit;
+
+                                    if (Global.Settings.GetLimit(netName, out limit, out cfgLimit, out match))
+                                    {
+                                        netNames.Add(Log.MessageString("NetInfo", netInfo, netInfo.m_class.name, netInfo.name, netInfo.GetLocalizedTitle(), netName, Global.NetNames.IgnoreNetText(netName), netInfo.m_maxSlope, match, limit, cfgLimit));
+                                    }
+                                    else
+                                    {
+                                        netNames.Add(Log.MessageString("NetInfo", netInfo, netInfo.m_class.name, netInfo.name, netInfo.GetLocalizedTitle(), netName, Global.NetNames.IgnoreNetText(netName), netInfo.m_maxSlope));
+                                    }
                                 }
                             }
                         }
@@ -552,38 +566,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             float? cfgLimit = null;
                             float limit;
 
-                            if (Global.Settings.SlopeLimits.TryGetValue(netName, out limit) && !float.IsNaN(limit) && !float.IsInfinity(limit))
+                            if (Global.Settings.GetLimit(netName, out limit, out cfgLimit, out match))
                             {
                                 netInfo.m_maxSlope = limit;
-                                cfgLimit = limit;
-                                match = "name";
-                            }
-                            else
-                            {
-                                string name = netName.ToLowerInvariant();
-                                if (Global.Settings.SlopeLimitsGeneric.TryGetValue(name, out limit) && !float.IsNaN(limit) && !float.IsInfinity(limit))
-                                {
-                                    netInfo.m_maxSlope = limit;
-                                    cfgLimit = limit;
-                                    match = "generic";
-                                }
-                                else
-                                {
-                                    foreach (string generic in Global.Settings.SlopeLimitsGeneric.Keys.ToList().OrderBy(sName => name.Length).Reverse())
-                                    {
-                                        limit = Global.Settings.SlopeLimitsGeneric[generic];
-                                        if (!float.IsNaN(limit) && !float.IsInfinity(limit))
-                                        {
-                                            if (name.Contains(generic))
-                                            {
-                                                netInfo.m_maxSlope = limit;
-                                                cfgLimit = limit;
-                                                match = "part";
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
                             }
 
                             if (match == null || match != "name")

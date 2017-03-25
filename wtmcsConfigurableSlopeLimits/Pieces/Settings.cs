@@ -113,6 +113,55 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
+        /// Gets the limit.
+        /// </summary>
+        /// <param name="netName">The net name.</param>
+        /// <param name="limit">The limit.</param>
+        /// <param name="cfgLimit">The configured limit.</param>
+        /// <param name="match">The match type.</param>
+        /// <returns>True if limit found.</returns>
+        public bool GetLimit(string netName, out float limit, out float? cfgLimit, out string match)
+        {
+            if (this.SlopeLimits.TryGetValue(netName, out limit) && !float.IsNaN(limit) && !float.IsInfinity(limit))
+            {
+                cfgLimit = limit;
+                match = "name";
+
+                return true;
+            }
+
+            string name = netName.ToLowerInvariant();
+            if (this.SlopeLimitsGeneric.TryGetValue(name, out limit) && !float.IsNaN(limit) && !float.IsInfinity(limit))
+            {
+                cfgLimit = limit;
+                match = "generic";
+
+                return true;
+            }
+
+            foreach (string generic in this.SlopeLimitsGeneric.Keys.ToList().OrderBy(sName => name.Length).Reverse())
+            {
+                limit = this.SlopeLimitsGeneric[generic];
+                if (!float.IsNaN(limit) && !float.IsInfinity(limit))
+                {
+                    if (name.Contains(generic))
+                    {
+                        cfgLimit = limit;
+                        match = "part";
+
+                        return true;
+                    }
+                }
+            }
+
+            limit = float.NaN;
+            cfgLimit = null;
+            match = null;
+
+            return false;
+        }
+
+        /// <summary>
         /// Gets the complete path.
         /// </summary>
         /// <value>

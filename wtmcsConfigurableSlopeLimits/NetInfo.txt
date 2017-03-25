@@ -2,6 +2,21 @@
 
 ToString											m_class.name									name									GetLocalizedTitle						NetName			NetName
 
+One-Lane Oneway With Parking (NetInfo)				NExt1LOnewayWithParking							One-Lane Oneway With Parking			One-Lane Oneway With Parking							Tiny Road
+BasicRoadPntMdn Elevated (NetInfo)					NEXTbasicroadpaintedmedian						BasicRoadPntMdn Elevated				BasicRoadPntMdn Elevated								Small Heavy Road
+BasicRoadPntMdn Bridge (NetInfo)					NEXTbasicroadpaintedmedian						BasicRoadPntMdn Bridge					BasicRoadPntMdn Bridge									Small Heavy Road
+BasicRoadPntMdn Tunnel (NetInfo)					NEXTbasicroadpaintedmedianTunnel				BasicRoadPntMdn Tunnel					BasicRoadPntMdn Tunnel									Small Heavy Road Tunnel
+BasicRoadPntMdn Slope (NetInfo)						NEXTbasicroadpaintedmedian						BasicRoadPntMdn Slope					BasicRoadPntMdn Slope									Small Heavy Road
+BasicRoadMdn (NetInfo)								NEXTbasicroadmedianGround						BasicRoadMdn							Basic Road with Median									Small Heavy Road
+BasicRoadMdn Elevated (NetInfo)						NEXTbasicroadmedianElevated						BasicRoadMdn Elevated					BasicRoadMdn Elevated									Small Heavy Road
+BasicRoadMdn Bridge (NetInfo)						NEXTbasicroadmedianBridge						BasicRoadMdn Bridge						BasicRoadMdn Bridge										Small Heavy Road
+BasicRoadMdn Tunnel (NetInfo)						NEXTbasicroadmedianTunnel						BasicRoadMdn Tunnel						BasicRoadMdn Tunnel										Small Heavy Road Tunnel
+BasicRoadMdn Slope (NetInfo)						NEXTbasicroadmedianSlope						BasicRoadMdn Slope						BasicRoadMdn Slope										Small Heavy Road
+BasicRoadMdn Decoration Grass (NetInfo)				NEXTbasicroadmedianGroundGrass					BasicRoadMdn Decoration Grass			Basic Road with Grass Median							Small Heavy Road
+BasicRoadMdn Decoration Trees (NetInfo)				NEXTbasicroadmedianGroundTrees					BasicRoadMdn Decoration Trees			Basic Road with Grass Median and Trees					Small Heavy Road
+Zonable Promenade (NetInfo)							NExtPedRoadStone16m								Zonable Promenade						Zonable Promenade										Tiny Road
+Zonable Promenade Elevated (NetInfo)				NExtPedRoadStone16m								Zonable Promenade Elevated				Zonable Promenade Elevated								Tiny Road
+
 Zonable Pedestrian Gravel Tiny (NetInfo)			NExt Zonable Pedestrian Gravel Tiny				Zonable Pedestrian Gravel Tiny			Zonable Pedestrian Gravel Tiny Road		Tiny Road		Gravel Road
 Zonable Pedestrian Gravel Tiny Elevated (NetInfo)	NExt Zonable Pedestrian Gravel Tiny Elevated	Zonable Pedestrian Gravel Tiny Elevated	Zonable Pedestrian Gravel Tiny Elevated	Tiny Road		Gravel Road
 Zonable Pedestrian Gravel (NetInfo)					NExt Zonable Pedestrian Gravel					Zonable Pedestrian Gravel				Zonable Pedestrian Gravel Road			Tiny Road		Gravel Road

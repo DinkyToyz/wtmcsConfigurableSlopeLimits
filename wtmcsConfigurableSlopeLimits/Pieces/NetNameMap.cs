@@ -48,97 +48,97 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// Matches canal names.
         /// </summary>
-        private readonly Regex canalNameRex = new Regex("(?:^|Landscaping )?Canal(?: ?\\d+)?$");
+        private readonly Regex canalNameRex = new Regex("(?:^|Landscaping )?Canal(?: ?\\d+)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches castle wall names.
         /// </summary>
-        private readonly Regex castleWallNameRex = new Regex("^Castle Walls?(?: ?\\d+)?$");
+        private readonly Regex castleWallNameRex = new Regex("^Castle Walls?(?: ?\\d+)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches castle wall names.
         /// </summary>
-        private readonly Regex floodWallNameRex = new Regex("(?:^|Landscaping )?Flood Wall(?: ?\\d+)?$");
+        private readonly Regex floodWallNameRex = new Regex("(?:^|Landscaping )?Flood Wall(?: ?\\d+)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// The net collections that should be ignored.
         /// </summary>
-        private readonly Regex ignoreNetCollectionsRex = new Regex("^(?:Electricity|Water)$", RegexOptions.IgnoreCase);
+        private readonly Regex ignoreNetCollectionsRex = new Regex("^(?:Electricity|Water)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// The nets that should be ignored.
         /// </summary>
-        private readonly Regex ignoreNetsRex = new Regex("(?:(?:^NExt)|(?:^Bus Stop$)|(?:(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam))|(?:(?<!Pedestrian|Bicycle) Path)$))", RegexOptions.IgnoreCase);
+        private readonly Regex ignoreNetsRex = new Regex("(?:(?:^NExt)|(?:^Bus Stop$)|(?:(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam))|(?:(?<!Pedestrian|Bicycle) Path)$))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches large road class name.
         /// </summary>
-        private readonly Regex largeRoadClassNameRex = new Regex("Large.*?(?:Road|Avenue)(?:TL)?$");
+        private readonly Regex largeRoadClassNameRex = new Regex("Large.*?(?:Road|Avenue)(?:TL)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches medium road class name.
         /// </summary>
-        private readonly Regex mediumRoadClassNameRex = new Regex("Medium.*?(?:Road|Avenue)(?:TL)?$");
+        private readonly Regex mediumRoadClassNameRex = new Regex("Medium.*?(?:Road|Avenue)(?:TL)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches Network Extensions double tunnel class name left-over.
         /// </summary>
-        private readonly Regex nextDoubleTunnelClasNameRestRex = new Regex("Tunnel(\\d+L)$");
+        private readonly Regex nextDoubleTunnelClasNameRestRex = new Regex("Tunnel(\\d+L)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches Network Extensions highway class name.
         /// </summary>
-        private readonly Regex nextHighwayClassNameRex = new Regex("^NExt.*?Highway(?:\\d+L)$");
+        private readonly Regex nextHighwayClassNameRex = new Regex("^NExt.*?Highway(?:\\d+L)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches Network Extensions large road class name.
         /// </summary>
-        private readonly Regex nextLargeRoadClassNameRex = new Regex("^NExt.*?Large.*?(?:Road|Avenue)(?:TL)?$");
+        private readonly Regex nextLargeRoadClassNameRex = new Regex("^NExt.*?Large.*?(?:Road|Avenue)(?:TL)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches Network Extensions medium road class name.
         /// </summary>
-        private readonly Regex nextMediumRoadClassNameRex = new Regex("^NExt.*?Medium.*?(?:Road|Avenue)(?:TL)?$");
+        private readonly Regex nextMediumRoadClassNameRex = new Regex("^NExt.*?Medium.*?(?:Road|Avenue)(?:TL)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches Network Extensions small heavy road class name.
         /// </summary>
-        private readonly Regex nextSmallHeavyRoadClassNameRex = new Regex("^NExt.*?Small[3-9]L(Road|Avenue)(?:TL)?$");
+        private readonly Regex nextSmallHeavyRoadClassNameRex = new Regex("^NExt.*?(?:Small[3-9]L|basic)(?:Road|Avenue)[a-z]*?(?:TL)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches Network Extensions small road class name.
         /// </summary>
-        private readonly Regex nextSmallRoadClassNameRex = new Regex("^NExt.*?Small.*?(?:Road|Avenue)(?:TL)?$");
+        private readonly Regex nextSmallRoadClassNameRex = new Regex("^NExt.*?Small.*?(?:Road|Avenue)(?:TL)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches Network Extensions tiny road class name.
         /// </summary>
-        private readonly Regex nextTinyRoadClassNameRex = new Regex("^NExt.*?(?:[12]LAlley|1LOneway|PedRoad(?:\\d+m)?)(?:TL)?$");
+        private readonly Regex nextTinyRoadClassNameRex = new Regex("^NExt.*?(?:[12]LAlley|1LOneway[a-z]*?|PedRoad[a-z]*?(?:\\d+m)?)(?:TL)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches quay names.
         /// </summary>
-        private readonly Regex quayNameRex = new Regex("(?:^|Landscaping )?Quay(?: ?\\d+)?$");
+        private readonly Regex quayNameRex = new Regex("(?:^|Landscaping )?Quay(?: ?\\d+)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches small road class name.
         /// </summary>
-        private readonly Regex smallRoadClassNameRex = new Regex("Small.*?(?:Road|Avenue)(?:TL)?$");
+        private readonly Regex smallRoadClassNameRex = new Regex("Small.*?(?:Road|Avenue)(?:TL)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches tram track/road object name.
         /// </summary>
-        private readonly Regex tramTrackRoadObjectNameRex = new Regex("(?:(^| )Road(?: .*?)? Tram( |$)|(?:^| )Tram(?: Depot)? (?:Track|Road)( |$))");
+        private readonly Regex tramTrackRoadObjectNameRex = new Regex("(?:(^| )Road(?: .*?)? Tram( |$)|(?:^| )Tram(?: Depot)? (?:Track|Road)( |$))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches trench names.
         /// </summary>
-        private readonly Regex trenchNameRex = new Regex("^Trench Ruins?(?: ?\\d+)?$");
+        private readonly Regex trenchNameRex = new Regex("^Trench Ruins?(?: ?\\d+)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// The net collections and nets combinations for which to warn about ignored nets.
         /// </summary>
-        private readonly Regex warnIgnoreNetCollectionsNetsRex = new Regex("^(?:(?:[^;]*?Road|Beautification);.*|Expansion \\d+;.*(?:Road|Path|Tunnel|Track)|Public Transport;(?:Road|Tunnel|Track))$", RegexOptions.IgnoreCase);
+        private readonly Regex warnIgnoreNetCollectionsNetsRex = new Regex("^(?:(?:[^;]*?Road|Beautification);.*|Expansion \\d+;.*(?:Road|Path|Tunnel|Track)|Public Transport;(?:Road|Tunnel|Track))$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// The map.
