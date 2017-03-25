@@ -156,13 +156,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                 UIHelperBase miscellaneousGroup = helper.AddGroup("Miscellaneous");
 
-                miscellaneousGroup.AddButton(
-                    "Dump network names",
-                    () =>
-                    {
-                        Limits.DumpNetNames();
-                    });
-
                 try
                 {
                     miscellaneousGroup.AddInformationalText("Config Path:", FileSystem.FilePath);
@@ -172,9 +165,18 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     {
                         miscellaneousGroup.AddInformationalText("Mod Version:", modAss.GetName().Version.ToString());
                     }
+
+                    miscellaneousGroup.AddInformationalText("Mod Built At:", AssemblyInfo.PreBuildStamps.DateTime.ToString("yyyy-MM-dd HH:mm"));
                 }
                 catch
                 { }
+
+                miscellaneousGroup.AddButton(
+                    "Dump network names",
+                    () =>
+                    {
+                        Limits.DumpNetNames();
+                    });
             }
             catch (System.Exception ex)
             {

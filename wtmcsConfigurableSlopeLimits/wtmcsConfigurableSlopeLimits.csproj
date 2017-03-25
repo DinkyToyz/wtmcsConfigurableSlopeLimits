@@ -72,6 +72,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Build\PreBuildStamps.cs" />
     <Compile Include="UI\ExtendedSlider.cs" />
     <Compile Include="Util\Extensions.cs" />
     <Compile Include="Util\FileSystem.cs" />
@@ -110,6 +111,9 @@
   <PropertyGroup>
     <PostBuildEvent>"$(ProjectDir)Build\PostBuild.cmd" 512194601 $(SolutionName) $(TargetFileName) $(Configuration)
 </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>c:\Applications\bin\PreBuildStamper.exe "$(ProjectDir)\Build\PreBuildStamps.cs"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
