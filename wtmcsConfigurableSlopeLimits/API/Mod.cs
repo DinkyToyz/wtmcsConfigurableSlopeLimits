@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using ICities;
+using System.Collections.Generic;
 using System.Linq;
-using ICities;
+using System.Reflection;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -161,6 +162,19 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     {
                         Limits.DumpNetNames();
                     });
+
+                try
+                {
+                    miscellaneousGroup.AddInformationalText("Config Path:", FileSystem.FilePath);
+
+                    Assembly modAss = this.GetType().Assembly;
+                    if (modAss != null)
+                    {
+                        miscellaneousGroup.AddInformationalText("Mod Version:", modAss.GetName().Version.ToString());
+                    }
+                }
+                catch
+                { }
             }
             catch (System.Exception ex)
             {

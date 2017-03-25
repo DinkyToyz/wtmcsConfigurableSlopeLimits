@@ -1,6 +1,6 @@
-﻿using System;
-using ColossalFramework.UI;
+﻿using ColossalFramework.UI;
 using ICities;
+using System;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -58,6 +58,33 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public static ExtendedSlider AddExtendedSlider(this UIHelperBase helper, string text, float min, float max, float step, float defaultValue, bool allowFloats, OnValueChanged eventCallback)
         {
             return new ExtendedSlider(helper, text, min, max, step, defaultValue, allowFloats, null, eventCallback);
+        }
+
+        /// <summary>
+        /// Adds the informational text to the helper component.
+        /// </summary>
+        /// <param name="helper">The UI helper.</param>
+        /// <param name="labelText">The label text.</param>
+        /// <param name="informationalText">The informational text.</param>
+        /// <returns>A text label.</returns>
+        public static UIComponent AddInformationalText(this UIHelperBase helper, string labelText, string informationalText)
+        {
+            UITextField textField = (UITextField)helper.AddTextfield(
+                labelText,
+                informationalText,
+                value =>
+                {
+                });
+
+            UIComponent textFieldParent = textField.parent;
+            textField.Hide();
+            textField.Disable();
+            //// textFieldParent.RemoveUIComponent(textField);
+
+            UILabel textFieldLabel = (UILabel)textFieldParent.AddUIComponent(typeof(UILabel));
+            textFieldLabel.text = informationalText;
+
+            return textFieldLabel;
         }
 
         /// <summary>
