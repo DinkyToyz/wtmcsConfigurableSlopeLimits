@@ -1,4 +1,10 @@
-﻿Network Extensions Zonable Pedestrian Gravel & Promenade
+﻿Expansion 3
+
+ToString											m_class.name									name									GetLocalizedTitle						NetName
+
+Radio Mast Support Cables (NetInfo)					Radio											Radio Mast Support Cables				Radio Mast Support Cables				Radio			ignore
+
+Network Extensions Zonable Pedestrian Gravel & Promenade
 
 ToString											m_class.name									name									GetLocalizedTitle						NetName			NetName
 

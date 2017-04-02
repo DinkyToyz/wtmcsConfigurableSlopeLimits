@@ -78,6 +78,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 try
                 {
                     slopeLimits = settings.GetSlopeLimits();
+
+                    foreach (string limit in slopeLimits.Keys.Where(l => Global.NetNames.IgnoreNet(l)).ToList())
+                    {
+                        slopeLimits.Remove(limit);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -110,55 +115,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
 
             this.initializing = false;
-        }
-
-        /// <summary>
-        /// Gets the limit.
-        /// </summary>
-        /// <param name="netName">The net name.</param>
-        /// <param name="limit">The limit.</param>
-        /// <param name="cfgLimit">The configured limit.</param>
-        /// <param name="match">The match type.</param>
-        /// <returns>True if limit found.</returns>
-        public bool GetLimit(string netName, out float limit, out float? cfgLimit, out string match)
-        {
-            if (this.SlopeLimits.TryGetValue(netName, out limit) && !float.IsNaN(limit) && !float.IsInfinity(limit))
-            {
-                cfgLimit = limit;
-                match = "name";
-
-                return true;
-            }
-
-            string name = netName.ToLowerInvariant();
-            if (this.SlopeLimitsGeneric.TryGetValue(name, out limit) && !float.IsNaN(limit) && !float.IsInfinity(limit))
-            {
-                cfgLimit = limit;
-                match = "generic";
-
-                return true;
-            }
-
-            foreach (string generic in this.SlopeLimitsGeneric.Keys.ToList().OrderBy(sName => name.Length).Reverse())
-            {
-                limit = this.SlopeLimitsGeneric[generic];
-                if (!float.IsNaN(limit) && !float.IsInfinity(limit))
-                {
-                    if (name.Contains(generic))
-                    {
-                        cfgLimit = limit;
-                        match = "part";
-
-                        return true;
-                    }
-                }
-            }
-
-            limit = float.NaN;
-            cfgLimit = null;
-            match = null;
-
-            return false;
         }
 
         /// <summary>
@@ -393,6 +349,55 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
+        /// Gets the limit.
+        /// </summary>
+        /// <param name="netName">The net name.</param>
+        /// <param name="limit">The limit.</param>
+        /// <param name="cfgLimit">The configured limit.</param>
+        /// <param name="match">The match type.</param>
+        /// <returns>True if limit found.</returns>
+        public bool GetLimit(string netName, out float limit, out float? cfgLimit, out string match)
+        {
+            if (this.SlopeLimits.TryGetValue(netName, out limit) && !float.IsNaN(limit) && !float.IsInfinity(limit))
+            {
+                cfgLimit = limit;
+                match = "name";
+
+                return true;
+            }
+
+            string name = netName.ToLowerInvariant();
+            if (this.SlopeLimitsGeneric.TryGetValue(name, out limit) && !float.IsNaN(limit) && !float.IsInfinity(limit))
+            {
+                cfgLimit = limit;
+                match = "generic";
+
+                return true;
+            }
+
+            foreach (string generic in this.SlopeLimitsGeneric.Keys.ToList().OrderBy(sName => name.Length).Reverse())
+            {
+                limit = this.SlopeLimitsGeneric[generic];
+                if (!float.IsNaN(limit) && !float.IsInfinity(limit))
+                {
+                    if (name.Contains(generic))
+                    {
+                        cfgLimit = limit;
+                        match = "part";
+
+                        return true;
+                    }
+                }
+            }
+
+            limit = float.NaN;
+            cfgLimit = null;
+            match = null;
+
+            return false;
+        }
+
+        /// <summary>
         /// Saves settings to the specified file name.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
@@ -468,14 +473,18 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 string lowerName = name.ToLowerInvariant();
 
                 bool changed = false;
+                float oldLimit = float.NaN;
 
-                if (this.SlopeLimits[name] != limit)
+                bool exists = this.SlopeLimits.TryGetValue(name, out oldLimit);
+                bool supported = exists || NetNameMap.IsSupportedGeneric(name);
+
+                if (supported && (!exists || oldLimit != limit))
                 {
                     this.SlopeLimits[name] = limit;
                     changed = true;
                 }
 
-                if (this.SlopeLimitsGeneric.ContainsKey(lowerName) && this.SlopeLimitsGeneric[lowerName] != limit)
+                if (this.SlopeLimitsGeneric.TryGetValue(lowerName, out oldLimit) && oldLimit != limit)
                 {
                     this.SlopeLimitsGeneric[lowerName] = limit;
                     changed = true;
@@ -488,7 +497,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
             catch (Exception ex)
             {
-                Log.Error(this, "SetLimit", ex);
+                Log.Error(this, "SetLimit", ex, name, limit);
             }
         }
 
@@ -509,7 +518,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             try
             {
-                if (!this.SlopeLimitsGeneric.ContainsKey(generic))
+                if (!this.SlopeLimitsGeneric.ContainsKey(generic) && !Global.NetNames.IgnoreNet(name))
                 {
                     if (this.SlopeLimits.ContainsKey(name))
                     {

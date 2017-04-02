@@ -68,7 +68,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// The nets that should be ignored.
         /// </summary>
-        private readonly Regex ignoreNetsRex = new Regex("(?:(?:^NExt)|(?:^Bus Stop$)|(?:(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam))|(?:(?<!Pedestrian|Bicycle) Path)$))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        private readonly Regex ignoreNetsRex = new Regex("(?:(?:^NExt)|(?:^(?:Bus Stop|Radio)$)|(?:(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam|Cables))|(?:(?<!Pedestrian|Bicycle) Path)$))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches large road class name.
@@ -312,6 +312,19 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             string fallBackName;
             return NetNameMap.FallBackNameList.TryGetValue(name, out fallBackName) ? fallBackName : null;
+        }
+
+        /// <summary>
+        /// Determines whether the specified name is a supported generic.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified name is a supported generic; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsSupportedGeneric(string name)
+        {
+            name = name.ToLowerInvariant();
+            return NetNameMap.GenericList.FindIndex(g => g.Name.ToLowerInvariant() == name) >= 0;
         }
 
         /// <summary>
@@ -611,6 +624,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
 
             bool tunnel = false;
+            bool bridge = false;
 
             // Figure out name.
             try
@@ -626,6 +640,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 else if (objectName.Contains("Tunnel"))
                 {
                     tunnel = true;
+                }
+                else if (className.SafeSubstring(className.Length - 6, 6) == "Bridge" || objectName.Contains("Bridge") ||
+                         className.SafeSubstring(className.Length - 8, 8) == "Elevated" || objectName.Contains("Elevated"))
+                {
+                    bridge = true;
                 }
 
                 if (className == "Water Pipe" || objectName == "Water Pipe")
@@ -696,7 +715,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                         name = "Pedestrian";
                     }
 
-                    if (!tunnel)
+                    if (!tunnel && !bridge)
                     {
                         name += " Path";
                     }
@@ -765,12 +784,13 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     // Use original name.
                     name = netInfo.m_class.name;
                 }
-                else
+                else if (tunnel && !name.Contains("Tunnel"))
                 {
-                    if (tunnel && !name.Contains("Tunnel"))
-                    {
-                        name += " Tunnel";
-                    }
+                    name += " Tunnel";
+                }
+                else if (bridge && name.SafeSubstring(0, 10) == "Pedestrian" && !name.Contains("Bridge") && !name.Contains("Elevated"))
+                {
+                    name += " Bridge";
                 }
             }
             catch (Exception ex)

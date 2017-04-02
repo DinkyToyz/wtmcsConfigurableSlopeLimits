@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
@@ -146,7 +145,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                 if (netNames.Count == 0)
                 {
-                    throw new InvalidDataException("No network objects");
+                    return;
                 }
 
                 netNames.Add("");

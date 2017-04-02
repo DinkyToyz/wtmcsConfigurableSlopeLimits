@@ -160,16 +160,21 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 {
                     miscellaneousGroup.AddInformationalText("Config Path:", FileSystem.FilePath);
 
+                    string version = null;
                     Assembly modAss = this.GetType().Assembly;
                     if (modAss != null)
                     {
-                        miscellaneousGroup.AddInformationalText("Mod Version:", modAss.GetName().Version.ToString());
+                        version = modAss.GetName().Version.ToString() + ", " + version + " ";
                     }
 
-                    miscellaneousGroup.AddInformationalText("Mod Built At:", AssemblyInfo.PreBuildStamps.DateTime.ToString("yyyy-MM-dd HH:mm"));
+                    version += "(" + AssemblyInfo.PreBuildStamps.DateTime.ToString("yyyy-MM-dd HH:mm") + ")";
+
+                    miscellaneousGroup.AddInformationalText("Mod Version:", version);
                 }
                 catch
                 { }
+
+                miscellaneousGroup.AddInformationalText("Note:", "Dumping is only possible when a city is loaded.");
 
                 miscellaneousGroup.AddButton(
                     "Dump network names",
