@@ -47,6 +47,14 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
+        /// Gets a value indicating whether this <see cref="Limits"/> is broken.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if broken; otherwise, <c>false</c>.
+        /// </value>
+        public bool Broken => this.isBroken;
+
+        /// <summary>
         /// Gets or sets the current selected group.
         /// </summary>
         /// <value>
@@ -129,13 +137,15 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                                     float? cfgLimit = null;
                                     float limit;
 
+                                    string group = NetNameMap.GetGroup(netName) ?? "-";
+
                                     if (Global.Settings.GetLimit(netName, out limit, out cfgLimit, out match))
                                     {
-                                        netNames.Add(Log.MessageString("NetInfo", netInfo, netInfo.m_class.name, netInfo.name, netInfo.GetLocalizedTitle(), netName, Global.NetNames.IgnoreNetText(netName), netInfo.m_maxSlope, match, limit, cfgLimit));
+                                        netNames.Add(Log.MessageString("NetInfo", netInfo, netInfo.m_class.name, netInfo.name, netInfo.GetLocalizedTitle(), netName, Global.NetNames.IgnoreNetText(netCollection.name, netName), netInfo.m_maxSlope, group, match, limit, cfgLimit));
                                     }
                                     else
                                     {
-                                        netNames.Add(Log.MessageString("NetInfo", netInfo, netInfo.m_class.name, netInfo.name, netInfo.GetLocalizedTitle(), netName, Global.NetNames.IgnoreNetText(netName), netInfo.m_maxSlope));
+                                        netNames.Add(Log.MessageString("NetInfo", netInfo, netInfo.m_class.name, netInfo.name, netInfo.GetLocalizedTitle(), netName, Global.NetNames.IgnoreNetText(netCollection.name, netName), netInfo.m_maxSlope, group));
                                     }
                                 }
                             }
@@ -158,6 +168,21 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             catch (Exception ex)
             {
                 Log.Error(typeof(Limits), "DumpNetNames", ex);
+            }
+        }
+
+        /// <summary>
+        /// Assures the limits.
+        /// </summary>
+        public void AssureLimits()
+        {
+            if (this.group == Groups.Original)
+            {
+                this.RestoreLimits(true);
+            }
+            else
+            {
+                this.SetLimits(this.group, true);
             }
         }
 

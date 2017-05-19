@@ -1,5 +1,5 @@
-﻿using System;
-using ColossalFramework.UI;
+﻿using ColossalFramework.UI;
+using System;
 using UnityEngine;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
@@ -103,6 +103,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// The base Y size.
         /// </summary>
         private float baseSizeY;
+
+        /// <summary>
+        /// The visibility counter.
+        /// </summary>
+        private int visibilityCounter = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ToolButton" /> class.
@@ -378,6 +383,18 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             if (value)
             {
+                this.visibilityCounter++;
+
+                if (!Global.Limits.Initialized && !Global.Limits.Broken)
+                {
+                    Global.Limits.Initialize();
+                }
+
+                if (this.visibilityCounter < 3)
+                {
+                    Global.Limits.AssureLimits();
+                }
+
                 int state = (Global.LimitsGroup == Limits.Groups.Custom) ? 1 : 0;
 
                 if (state != this.Button.activeStateIndex)

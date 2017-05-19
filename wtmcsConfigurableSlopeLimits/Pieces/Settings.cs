@@ -14,7 +14,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// The settings version.
         /// </summary>
-        public readonly int Version = 1;
+        public readonly int Version = 2;
 
         /// <summary>
         /// The maximum slope limit.
@@ -679,7 +679,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// </returns>
             public Dictionary<string, float> GetSlopeLimits()
             {
-                return this.GetLimitsDictionary(this.SlopeLimits, "GetSlopeLimits");
+                return this.GetLimitsDictionary(this.SlopeLimits, "GetSlopeLimits", true);
             }
 
             /// <summary>
@@ -766,7 +766,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <param name="limits">The limits.</param>
             /// <param name="name">The name.</param>
             /// <returns>The limits dictionary.</returns>
-            private Dictionary<string, float> GetLimitsDictionary(List<SlopeLimit> limits, string name = null)
+            private Dictionary<string, float> GetLimitsDictionary(List<SlopeLimit> limits, string name = null, bool versionCheck = false)
             {
                 try
                 {
@@ -775,8 +775,12 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     List<KeyValuePair<string, float>> lims = dict.ToList();
                     foreach (KeyValuePair<string, float> lim in lims)
                     {
-                        if (float.IsNaN(lim.Value) || float.IsInfinity(lim.Value))
+                        Log.Debug(this, "GetLimitsDictionary", "Check", lim.Key, lim.Value, versionCheck);
+
+                        if (float.IsNaN(lim.Value) || float.IsInfinity(lim.Value) ||
+                            (versionCheck && this.Version < 2 && lim.Key == "Bicycle"))
                         {
+                            Log.Info(this, "GetLimitsDictionary", "Remove", lim.Key, lim.Value);
                             dict.Remove(lim.Key);
                         }
                     }

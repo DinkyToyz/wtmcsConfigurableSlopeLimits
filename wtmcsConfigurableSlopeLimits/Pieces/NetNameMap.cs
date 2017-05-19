@@ -81,6 +81,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         private readonly Regex mediumRoadClassNameRex = new Regex("Medium.*?(?:Road|Avenue)(?:TL)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
+        /// Matches monorail track/road object name.
+        /// </summary>
+        private readonly Regex monorailTrackRoadObjectNameRex = new Regex("(?:(^| )Road(?: .*?)? Monorail( |$)|(?:^| )Monorail(?: Station|Oneway)? (?:Track|Road)( |$))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+
+        /// <summary>
         /// Matches Network Extensions double tunnel class name left-over.
         /// </summary>
         private readonly Regex nextDoubleTunnelClasNameRestRex = new Regex("Tunnel(\\d+L)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
@@ -128,7 +133,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// Matches tram track/road object name.
         /// </summary>
-        private readonly Regex tramTrackRoadObjectNameRex = new Regex("(?:(^| )Road(?: .*?)? Tram( |$)|(?:^| )Tram(?: Depot)? (?:Track|Road)( |$))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        private readonly Regex tramTrackRoadObjectNameRex = new Regex("(?:(^| )Road(?: .*?)? Tram( |$)|(?:^| )Tram(?: Depot|Oneway)? (?:Track|Road)( |$))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches trench names.
@@ -138,7 +143,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// The net collections and nets combinations for which to warn about ignored nets.
         /// </summary>
-        private readonly Regex warnIgnoreNetCollectionsNetsRex = new Regex("^(?:(?:[^;]*?Road|Beautification);.*|Expansion \\d+;.*(?:Road|Path|Tunnel|Track)|Public Transport;(?:Road|Tunnel|Track))$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        private readonly Regex warnIgnoreNetCollectionsNetsRex = new Regex("^(?:(?:[^;]*?Road|Beautification);.*|Expansion \\d+;.*(?:Road|Tunnel|Track(?<!(?:Ferry|CableCar|Blimp) )Path)|Public Transport;(?:Road|Tunnel|Track))$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// The map.
@@ -210,6 +215,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 new KeyValuePair<string, string>("Bicycle", "Paths"),
                 new KeyValuePair<string, string>("Train Track", "Railroads"),
                 new KeyValuePair<string, string>("Metro Track", "Railroads"),
+                new KeyValuePair<string, string>("Monorail Track", "Railroads"),
                 new KeyValuePair<string, string>("Tram Track", "Railroads"),
                 new KeyValuePair<string, string>("Airplane Runway", "Runways"),
                 new KeyValuePair<string, string>("Canal", "Waterworks"),
@@ -235,6 +241,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 new Generic("Train Track", "track", SteamHelper.DLC.None, 1200),
                 new Generic("Train Track Tunnel", "track", SteamHelper.DLC.None, 1200, true),
                 new Generic("Metro Track", "track", SteamHelper.DLC.None, 1000),
+                new Generic("Monorail Track", "track", SteamHelper.DLC.InMotionDLC, 1300),
                 new Generic("Pedestrian Path", "pedestrian", SteamHelper.DLC.None, 700),
                 new Generic("Pedestrian Bridge", "pedestrian", SteamHelper.DLC.None, 700, true),
                 new Generic("Pedestrian Tunnel", "pedestrian", SteamHelper.DLC.None, 700, true),
@@ -312,6 +319,63 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             string fallBackName;
             return NetNameMap.FallBackNameList.TryGetValue(name, out fallBackName) ? fallBackName : null;
+        }
+
+        /// <summary>
+        /// Gets the group.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="defaultGroup">The default group.</param>
+        /// <param name="fallBack">If set to <c>true</c> fall back based on net name.</param>
+        /// <returns>The group.</returns>
+        public static string GetGroup(string name, string defaultGroup = null, bool fallBack = true)
+        {
+            if (!String.IsNullOrEmpty(name))
+            {
+                foreach (KeyValuePair<string, string> group in NetNameMap.GroupMap)
+                {
+                    if (name.Length >= group.Key.Length && name.Substring(0, group.Key.Length) == group.Key)
+                    {
+                        return group.Value;
+                    }
+                }
+            }
+
+            string groupName = null;
+
+            if (!String.IsNullOrEmpty(name))
+            {
+                if (fallBack)
+                {
+                    string fallBackName = GetFallbackName(name);
+                    if (!String.IsNullOrEmpty(fallBackName))
+                    {
+                        groupName = NetNameMap.GetGroup(fallBackName, "", false);
+                        if (!String.IsNullOrEmpty(groupName))
+                        {
+                            return groupName;
+                        }
+                    }
+                }
+            }
+
+            if (defaultGroup != null)
+            {
+                return (defaultGroup == "") ? null : defaultGroup;
+            }
+
+            int order = -1;
+
+            foreach (KeyValuePair<string, int> group in NetNameMap.NetGroupList)
+            {
+                if (group.Value > order)
+                {
+                    groupName = group.Key;
+                    order = group.Value;
+                }
+            }
+
+            return groupName;
         }
 
         /// <summary>
@@ -504,6 +568,27 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
+        /// Get text showing whether net should be ignored.
+        /// </summary>
+        /// <param name="collectionName">Name of the collection.</param>
+        /// <param name="netName">Name of the net.</param>
+        /// <returns>The text "Ignore" if net should be ignored (with exclamation case if warning specified), otherwise null.</returns>
+        public string IgnoreNetText(string collectionName, string netName)
+        {
+            if (String.IsNullOrEmpty(netName) || !this.ignoreNetsRex.IsMatch(netName))
+            {
+                return null;
+            }
+
+            if (this.WarnAboutIgnoredNet(collectionName, netName))
+            {
+                return "Ignore!";
+            }
+
+            return "Ignore";
+        }
+
+        /// <summary>
         /// Gets he order index for the net group.
         /// </summary>
         /// <param name="name">The group name.</param>
@@ -523,63 +608,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public bool WarnAboutIgnoredNet(string collectionName, string netName)
         {
             return String.IsNullOrEmpty(collectionName) ? false : String.IsNullOrEmpty(netName) ? false : this.warnIgnoreNetCollectionsNetsRex.IsMatch(collectionName + ";" + netName);
-        }
-
-        /// <summary>
-        /// Gets the group.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="defaultGroup">The default group.</param>
-        /// <param name="fallBack">If set to <c>true</c> fall back based on net name.</param>
-        /// <returns>The group.</returns>
-        private static string GetGroup(string name, string defaultGroup = null, bool fallBack = true)
-        {
-            if (!String.IsNullOrEmpty(name))
-            {
-                foreach (KeyValuePair<string, string> group in NetNameMap.GroupMap)
-                {
-                    if (name.Length >= group.Key.Length && name.Substring(0, group.Key.Length) == group.Key)
-                    {
-                        return group.Value;
-                    }
-                }
-            }
-
-            string groupName = null;
-
-            if (!String.IsNullOrEmpty(name))
-            {
-                if (fallBack)
-                {
-                    string fallBackName = GetFallbackName(name);
-                    if (!String.IsNullOrEmpty(fallBackName))
-                    {
-                        groupName = NetNameMap.GetGroup(fallBackName, "", false);
-                        if (!String.IsNullOrEmpty(groupName))
-                        {
-                            return groupName;
-                        }
-                    }
-                }
-            }
-
-            if (defaultGroup != null)
-            {
-                return (defaultGroup == "") ? null : defaultGroup;
-            }
-
-            int order = -1;
-
-            foreach (KeyValuePair<string, int> group in NetNameMap.NetGroupList)
-            {
-                if (group.Value > order)
-                {
-                    groupName = group.Key;
-                    order = group.Value;
-                }
-            }
-
-            return groupName;
         }
 
         /// <summary>
@@ -683,6 +711,10 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 {
                     name = "Tram Track";
                 }
+                else if (this.monorailTrackRoadObjectNameRex.IsMatch(objectName))
+                {
+                    name = "Monorail Track";
+                }
                 else if (className == "Highway")
                 {
                     // Standard game. Separate ramp from highways.
@@ -709,15 +741,20 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     if (objectName.Contains("Bicycle"))
                     {
                         name = "Bicycle";
+
+                        if (!tunnel)
+                        {
+                            name += " Path";
+                        }
                     }
                     else
                     {
                         name = "Pedestrian";
-                    }
 
-                    if (!tunnel && !bridge)
-                    {
-                        name += " Path";
+                        if (!tunnel && !bridge)
+                        {
+                            name += " Path";
+                        }
                     }
                 }
                 else if (this.nextSmallHeavyRoadClassNameRex.IsMatch(className))
