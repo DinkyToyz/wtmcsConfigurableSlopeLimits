@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -75,7 +76,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                         {
                             sliders.Add(generic.Group, new List<SlopeLimitSlider>());
                         }
-                        sliders[generic.Group].Add(new SlopeLimitSlider(name, generic.Order));
+                        sliders[generic.Group].Add(new SlopeLimitSlider(name, generic));
 
                         keys.Add(name);
                     }
@@ -93,7 +94,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                         {
                             sliders.Add(generic.Group, new List<SlopeLimitSlider>());
                         }
-                        sliders[generic.Group].Add(new SlopeLimitSlider(name, generic.Order));
+                        sliders[generic.Group].Add(new SlopeLimitSlider(name, generic));
 
                         keys.Add(name);
                     }
@@ -232,11 +233,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             public float OrgLimit;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="SlopeLimitSlider"/> struct.
+            /// Initializes a new instance of the <see cref="SlopeLimitSlider" /> struct.
             /// </summary>
             /// <param name="name">The name.</param>
-            /// <param name="order">The sort order.</param>
-            public SlopeLimitSlider(string name, int order)
+            /// <param name="generic">The generic.</param>
+            public SlopeLimitSlider(string name, NetNameMap.Generic generic)
             {
                 float limit;
 
@@ -244,8 +245,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 this.CurLimit = Global.Settings.SlopeLimits.TryGetValue(name, out limit) ? limit : 0.25f;
                 this.OrgLimit = Global.Settings.SlopeLimitsOriginal.TryGetValue(name, out limit) ? limit : this.CurLimit;
                 this.MinLimit = Global.Settings.MinimumLimit;
-                this.MaxLimit = Global.Settings.MaximumLimit;
-                this.Order = order;
+                this.MaxLimit = Math.Max(Math.Max(generic.MaxLimit, this.OrgLimit), this.CurLimit);
+                this.Order = generic.Order;
             }
 
             /// <summary>

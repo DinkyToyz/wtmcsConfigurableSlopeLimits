@@ -129,6 +129,43 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
+        /// Retrieves a substring from this instance, containing the left-most characters.
+        /// </summary>
+        /// <param name="text">The string instance.</param>
+        /// <param name="maxLength">The maximum number of characters in the substring.</param>
+        /// <returns>A String object equivalent to the left-most characters.</returns>
+        public static string SafeLeftString(this string text, int maxLength)
+        {
+            return text.SafeSubstring(0, maxLength);
+        }
+
+        /// <summary>
+        /// Retrieves a substring from this instance, containing the right-most characters.
+        /// </summary>
+        /// <param name="text">The string instance.</param>
+        /// <param name="maxLength">The maximum number of characters in the substring.</param>
+        /// <returns>A String object equivalent to the right-most characters.</returns>
+        public static string SafeRightString(this string text, int maxLength)
+        {
+            if (text == null)
+            {
+                return null;
+            }
+            else if (text.Length == 0)
+            {
+                return String.Empty;
+            }
+            else if (maxLength >= text.Length)
+            {
+                return text.Substring(0, text.Length);
+            }
+            else
+            {
+                return text.Substring(text.Length - maxLength);
+            }
+        }
+
+        /// <summary>
         /// Retrieves a substring from this instance. The substring starts at a specified character position.
         /// </summary>
         /// <param name="text">The string instance.</param>
@@ -142,7 +179,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
             else if (startIndex >= text.Length)
             {
-                return "";
+                return String.Empty;
             }
             else
             {

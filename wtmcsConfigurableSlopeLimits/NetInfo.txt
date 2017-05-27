@@ -15,10 +15,10 @@ Small Road Monorail Elevated (NetInfo)		Small Road			Small Road Monorail Elevate
 Ferry Path (NetInfo)						Ferry Path			Ferry Path						Ferry Pathway								Ferry Path		Ignore!
 Ferry Dock (NetInfo)						Ferry Path			Ferry Dock						NET_TITLE[Ferry Dock]:0						Ferry Path		Ignore!
 Ferry Dockway (NetInfo)						Ferry Path			Ferry Dockway					NET_TITLE[Ferry Dockway]:0					Ferry Path		Ignore!
-CableCar Path (NetInfo)						CableCar Path		CableCar Path					Cable Car Cables							CableCar Path	Ignore!
-CableCar Stop (NetInfo)						CableCar Path		CableCar Stop					NET_TITLE[CableCar Stop]:0					CableCar Path	Ignore!
-Blimp Stop (NetInfo)						Blimp Path			Blimp Stop						NET_TITLE[Blimp Stop]:0						Blimp Path		Ignore!
-Blimp Path (NetInfo)						Blimp Path			Blimp Path						Blimp Pathway								Blimp Path		Ignore!
+CableCar Path (NetInfo)						CableCar Path		CableCar Path					Cable Car Cables							CableCar Path	Cable Car Path
+CableCar Stop (NetInfo)						CableCar Path		CableCar Stop					NET_TITLE[CableCar Stop]:0					CableCar Path	Cable Car Path
+Blimp Stop (NetInfo)						Blimp Path			Blimp Stop						NET_TITLE[Blimp Stop]:0						Blimp Path		Blimp Path
+Blimp Path (NetInfo)						Blimp Path			Blimp Path						Blimp Pathway								Blimp Path		Blimp Path
 Blimp Depot Path (NetInfo)					Blimp Path			Blimp Depot Path				NET_TITLE[Blimp Depot Path]:0				Blimp Path		Ignore!
 
 Expansion 3

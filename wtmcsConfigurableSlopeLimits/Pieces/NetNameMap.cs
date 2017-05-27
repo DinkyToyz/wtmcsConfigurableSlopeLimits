@@ -26,6 +26,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         protected static readonly List<KeyValuePair<string, string>> GroupMap;
 
         /// <summary>
+        /// The maximum limits.
+        /// </summary>
+        protected static readonly Dictionary<string, float> MaxLimits;
+
+        /// <summary>
         /// The net groups.
         /// </summary>
         protected static readonly Dictionary<string, int> NetGroupList;
@@ -68,7 +73,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// The nets that should be ignored.
         /// </summary>
-        private readonly Regex ignoreNetsRex = new Regex("(?:(?:^NExt)|(?:^(?:Bus Stop|Radio)$)|(?:(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam|Cables))|(?:(?<!Pedestrian|Bicycle) Path)$))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        private readonly Regex ignoreNetsRex = new Regex("(?:(?:^NExt)|(?:^(?:Bus Stop|Radio)$)|(?:(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam|Cables))|(?:(?<!CableCar)(?: Cables))|(?:(?<!Pedestrian|Bicycle|Cable ?Car|Blimp) Path)$))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+
+        ////private readonly Regex ignoreNetsRex = new Regex("(?:(?:^NExt)|(?:^(?:Bus Stop|Radio)$)|(?:(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam|Cables))|(?:(?<!Pedestrian|Bicycle) Path)$))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches large road class name.
@@ -143,7 +150,9 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// The net collections and nets combinations for which to warn about ignored nets.
         /// </summary>
-        private readonly Regex warnIgnoreNetCollectionsNetsRex = new Regex("^(?:(?:[^;]*?Road|Beautification);.*|Expansion \\d+;.*(?:Road|Tunnel|Track(?<!(?:Ferry|CableCar|Blimp) )Path)|Public Transport;(?:Road|Tunnel|Track))$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        private readonly Regex warnIgnoreNetCollectionsNetsRex = new Regex("^(?:(?:[^;]*?Road|Beautification);.*|Expansion \\d+;.*(?:Road|Tunnel|Track|(?<!Ferry )Path)|Public Transport;(?:Road|Tunnel|Track))$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+
+        ////private readonly Regex warnIgnoreNetCollectionsNetsRex = new Regex("^(?:(?:[^;]*?Road|Beautification);.*|Expansion \\d+;.*(?:Road|Tunnel|Track|(?<!(?:Ferry|CableCar|Blimp) )Path)|Public Transport;(?:Road|Tunnel|Track))$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// The map.
@@ -155,102 +164,119 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         static NetNameMap()
         {
-            // The fall back limits.
-            FallBackNameList = new Dictionary<string, string>
+            try
             {
-                { "Tiny Road", "Small Road" },
-                { "Small Heavy Road", "Small Road" },
-                { "Rural Highway", "Highway" },
-                { "National Road", "Highway" }
-            };
+                // The fall back limits.
+                FallBackNameList = new Dictionary<string, string>
+                {
+                    { "Tiny Road", "Small Road" },
+                    { "Small Heavy Road", "Small Road" },
+                    { "Rural Highway", "Highway" },
+                    { "National Road", "Highway" }
+                };
 
-            // The display names.
-            DisplayNames = new Dictionary<string, string>
-            {
-                { "Rural Highway", "National Road" }
-            };
+                // The display names.
+                DisplayNames = new Dictionary<string, string>
+                {
+                    { "Rural Highway", "National Road" }
+                };
 
-            // The display orders.
-            DisplayOrders = new Dictionary<string, int>
-            {
-                { "Tiny Road", 150 },
-                { "Small Heavy Road", 250 },
-                { "Rural Highway", 450 },
-                { "National Road", 450 },
-                { "Pedestrian Bridge", 701 },
-                { "Pedestrian Tunnel", 702 },
-                { "Canal", 2000 },
-                { "Quay", 2010 },
-                { "Flood Wall", 2020 },
-                { "Dam", 2030 },
-                { "Pipe", 3000 },
-                { "Wire", 3000 },
-                { "Castle Wall", 4000 },
-                { "Trench", 4000 }
-            };
+                // The display orders.
+                DisplayOrders = new Dictionary<string, int>
+                {
+                    { "Tiny Road", 150 },
+                    { "Small Heavy Road", 250 },
+                    { "Rural Highway", 450 },
+                    { "National Road", 450 },
+                    { "Pedestrian Bridge", 701 },
+                    { "Pedestrian Tunnel", 702 },
+                    { "Canal", 2000 },
+                    { "Quay", 2010 },
+                    { "Flood Wall", 2020 },
+                    { "Dam", 2030 },
+                    { "Pipe", 3000 },
+                    { "Wire", 3000 },
+                    { "Castle Wall", 4000 },
+                    { "Trench", 4000 }
+                };
 
-            // The net groups.
-            NetGroupList = new Dictionary<string, int>
-            {
-                { "Tiny Roads", 1 },
-                { "Small Roads", 2 },
-                { "Medium & Large Roads", 3 },
-                { "Highways", 4 },
-                { "Paths", 5 },
-                { "Railroads", 6 },
-                { "Runways", 7 },
-                { "Waterworks", 8 },
-                { "Other", 9 }
-            };
+                // The net groups.
+                NetGroupList = new Dictionary<string, int>
+                {
+                    { "Tiny Roads", 1 },
+                    { "Small Roads", 2 },
+                    { "Medium & Large Roads", 3 },
+                    { "Highways", 4 },
+                    { "Paths", 5 },
+                    { "Railroads", 6 },
+                    { "Misc Transit", 7 },
+                    { "Waterworks", 8 },
+                    { "Other", 9 }
+                };
 
-            GroupMap = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("Gravel Road", "Tiny Roads"),
-                new KeyValuePair<string, string>("Tiny Road", "Tiny Roads"),
-                new KeyValuePair<string, string>("Small Road", "Small Roads"),
-                new KeyValuePair<string, string>("Medium Road", "Medium & Large Roads"),
-                new KeyValuePair<string, string>("Large Road", "Medium & Large Roads"),
-                new KeyValuePair<string, string>("Highway", "Highways"),
-                new KeyValuePair<string, string>("Pedestrian", "Paths"),
-                new KeyValuePair<string, string>("Bicycle", "Paths"),
-                new KeyValuePair<string, string>("Train Track", "Railroads"),
-                new KeyValuePair<string, string>("Metro Track", "Railroads"),
-                new KeyValuePair<string, string>("Monorail Track", "Railroads"),
-                new KeyValuePair<string, string>("Tram Track", "Railroads"),
-                new KeyValuePair<string, string>("Airplane Runway", "Runways"),
-                new KeyValuePair<string, string>("Canal", "Waterworks"),
-                new KeyValuePair<string, string>("Quay", "Waterworks"),
-                new KeyValuePair<string, string>("Flood Wall", "Waterworks")
-            };
+                GroupMap = new List<KeyValuePair<string, string>>
+                {
+                    new KeyValuePair<string, string>("Gravel Road", "Tiny Roads"),
+                    new KeyValuePair<string, string>("Tiny Road", "Tiny Roads"),
+                    new KeyValuePair<string, string>("Small Road", "Small Roads"),
+                    new KeyValuePair<string, string>("Medium Road", "Medium & Large Roads"),
+                    new KeyValuePair<string, string>("Large Road", "Medium & Large Roads"),
+                    new KeyValuePair<string, string>("Highway", "Highways"),
+                    new KeyValuePair<string, string>("Pedestrian", "Paths"),
+                    new KeyValuePair<string, string>("Bicycle", "Paths"),
+                    new KeyValuePair<string, string>("Train Track", "Railroads"),
+                    new KeyValuePair<string, string>("Metro Track", "Railroads"),
+                    new KeyValuePair<string, string>("Monorail Track", "Railroads"),
+                    new KeyValuePair<string, string>("Tram Track", "Railroads"),
+                    new KeyValuePair<string, string>("Airplane Runway", "Misc Transit"),
+                    new KeyValuePair<string, string>("Blimp Path", "Misc Transit"),
+                    new KeyValuePair<string, string>("Cable Car Path", "Misc Transit"),
+                    new KeyValuePair<string, string>("Canal", "Waterworks"),
+                    new KeyValuePair<string, string>("Quay", "Waterworks"),
+                    new KeyValuePair<string, string>("Flood Wall", "Waterworks")
+                };
 
-            // The generics.
-            GenericList = new List<Generic>
+                // The maximum limits.
+                MaxLimits = new Dictionary<string, float>
+                {
+                    { "blimp", 3 }
+                };
+
+                // The generics.
+                GenericList = new List<Generic>
+                {
+                    new Generic("Highway Ramp", "ramp", SteamHelper.DLC.None, 500),
+                    new Generic("Highway Ramp Tunnel", "ramp", SteamHelper.DLC.None, 500, true),
+                    new Generic("Highway", "high", SteamHelper.DLC.None, 600),
+                    new Generic("Highway Tunnel", "high", SteamHelper.DLC.None, 600, true),
+                    new Generic("Large Road", "large", SteamHelper.DLC.None, 400),
+                    new Generic("Large Road Tunnel", "large", SteamHelper.DLC.None, 400, true),
+                    new Generic("Medium Road", "medium", SteamHelper.DLC.None, 300),
+                    new Generic("Medium Road Tunnel", "medium", SteamHelper.DLC.None, 300, true),
+                    new Generic("Small Road", "small", SteamHelper.DLC.None, 200),
+                    new Generic("Small Road Tunnel", "small", SteamHelper.DLC.None, 200, true),
+                    new Generic("Gravel Road", "gravel", SteamHelper.DLC.None, 100),
+                    new Generic("Gravel Road Tunnel", "gravel", SteamHelper.DLC.None, 100, true),
+                    new Generic("Train Track", "track", SteamHelper.DLC.None, 1200),
+                    new Generic("Train Track Tunnel", "track", SteamHelper.DLC.None, 1200, true),
+                    new Generic("Metro Track", "track", SteamHelper.DLC.None, 1000),
+                    new Generic("Monorail Track", "track", SteamHelper.DLC.InMotionDLC, 1300),
+                    new Generic("Pedestrian Path", "pedestrian", SteamHelper.DLC.None, 700),
+                    new Generic("Pedestrian Bridge", "pedestrian", SteamHelper.DLC.None, 700, true),
+                    new Generic("Pedestrian Tunnel", "pedestrian", SteamHelper.DLC.None, 700, true),
+                    new Generic("Bicycle Path", "bicycle", SteamHelper.DLC.AfterDarkDLC, 800),
+                    new Generic("Bicycle Tunnel", "bicycle", SteamHelper.DLC.AfterDarkDLC, 800, true),
+                    new Generic("Airplane Runway", "runway", SteamHelper.DLC.None, 1200),
+                    new Generic("Tram Track", "tram", SteamHelper.DLC.SnowFallDLC, 900),
+                    new Generic("Tram Track Tunnel", "tram", SteamHelper.DLC.SnowFallDLC, 900, true),
+                    new Generic("Blimp Path", "blimp", SteamHelper.DLC.InMotionDLC, 900, true),
+                    new Generic("Cable Car Path", "cable", SteamHelper.DLC.InMotionDLC, 900, true)
+                };
+            }
+            catch (Exception ex)
             {
-                new Generic("Highway Ramp", "ramp", SteamHelper.DLC.None, 500),
-                new Generic("Highway Ramp Tunnel", "ramp", SteamHelper.DLC.None, 500, true),
-                new Generic("Highway", "high", SteamHelper.DLC.None, 600),
-                new Generic("Highway Tunnel", "high", SteamHelper.DLC.None, 600, true),
-                new Generic("Large Road", "large", SteamHelper.DLC.None, 400),
-                new Generic("Large Road Tunnel", "large", SteamHelper.DLC.None, 400, true),
-                new Generic("Medium Road", "medium", SteamHelper.DLC.None, 300),
-                new Generic("Medium Road Tunnel", "medium", SteamHelper.DLC.None, 300, true),
-                new Generic("Small Road", "small", SteamHelper.DLC.None, 200),
-                new Generic("Small Road Tunnel", "small", SteamHelper.DLC.None, 200, true),
-                new Generic("Gravel Road", "gravel", SteamHelper.DLC.None, 100),
-                new Generic("Gravel Road Tunnel", "gravel", SteamHelper.DLC.None, 100, true),
-                new Generic("Train Track", "track", SteamHelper.DLC.None, 1200),
-                new Generic("Train Track Tunnel", "track", SteamHelper.DLC.None, 1200, true),
-                new Generic("Metro Track", "track", SteamHelper.DLC.None, 1000),
-                new Generic("Monorail Track", "track", SteamHelper.DLC.InMotionDLC, 1300),
-                new Generic("Pedestrian Path", "pedestrian", SteamHelper.DLC.None, 700),
-                new Generic("Pedestrian Bridge", "pedestrian", SteamHelper.DLC.None, 700, true),
-                new Generic("Pedestrian Tunnel", "pedestrian", SteamHelper.DLC.None, 700, true),
-                new Generic("Bicycle Path", "bicycle", SteamHelper.DLC.AfterDarkDLC, 800),
-                new Generic("Bicycle Tunnel", "bicycle", SteamHelper.DLC.AfterDarkDLC, 800, true),
-                new Generic("Airplane Runway", "runway", SteamHelper.DLC.None, 1200),
-                new Generic("Tram Track", "tram", SteamHelper.DLC.SnowFallDLC, 900),
-                new Generic("Tram Track Tunnel", "tram", SteamHelper.DLC.SnowFallDLC, 900, true),
-            };
+                Log.Error(typeof(NetNameMap), "ConstructStatic", ex);
+            }
         }
 
         /// <summary>
@@ -258,9 +284,12 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         public NetNameMap()
         {
-            foreach (Generic generic in Generics)
+            if (Log.LogToFile && Log.LogALot)
             {
-                Log.Debug(this, "Constructor", "Generic", generic.Name, generic.Group);
+                foreach (Generic generic in Generics)
+                {
+                    Log.Debug(this, "Constructor", "Generic", generic.Name, generic.Group);
+                }
             }
 
             this.GenericNames = new HashSet<string>(NetNameMap.Generics.Select(g => g.Name));
@@ -675,7 +704,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     bridge = true;
                 }
 
-                if (className == "Water Pipe" || objectName == "Water Pipe")
+                if (className == "Water Pipe" || objectName == "Water Pipe" || className == "Heating Pipe" || objectName == "Heating Pipe")
                 {
                     name = "Pipe";
                 }
@@ -756,6 +785,14 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                             name += " Path";
                         }
                     }
+                }
+                else if (className.SafeLeftString(6) == "Blimp " && className.SafeRightString(5) == " Path")
+                {
+                    name = "Blimp Path";
+                }
+                else if (className.SafeLeftString(9) == "CableCar " && className.SafeRightString(5) == " Path")
+                {
+                    name = "Cable Car Path";
                 }
                 else if (this.nextSmallHeavyRoadClassNameRex.IsMatch(className))
                 {
@@ -874,6 +911,22 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             public string LowerCaseName;
 
             /// <summary>
+            /// The maximum limit value.
+            /// </summary>
+            private float? maxLimitValue;
+
+            /// <summary>
+            /// The maximum limit.
+            /// </summary>
+            public float MaxLimit
+            {
+                get
+                {
+                    return (this.maxLimitValue != null && this.maxLimitValue.HasValue) ? Math.Max(this.maxLimitValue.Value, Global.Settings.MaximumLimit)  : Global.Settings.MaximumLimit;
+                }
+            }
+
+            /// <summary>
             /// The name.
             /// </summary>
             public string Name;
@@ -919,6 +972,16 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 if (this.Order < 0)
                 {
                     this.Order += 10000;
+                }
+
+                float limit;
+                if (!String.IsNullOrEmpty(Part) && MaxLimits.TryGetValue(this.Part, out limit))
+                {
+                    this.maxLimitValue = limit;
+                }
+                else
+                {
+                    this.maxLimitValue = null;
                 }
             }
 

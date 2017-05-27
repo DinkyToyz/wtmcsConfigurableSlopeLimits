@@ -765,7 +765,10 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// </summary>
             /// <param name="limits">The limits.</param>
             /// <param name="name">The name.</param>
-            /// <returns>The limits dictionary.</returns>
+            /// <param name="versionCheck">if set to <c>true</c> check version.</param>
+            /// <returns>
+            /// The limits dictionary.
+            /// </returns>
             private Dictionary<string, float> GetLimitsDictionary(List<SlopeLimit> limits, string name = null, bool versionCheck = false)
             {
                 try
