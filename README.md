@@ -10,7 +10,8 @@ The following is from the [steam description](http://steamcommunity.com/sharedfi
 
 Allows slope limits to be configured separately for different network types.
 
-Compatible with [Network Extensions Project](http://steamcommunity.com/sharedfiles/filedetails/?id=478820060), but may lag behind when that mod updates with new or changed road types.
+Compatible with
+[Network Extensions 2](http://steamcommunity.com/sharedfiles/filedetails/?id=812125426), and [Network Extensions Project](http://steamcommunity.com/sharedfiles/filedetails/?id=478820060), but may lag behind when that mod updates with new or changed road types.
 
 ## Usage
 

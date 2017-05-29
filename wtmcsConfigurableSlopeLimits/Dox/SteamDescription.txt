@@ -1,6 +1,6 @@
 Allows slope limits to be configured separately for different network types.
 
-Compatible with [url=http://steamcommunity.com/sharedfiles/filedetails/?id=478820060]Network Extensions Project[/url], but may lag behind when that mod updates with new or changed road types.
+Compatible with [url=http://steamcommunity.com/sharedfiles/filedetails/?id=812125426]Network Extensions 2[/url], and [url=http://steamcommunity.com/sharedfiles/filedetails/?id=478820060]Network Extensions Project[/url], but may lag behind when that mod updates with new or changed road types.
 
 [h1]Usage[/h1]
 
