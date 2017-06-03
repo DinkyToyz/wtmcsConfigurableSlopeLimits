@@ -88,6 +88,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         private readonly Regex mediumRoadClassNameRex = new Regex("Medium.*?(?:Road|Avenue)(?:TL)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
+        /// Matches metro track object name.
+        /// </summary>
+        private readonly Regex metroTrackObjectNameRex = new Regex("(?:^| )Metro(?: Station)? Track(?: |$)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+
+        /// <summary>
         /// Matches monorail track/road object name.
         /// </summary>
         private readonly Regex monorailTrackRoadObjectNameRex = new Regex("(?:(^| )Road(?: .*?)? Monorail( |$)|(?:^| )Monorail(?: Station|Oneway)? (?:Track|Road)( |$))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
@@ -140,7 +145,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// Matches tram track/road object name.
         /// </summary>
-        private readonly Regex tramTrackRoadObjectNameRex = new Regex("(?:(^| )Road(?: .*?)? Tram( |$)|(?:^| )Tram(?: Depot|Oneway)? (?:Track|Road)( |$))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        private readonly Regex tramTrackRoadObjectNameRex = new Regex("(?:(^| )Road(?: .*?)? Tram( |$)|(?:^| )Tram(?: Depot|Oneway|Station)? (?:Track|Road)(?: |$))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches trench names.
@@ -246,29 +251,30 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 GenericList = new List<Generic>
                 {
                     new Generic("Highway Ramp", "ramp", SteamHelper.DLC.None, 500),
-                    new Generic("Highway Ramp Tunnel", "ramp", SteamHelper.DLC.None, 500, true),
+                    new Generic("Highway Ramp Tunnel", "ramp", SteamHelper.DLC.None, 501, true),
                     new Generic("Highway", "high", SteamHelper.DLC.None, 600),
-                    new Generic("Highway Tunnel", "high", SteamHelper.DLC.None, 600, true),
+                    new Generic("Highway Tunnel", "high", SteamHelper.DLC.None, 601, true),
                     new Generic("Large Road", "large", SteamHelper.DLC.None, 400),
-                    new Generic("Large Road Tunnel", "large", SteamHelper.DLC.None, 400, true),
+                    new Generic("Large Road Tunnel", "large", SteamHelper.DLC.None, 401, true),
                     new Generic("Medium Road", "medium", SteamHelper.DLC.None, 300),
-                    new Generic("Medium Road Tunnel", "medium", SteamHelper.DLC.None, 300, true),
+                    new Generic("Medium Road Tunnel", "medium", SteamHelper.DLC.None, 301, true),
                     new Generic("Small Road", "small", SteamHelper.DLC.None, 200),
-                    new Generic("Small Road Tunnel", "small", SteamHelper.DLC.None, 200, true),
+                    new Generic("Small Road Tunnel", "small", SteamHelper.DLC.None, 201, true),
                     new Generic("Gravel Road", "gravel", SteamHelper.DLC.None, 100),
-                    new Generic("Gravel Road Tunnel", "gravel", SteamHelper.DLC.None, 100, true),
+                    new Generic("Gravel Road Tunnel", "gravel", SteamHelper.DLC.None, 101, true),
                     new Generic("Train Track", "track", SteamHelper.DLC.None, 1200),
-                    new Generic("Train Track Tunnel", "track", SteamHelper.DLC.None, 1200, true),
+                    new Generic("Train Track Tunnel", "track", SteamHelper.DLC.None, 1201, true),
                     new Generic("Metro Track", "track", SteamHelper.DLC.None, 1000),
+                    new Generic("Metro Track Tunnel", "track", SteamHelper.DLC.None, 1001),
                     new Generic("Monorail Track", "track", SteamHelper.DLC.InMotionDLC, 1300),
                     new Generic("Pedestrian Path", "pedestrian", SteamHelper.DLC.None, 700),
-                    new Generic("Pedestrian Bridge", "pedestrian", SteamHelper.DLC.None, 700, true),
-                    new Generic("Pedestrian Tunnel", "pedestrian", SteamHelper.DLC.None, 700, true),
+                    new Generic("Pedestrian Bridge", "pedestrian", SteamHelper.DLC.None, 701, true),
+                    new Generic("Pedestrian Tunnel", "pedestrian", SteamHelper.DLC.None, 702, true),
                     new Generic("Bicycle Path", "bicycle", SteamHelper.DLC.AfterDarkDLC, 800),
-                    new Generic("Bicycle Tunnel", "bicycle", SteamHelper.DLC.AfterDarkDLC, 800, true),
+                    new Generic("Bicycle Tunnel", "bicycle", SteamHelper.DLC.AfterDarkDLC, 801, true),
                     new Generic("Airplane Runway", "runway", SteamHelper.DLC.None, 1200),
                     new Generic("Tram Track", "tram", SteamHelper.DLC.SnowFallDLC, 900),
-                    new Generic("Tram Track Tunnel", "tram", SteamHelper.DLC.SnowFallDLC, 900, true),
+                    new Generic("Tram Track Tunnel", "tram", SteamHelper.DLC.SnowFallDLC, 901, true),
                     new Generic("Blimp Path", "blimp", SteamHelper.DLC.InMotionDLC, 900, true),
                     new Generic("Cable Car Path", "cable", SteamHelper.DLC.InMotionDLC, 900, true)
                 };
@@ -347,7 +353,23 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public static string GetFallbackName(string name)
         {
             string fallBackName;
-            return NetNameMap.FallBackNameList.TryGetValue(name, out fallBackName) ? fallBackName : null;
+
+            if (NetNameMap.FallBackNameList.TryGetValue(name, out fallBackName))
+            {
+                return fallBackName;
+            }
+
+            if (name.SafeRightString(7) == " Tunnel" && NetNameMap.FallBackNameList.TryGetValue(name.SafeLeftString(name.Length - 7), out fallBackName))
+            {
+                return fallBackName + " Tunnel";
+            }
+
+            if (name.SafeRightString(7) == " Bridge" && NetNameMap.FallBackNameList.TryGetValue(name.SafeLeftString(name.Length - 7), out fallBackName))
+            {
+                return fallBackName + " Bridge";
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -670,6 +692,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             string className = netInfo.m_class.name;
             string objectName = netInfo.name;
+            string localizedTitle = netInfo.GetLocalizedTitle();
 
             string key = className + "|" + objectName;
             string name = null;
@@ -694,7 +717,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     // Order from Network Extensions chaos.
                     className = this.nextDoubleTunnelClasNameRestRex.Replace(className, "$1");
                 }
-                else if (objectName.Contains("Tunnel"))
+                else if (objectName.Contains("Tunnel") || localizedTitle.Contains("Tunnel"))
                 {
                     tunnel = true;
                 }
@@ -739,6 +762,10 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 else if (this.tramTrackRoadObjectNameRex.IsMatch(objectName))
                 {
                     name = "Tram Track";
+                }
+                else if (this.metroTrackObjectNameRex.IsMatch(objectName))
+                {
+                    name = "Metro Track";
                 }
                 else if (this.monorailTrackRoadObjectNameRex.IsMatch(objectName))
                 {
@@ -911,22 +938,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             public string LowerCaseName;
 
             /// <summary>
-            /// The maximum limit value.
-            /// </summary>
-            private float? maxLimitValue;
-
-            /// <summary>
-            /// The maximum limit.
-            /// </summary>
-            public float MaxLimit
-            {
-                get
-                {
-                    return (this.maxLimitValue != null && this.maxLimitValue.HasValue) ? Math.Max(this.maxLimitValue.Value, Global.Settings.MaximumLimit)  : Global.Settings.MaximumLimit;
-                }
-            }
-
-            /// <summary>
             /// The name.
             /// </summary>
             public string Name;
@@ -940,6 +951,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// The part.
             /// </summary>
             public string Part;
+
+            /// <summary>
+            /// The maximum limit value.
+            /// </summary>
+            private float? maxLimitValue;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="Generic" /> struct.
@@ -982,6 +998,17 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 else
                 {
                     this.maxLimitValue = null;
+                }
+            }
+
+            /// <summary>
+            /// The maximum limit.
+            /// </summary>
+            public float MaxLimit
+            {
+                get
+                {
+                    return (this.maxLimitValue != null && this.maxLimitValue.HasValue) ? Math.Max(this.maxLimitValue.Value, Global.Settings.MaximumLimit) : Global.Settings.MaximumLimit;
                 }
             }
 

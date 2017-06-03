@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Linq;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -116,53 +116,32 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             try
             {
-                StringBuilder newNetNames = new StringBuilder();
+                bool found = false;
+
                 List<String> netNames = new List<string>();
 
-                foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
+                NetData.AddHeaderToDumpList(netNames);
+
+                foreach (NetData netData in NetData.FindAll())
                 {
-                    if (netCollection != null)
+                    found = true;
+
+                    if (netData.Index == 0)
                     {
-                        netNames.Add(Log.MessageString("NetCollection", netCollection, netCollection.name, Global.NetNames.IgnoreNetCollectionText(netCollection)));
-                        if (netCollection.m_prefabs != null)
-                        {
-                            netNames.Add(Log.MessageString("Prefabs", netCollection.m_prefabs));
-                            foreach (NetInfo netInfo in netCollection.m_prefabs)
-                            {
-                                if (netInfo != null)
-                                {
-                                    String netName = Global.NetNames.IgnoreNetCollection(netCollection) ? netInfo.m_class.name : Global.NetNames[netInfo];
-
-                                    string match = null;
-                                    float? cfgLimit = null;
-                                    float limit;
-
-                                    string group = NetNameMap.GetGroup(netName) ?? "-";
-
-                                    if (Global.Settings.GetLimit(netName, out limit, out cfgLimit, out match))
-                                    {
-                                        netNames.Add(Log.MessageString("NetInfo", netInfo, netInfo.m_class.name, netInfo.name, netInfo.GetLocalizedTitle(), netName, Global.NetNames.IgnoreNetText(netCollection.name, netName), netInfo.m_maxSlope, group, match, limit, cfgLimit));
-                                    }
-                                    else
-                                    {
-                                        netNames.Add(Log.MessageString("NetInfo", netInfo, netInfo.m_class.name, netInfo.name, netInfo.GetLocalizedTitle(), netName, Global.NetNames.IgnoreNetText(netCollection.name, netName), netInfo.m_maxSlope, group));
-                                    }
-                                }
-                            }
-                        }
+                        netData.AddCollectionToDumpList(netNames);
                     }
+
+                    netData.AddInfoToDumpList(netNames);
                 }
 
-                if (netNames.Count == 0)
+                if (found)
                 {
-                    return;
-                }
-
-                netNames.Add("");
-                using (StreamWriter dumpFile = new StreamWriter(FileSystem.FilePathName(".NetNames.txt"), false))
-                {
-                    dumpFile.Write(String.Join("\n", netNames.ToArray()).ConformNewlines());
-                    dumpFile.Close();
+                    netNames.Add("");
+                    using (StreamWriter dumpFile = new StreamWriter(FileSystem.FilePathName(".NetNames.txt"), false))
+                    {
+                        dumpFile.Write(String.Join("\n", netNames.ToArray()).ConformNewlines());
+                        dumpFile.Close();
+                    }
                 }
             }
             catch (Exception ex)
@@ -342,57 +321,18 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             try
             {
-                foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
+                foreach (NetData netData in NetData.FindAll())
                 {
-                    if (netCollection != null)
+                    if (netData.Index == 0)
                     {
-                        Log.Debug(this, "LogNetNames", "NetCollection", netCollection, netCollection.name, Global.NetNames.IgnoreNetCollectionText(netCollection));
-                        if (netCollection.m_prefabs != null)
-                        {
-                            Log.Debug(this, "LogNetNames", "Prefabs", netCollection.m_prefabs);
-                            foreach (NetInfo netInfo in netCollection.m_prefabs)
-                            {
-                                if (netInfo != null)
-                                {
-                                    String netName = Global.NetNames.IgnoreNetCollection(netCollection) ? netInfo.m_class.name : Global.NetNames[netInfo];
-                                    Log.Debug(this, "LogNetNames", "NetInfo", netInfo, netInfo.m_class.name, netInfo.name, netInfo.GetLocalizedTitle(), netName, Global.NetNames.IgnoreNetText(netName));
-                                }
-                            }
-                        }
+                        netData.LogCollection(this, "LogNetNames");
                     }
+
+                    netData.LogInfo(this, "LogNetNames");
                 }
             }
             catch
             {
-            }
-        }
-
-        /// <summary>
-        /// Logs the nets.
-        /// </summary>
-        /// <param name="caller">The caller.</param>
-        /// <param name="block">The block.</param>
-        public void LogNets(object caller, string block)
-        {
-            try
-            {
-                foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
-                {
-                    if (netCollection != null && netCollection.m_prefabs != null && !Global.NetNames.IgnoreNetCollection(netCollection))
-                    {
-                        foreach (NetInfo netInfo in netCollection.m_prefabs)
-                        {
-                            if (netInfo != null && !Global.NetNames.IgnoreNet(netInfo))
-                            {
-                                this.LogNetInfo((caller == null) ? this : caller, String.IsNullOrEmpty(block) ? "LogNets" : block, netInfo);
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(this, "LogNets", ex);
             }
         }
 
@@ -703,6 +643,262 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
             catch
             {
+            }
+        }
+
+        /// <summary>
+        /// Utility for finding network info objects.
+        /// </summary>
+        private struct NetData
+        {
+            /// <summary>
+            /// The collection.
+            /// </summary>
+            public readonly NetCollection Collection;
+
+            /// <summary>
+            /// The item index.
+            /// </summary>
+            public readonly int Index;
+
+            /// <summary>
+            /// The information.
+            /// </summary>
+            public readonly NetInfo Info;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="NetData" /> struct.
+            /// </summary>
+            /// <param name="index">Index of the item.</param>
+            /// <param name="netCollection">The net collection.</param>
+            /// <param name="netInfo">The net information.</param>
+            public NetData(int index, NetCollection netCollection, NetInfo netInfo)
+            {
+                this.Collection = netCollection;
+                this.Info = netInfo;
+                this.Index = index;
+            }
+
+            /// <summary>
+            /// Gets the name of the net.
+            /// </summary>
+            /// <value>
+            /// The name of the net.
+            /// </value>
+            public string NetName
+            {
+                get
+                {
+                    if (this.Collection != null && Global.NetNames.IgnoreNetCollection(this.Collection))
+                    {
+                        return this.Info.m_class.name;
+                    }
+                    else
+                    {
+                        return Global.NetNames[this.Info];
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Finds all network information objects.
+            /// </summary>
+            /// <returns>All network info objects.</returns>
+            public static IEnumerable<NetData> FindAll()
+            {
+                return Find(true, false);
+            }
+
+            /// <summary>
+            /// Finds network information objects slope limits should apply to.
+            /// </summary>
+            /// <returns>Used info objects.</returns>
+            public static IEnumerable<NetData> FindUsed()
+            {
+                return Find(false, true);
+            }
+
+            /// <summary>
+            /// Adds the collection to dump list.
+            /// </summary>
+            /// <param name="netNames">The dump list.</param>
+            public void AddCollectionToDumpList(List<String> netNames)
+            {
+                if (this.Collection == null)
+                {
+                    netNames.Add(Log.MessageString("NetCollection", "(uncollected)"));
+                }
+                else
+                {
+                    netNames.Add(Log.MessageString("NetCollection", this.Collection, this.Collection.name, Global.NetNames.IgnoreNetCollectionText(this.Collection)));
+                    netNames.Add(Log.MessageString("Prefabs", this.Collection.m_prefabs));
+                }
+            }
+
+            /// <summary>
+            /// Adds the header to dump list.
+            /// </summary>
+            /// <param name="netNames">The dump list.</param>
+            public static void AddHeaderToDumpList(List<String> netNames)
+            {
+                // Collection
+                netNames.Add(Log.MessageString("NetCollection", "netCollection", "netCollection.name", "IgnoreNetCollectionText"));
+                netNames.Add(Log.MessageString("Prefabs", "netCollection.m_prefabs"));
+
+                //Info
+                netNames.Add(Log.MessageString(
+                    "Type",
+                    "netInfo",
+                    "netInfo.m_class.name",
+                    "netInfo.name",
+                    "netInfo.GetLocalizedTitle()",
+                    "netName",
+                    "IgnoreNetText",
+                    "netInfo.m_maxSlope",
+                    "Group",
+                    "match",
+                    "limit",
+                    "cfgLimit"));
+            }
+
+            /// <summary>
+            /// Adds the network information to dump list.
+            /// </summary>
+            /// <param name="netNames">The dump list.</param>
+            public void AddInfoToDumpList(List<String> netNames)
+            {
+                List<object> info = new List<object>();
+
+                String netName = this.NetName;
+
+                info.Add("NetInfo");
+                info.Add(this.Info);
+                info.Add(this.Info.m_class.name);
+                info.Add(this.Info.name);
+                info.Add(this.Info.GetLocalizedTitle());
+                info.Add(netName);
+
+                info.Add(this.Collection == null ? "-" : Global.NetNames.IgnoreNetText(this.Collection.name, netName));
+
+                info.Add(this.Info.m_maxSlope);
+                info.Add(NetNameMap.GetGroup(netName) ?? "-");
+
+                string match = null;
+                float? cfgLimit = null;
+                float limit;
+
+                if (Global.Settings.GetLimit(netName, out limit, out cfgLimit, out match))
+                {
+                    info.Add(match);
+                    info.Add(limit);
+                    info.Add(cfgLimit);
+                }
+
+                netNames.Add(Log.ListString(info));
+            }
+
+            /// <summary>
+            /// Logs the collection.
+            /// </summary>
+            /// <param name="sourceObject">The source object.</param>
+            /// <param name="sourceBlock">The source block.</param>
+            public void LogCollection(object sourceObject, string sourceBlock)
+            {
+                if (Collection == null)
+                {
+                    Log.Debug(sourceObject ?? this, sourceBlock ?? "LogCollection", "NetCollection", this.Collection, this.Collection.name, Global.NetNames.IgnoreNetCollectionText(this.Collection));
+                    Log.Debug(sourceObject ?? this, sourceBlock ?? "LogCollection", "Prefabs", this, Collection.m_prefabs);
+                }
+            }
+
+            /// <summary>
+            /// Logs the information.
+            /// </summary>
+            /// <param name="sourceObject">The source object.</param>
+            /// <param name="sourceBlock">The source block.</param>
+            public void LogInfo(object sourceObject, string sourceBlock)
+            {
+                String netName = this.NetName;
+                Log.Debug(this, "LogNetNames", "NetInfo", this.Info, this.Info.m_class.name, this.Info.name, this.Info.GetLocalizedTitle(), netName, Global.NetNames.IgnoreNetText(netName));
+            }
+
+            /// <summary>
+            /// Finds network information objects.
+            /// </summary>
+            /// <param name="returnIgnoredCollections">if set to <c>true</c> return objects from ignored collections.</param>
+            /// <param name="logNulls">if set to <c>true</c> log when encountering undefined objects.</param>
+            /// <returns>The found network info objects.</returns>
+            private static IEnumerable<NetData> Find(bool returnIgnoredCollections, bool logNulls)
+            {
+                int index = 0;
+                HashSet<long> collected = new HashSet<long>();
+
+                foreach (NetCollection netCollection in UnityEngine.Object.FindObjectsOfType<NetCollection>())
+                {
+                    if (netCollection == null)
+                    {
+                        if (logNulls)
+                        {
+                            Log.Warning(typeof(NetData), "Find", "Null NetCollection");
+                        }
+
+                        continue;
+                    }
+
+                    if (!returnIgnoredCollections && Global.NetNames.IgnoreNetCollection(netCollection))
+                    {
+                        continue;
+                    }
+
+                    if (netCollection.m_prefabs == null)
+                    {
+                        if (logNulls)
+                        {
+                            Log.Warning(typeof(NetData), "Find", "Null NetCollection.m_prefabs", netCollection);
+                        }
+
+                        continue;
+                    }
+
+                    foreach (NetInfo netInfo in netCollection.m_prefabs)
+                    {
+                        if (netInfo == null)
+                        {
+                            if (logNulls)
+                            {
+                                Log.Warning(typeof(NetData), "Find", "Null NetInfo", netCollection, netCollection.m_prefabs);
+                            }
+
+                            continue;
+                        }
+
+                        long key = ((long)(netInfo.GetHashCode()) << 32) | ((long)(netInfo.GetInstanceID()));
+
+                        if (!collected.Contains(key))
+                        {
+                            collected.Add(key);
+
+                            yield return new NetData(index++, netCollection, netInfo);
+                        }
+                    }
+                }
+
+                foreach (NetInfo netInfo in UnityEngine.Resources.FindObjectsOfTypeAll<NetInfo>().Where(ni => ni != null && ni.name != "temp"))
+                {
+                    if (!returnIgnoredCollections && Global.NetNames.IgnoreNetCollection(null))
+                    {
+                        continue;
+                    }
+
+                    long key = ((long)(netInfo.GetHashCode()) << 32) | ((long)(netInfo.GetInstanceID()));
+
+                    if (!collected.Contains(key))
+                    {
+                        collected.Add(key);
+
+                        yield return new NetData(index++, null, netInfo);
+                    }
+                }
             }
         }
     }

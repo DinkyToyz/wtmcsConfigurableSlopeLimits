@@ -233,6 +233,23 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
+        /// Combines the messages in a string.
+        /// </summary>
+        /// <param name="messages">The messages.</param>
+        /// <returns>
+        /// The string.
+        /// </returns>
+        public static string ListString(IEnumerable<object> messages)
+        {
+            StringBuilder msg = new StringBuilder();
+            int mc = 0;
+
+            AddMessages(ref msg, ref mc, messages);
+
+            return (mc == 0) ? (string)null : msg.ToString();
+        }
+
+        /// <summary>
         /// Convert log level to message type.
         /// </summary>
         /// <param name="level">The level.</param>
@@ -334,7 +351,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                 msg.Insert(0, "] ").Insert(0, Library.Name).Insert(0, "[");
 
-                if (level != Level.None && level != Level.All)
+                if (level != Level.None && level <= Level.Warning)
                 {
                     try
                     {
@@ -355,38 +372,39 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     }
                 }
 
-                try
+                switch (level)
                 {
-                    switch (level)
-                    {
-                        case Level.Info:
-                            msg.Insert(0, "Info:    ");
-                            UnityEngine.Debug.Log(msg.CleanNewLines());
-                            break;
+                    case Level.Info:
+                        msg.Insert(0, "Info:    ");
+                        break;
 
-                        case Level.Warning:
-                            msg.Insert(0, "Warning: ");
-                            UnityEngine.Debug.LogWarning(msg.CleanNewLines());
-                            break;
+                    case Level.Warning:
+                        msg.Insert(0, "Warning: ");
+                        break;
 
-                        case Level.Error:
-                            msg.Insert(0, "Error:   ");
-                            UnityEngine.Debug.LogError(msg.CleanNewLines());
-                            break;
+                    case Level.Error:
+                        msg.Insert(0, "Error:   ");
+                        break;
 
-                        case Level.None:
-                        case Level.All:
-                            msg.Insert(0, "         ");
-                            break;
+                    case Level.None:
+                    case Level.All:
+                        msg.Insert(0, "         ");
+                        break;
 
-                        default:
-                            msg.Insert(0, "Debug:   ");
-                            UnityEngine.Debug.Log(msg.CleanNewLines());
-                            break;
-                    }
+                    default:
+                        msg.Insert(0, "Debug:   ");
+                        break;
                 }
-                catch
+
+                if (level != Level.None && level != Level.All && (level < Level.Debug || !LogToFile))
                 {
+                    try
+                    {
+                        UnityEngine.Debug.Log(msg.CleanNewLines());
+                    }
+                    catch
+                    {
+                    }
                 }
 
                 if (LogToFile)
@@ -438,16 +456,16 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <param name="stringBuilder">The string builder.</param>
         /// <param name="messageCounter">The message counter.</param>
         /// <param name="messages">The messages.</param>
-        private static void AddMessages(ref StringBuilder stringBuilder, ref int messageCounter, object[] messages)
+        private static void AddMessages(ref StringBuilder stringBuilder, ref int messageCounter, IEnumerable<object> messages)
         {
-            for (int i = 0; i < messages.Length; i++)
+            foreach (object msg in messages)
             {
-                if (messages[i] == null)
+                if (msg == null)
                 {
                     continue;
                 }
 
-                string message = (messages[i] is string) ? (string)messages[i] : messages[i].ToString();
+                string message = (msg is string) ? (string)msg : msg.ToString();
                 if (message == null)
                 {
                     continue;
