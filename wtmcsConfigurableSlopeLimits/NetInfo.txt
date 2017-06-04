@@ -1,12 +1,14 @@
 ﻿NetCollection; netCollection; netCollection.name; IgnoreNetCollectionText
 Prefabs; netCollection.m_prefabs; Count()
 Type; netInfo; netInfo.m_class.name; netInfo.name; netInfo.GetLocalizedTitle(); netName; IgnoreNetText; netInfo.m_maxSlope; Group; match; limit; cfgLimit
+
+
 NetCollection; TAM Road (NetCollection); TAM Road
-Prefabs; NetInfo[]
-NetInfo; Two-Lane Alley (NetInfo); NExt2LAlley; Two-Lane Alley; Two-Lane Alley; Tiny Road; 0.25; Tiny Roads; name; 0.5; 0.5
-NetInfo; One-Lane Oneway (NetInfo); NExt1LOneway; One-Lane Oneway; One-Lane Oneway; Tiny Road; 0.25; Tiny Roads; name; 0.5; 0.5
-NetInfo; One-Lane Oneway With Parking (NetInfo); NExt1LOnewayWithParking; One-Lane Oneway With Parking; One-Lane Oneway With Parking; Tiny Road; 0.25; Tiny Roads; name; 0.5; 0.5
-NetInfo; PlainStreet2L (NetInfo); Gravel Road; PlainStreet2L; Two-Lane Plain Street; Gravel Road; 1; Tiny Roads; name; 0.25; 0.25
+Prefabs; NetInfo[]; 132
+NetInfo; Two-Lane Alley (NetInfo); NExt2LAlley; Two-Lane Alley; Two-Lane Alley; Tiny Road; 0.35; Tiny Roads; name; 0.35; 0.35
+NetInfo; One-Lane Oneway (NetInfo); NExt1LOneway; One-Lane Oneway; One-Lane Oneway; Tiny Road; 0.35; Tiny Roads; name; 0.35; 0.35
+NetInfo; One-Lane Oneway With Parking (NetInfo); NExt1LOnewayWithParking; One-Lane Oneway With Parking; One-Lane Oneway With Parking; Tiny Road; 0.35; Tiny Roads; name; 0.35; 0.35
+NetInfo; PlainStreet2L (NetInfo); Gravel Road; PlainStreet2L; Two-Lane Plain Street; Gravel Road; 0.35; Tiny Roads; name; 0.35; 0.35
 NetInfo; BasicRoadPntMdn (NetInfo); NEXTbasicroadpaintedmedian; BasicRoadPntMdn; Basic Road with Painted Median; Small Heavy Road; 0.25; Small Roads; name; 0.25; 0.25
 NetInfo; BasicRoadPntMdn Elevated (NetInfo); NEXTbasicroadpaintedmedian; BasicRoadPntMdn Elevated; BasicRoadPntMdn Elevated; Small Heavy Road; 0.25; Small Roads; name; 0.25; 0.25
 NetInfo; BasicRoadPntMdn Bridge (NetInfo); NEXTbasicroadpaintedmedian; BasicRoadPntMdn Bridge; BasicRoadPntMdn Bridge; Small Heavy Road; 0.25; Small Roads; name; 0.25; 0.25
@@ -59,46 +61,46 @@ NetInfo; Oneway4L Elevated (NetInfo); NExtSmall4LRoad; Oneway4L Elevated; Oneway
 NetInfo; Oneway4L Bridge (NetInfo); NExtSmall4LRoad; Oneway4L Bridge; Oneway4L Bridge; Small Heavy Road; 0.25; Small Roads; name; 0.25; 0.25
 NetInfo; Oneway4L Tunnel (NetInfo); NExtSmall4LRoadTunnel; Oneway4L Tunnel; Oneway4L Tunnel; Small Heavy Road Tunnel; 0.25; Small Roads; name; 0.25; 0.25
 NetInfo; Oneway4L Slope (NetInfo); NExtSmall4LRoad; Oneway4L Slope; Oneway4L Slope; Small Heavy Road; 0.25; Small Roads; name; 0.25; 0.25
-NetInfo; Medium Avenue (NetInfo); NExtMediumRoad; Medium Avenue; Four-Lane Road; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Medium Avenue Elevated (NetInfo); NExtMediumRoad; Medium Avenue Elevated; Medium Avenue Elevated; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Medium Avenue Bridge (NetInfo); NExtMediumRoad; Medium Avenue Bridge; Medium Avenue Bridge; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Medium Avenue Tunnel (NetInfo); NExtMediumRoadTunnel; Medium Avenue Tunnel; Medium Avenue Tunnel; Medium Road Tunnel; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Medium Avenue Slope (NetInfo); NExtMediumRoad; Medium Avenue Slope; Medium Avenue Slope; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Medium Avenue TL (NetInfo); NExtMediumRoadTL; Medium Avenue TL; Four-Lane Road with Turning Lane; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Medium Avenue TL Elevated (NetInfo); NExtMediumRoadTL; Medium Avenue TL Elevated; Medium Avenue TL Elevated; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Medium Avenue TL Bridge (NetInfo); NExtMediumRoadTL; Medium Avenue TL Bridge; Medium Avenue TL Bridge; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Medium Avenue TL Tunnel (NetInfo); NExtMediumRoadTLTunnel; Medium Avenue TL Tunnel; Medium Avenue TL Tunnel; Medium Road Tunnel; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Medium Avenue TL Slope (NetInfo); NExtMediumRoadTL; Medium Avenue TL Slope; Medium Avenue TL Slope; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Eight-Lane Avenue (NetInfo); NExtXLargeRoad; Eight-Lane Avenue; Eight-Lane Road; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Eight-Lane Avenue Elevated (NetInfo); NExtXLargeRoad; Eight-Lane Avenue Elevated; Eight-Lane Avenue Elevated; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Eight-Lane Avenue Bridge (NetInfo); NExtXLargeRoad; Eight-Lane Avenue Bridge; Eight-Lane Avenue Bridge; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Eight-Lane Avenue Tunnel (NetInfo); NExtXLargeRoadTunnel; Eight-Lane Avenue Tunnel; Eight-Lane Avenue Tunnel; Large Road Tunnel; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Eight-Lane Avenue Slope (NetInfo); NExtXLargeRoad; Eight-Lane Avenue Slope; Eight-Lane Avenue Slope; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Small Rural Highway (NetInfo); NExtHighway1L; Small Rural Highway; National Road; Rural Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Small Rural Highway Elevated (NetInfo); NExtHighway1L; Small Rural Highway Elevated; Small Rural Highway Elevated; Rural Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Small Rural Highway Bridge (NetInfo); NExtHighway1L; Small Rural Highway Bridge; Small Rural Highway Bridge; Rural Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Small Rural Highway Tunnel (NetInfo); NExtHighwayTunnel1LTunnel; Small Rural Highway Tunnel; Small Rural Highway Tunnel; Rural Highway Tunnel; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Small Rural Highway Slope (NetInfo); NExtHighway1L; Small Rural Highway Slope; Small Rural Highway Slope; Rural Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Rural Highway (NetInfo); NExtHighway2L; Rural Highway; Two-Lane Highway; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Rural Highway Elevated (NetInfo); NExtHighway2L; Rural Highway Elevated; Rural Highway Elevated; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Rural Highway Bridge (NetInfo); NExtHighway2L; Rural Highway Bridge; Rural Highway Bridge; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Rural Highway Tunnel (NetInfo); NExtHighwayTunnel2LTunnel; Rural Highway Tunnel; Rural Highway Tunnel; Highway Tunnel; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Rural Highway Slope (NetInfo); NExtHighway2L; Rural Highway Slope; Rural Highway Slope; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Four-Lane Highway (NetInfo); NExtHighway4L; Four-Lane Highway; Four-Lane Highway; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Four-Lane Highway Elevated (NetInfo); NExtHighway4L; Four-Lane Highway Elevated; Four-Lane Highway Elevated; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Four-Lane Highway Bridge (NetInfo); NExtHighway4L; Four-Lane Highway Bridge; Four-Lane Highway Bridge; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Four-Lane Highway Tunnel (NetInfo); NExtHighwayTunnel4LTunnel; Four-Lane Highway Tunnel; Four-Lane Highway Tunnel; Highway Tunnel; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Four-Lane Highway Slope (NetInfo); NExtHighway4L; Four-Lane Highway Slope; Four-Lane Highway Slope; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Five-Lane Highway (NetInfo); NExtHighway5L; Five-Lane Highway; Five-Lane Highway; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Five-Lane Highway Elevated (NetInfo); NExtHighway5L; Five-Lane Highway Elevated; Five-Lane Highway Elevated; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Five-Lane Highway Bridge (NetInfo); NExtHighway5L; Five-Lane Highway Bridge; Five-Lane Highway Bridge; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Five-Lane Highway Tunnel (NetInfo); NExtHighwayTunnel5LTunnel; Five-Lane Highway Tunnel; Five-Lane Highway Tunnel; Highway Tunnel; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Five-Lane Highway Slope (NetInfo); NExtHighway5L; Five-Lane Highway Slope; Five-Lane Highway Slope; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Large Highway (NetInfo); NExtHighway6L; Large Highway; Six-Lane Highway; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Large Highway Elevated (NetInfo); NExtHighway6L; Large Highway Elevated; Large Highway Elevated; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Large Highway Bridge (NetInfo); NExtHighway6L; Large Highway Bridge; Large Highway Bridge; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Large Highway Tunnel (NetInfo); NExtHighwayTunnel6LTunnel; Large Highway Tunnel; Large Highway Tunnel; Highway Tunnel; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Large Highway Slope (NetInfo); NExtHighway6L; Large Highway Slope; Large Highway Slope; Highway; 0.55; Highways; name; 0.15; 0.15
+NetInfo; Medium Avenue (NetInfo); NExtMediumRoad; Medium Avenue; Four-Lane Road; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Medium Avenue Elevated (NetInfo); NExtMediumRoad; Medium Avenue Elevated; Medium Avenue Elevated; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Medium Avenue Bridge (NetInfo); NExtMediumRoad; Medium Avenue Bridge; Medium Avenue Bridge; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Medium Avenue Tunnel (NetInfo); NExtMediumRoadTunnel; Medium Avenue Tunnel; Medium Avenue Tunnel; Medium Road Tunnel; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Medium Avenue Slope (NetInfo); NExtMediumRoad; Medium Avenue Slope; Medium Avenue Slope; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Medium Avenue TL (NetInfo); NExtMediumRoadTL; Medium Avenue TL; Four-Lane Road with Turning Lane; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Medium Avenue TL Elevated (NetInfo); NExtMediumRoadTL; Medium Avenue TL Elevated; Medium Avenue TL Elevated; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Medium Avenue TL Bridge (NetInfo); NExtMediumRoadTL; Medium Avenue TL Bridge; Medium Avenue TL Bridge; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Medium Avenue TL Tunnel (NetInfo); NExtMediumRoadTLTunnel; Medium Avenue TL Tunnel; Medium Avenue TL Tunnel; Medium Road Tunnel; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Medium Avenue TL Slope (NetInfo); NExtMediumRoadTL; Medium Avenue TL Slope; Medium Avenue TL Slope; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Eight-Lane Avenue (NetInfo); NExtXLargeRoad; Eight-Lane Avenue; Eight-Lane Road; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Eight-Lane Avenue Elevated (NetInfo); NExtXLargeRoad; Eight-Lane Avenue Elevated; Eight-Lane Avenue Elevated; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Eight-Lane Avenue Bridge (NetInfo); NExtXLargeRoad; Eight-Lane Avenue Bridge; Eight-Lane Avenue Bridge; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Eight-Lane Avenue Tunnel (NetInfo); NExtXLargeRoadTunnel; Eight-Lane Avenue Tunnel; Eight-Lane Avenue Tunnel; Large Road Tunnel; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Eight-Lane Avenue Slope (NetInfo); NExtXLargeRoad; Eight-Lane Avenue Slope; Eight-Lane Avenue Slope; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Small Rural Highway (NetInfo); NExtHighway1L; Small Rural Highway; National Road; Rural Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Small Rural Highway Elevated (NetInfo); NExtHighway1L; Small Rural Highway Elevated; Small Rural Highway Elevated; Rural Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Small Rural Highway Bridge (NetInfo); NExtHighway1L; Small Rural Highway Bridge; Small Rural Highway Bridge; Rural Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Small Rural Highway Tunnel (NetInfo); NExtHighwayTunnel1LTunnel; Small Rural Highway Tunnel; Small Rural Highway Tunnel; Rural Highway Tunnel; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Small Rural Highway Slope (NetInfo); NExtHighway1L; Small Rural Highway Slope; Small Rural Highway Slope; Rural Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Rural Highway (NetInfo); NExtHighway2L; Rural Highway; Two-Lane Highway; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Rural Highway Elevated (NetInfo); NExtHighway2L; Rural Highway Elevated; Rural Highway Elevated; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Rural Highway Bridge (NetInfo); NExtHighway2L; Rural Highway Bridge; Rural Highway Bridge; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Rural Highway Tunnel (NetInfo); NExtHighwayTunnel2LTunnel; Rural Highway Tunnel; Rural Highway Tunnel; Highway Tunnel; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Rural Highway Slope (NetInfo); NExtHighway2L; Rural Highway Slope; Rural Highway Slope; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Four-Lane Highway (NetInfo); NExtHighway4L; Four-Lane Highway; Four-Lane Highway; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Four-Lane Highway Elevated (NetInfo); NExtHighway4L; Four-Lane Highway Elevated; Four-Lane Highway Elevated; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Four-Lane Highway Bridge (NetInfo); NExtHighway4L; Four-Lane Highway Bridge; Four-Lane Highway Bridge; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Four-Lane Highway Tunnel (NetInfo); NExtHighwayTunnel4LTunnel; Four-Lane Highway Tunnel; Four-Lane Highway Tunnel; Highway Tunnel; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Four-Lane Highway Slope (NetInfo); NExtHighway4L; Four-Lane Highway Slope; Four-Lane Highway Slope; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Five-Lane Highway (NetInfo); NExtHighway5L; Five-Lane Highway; Five-Lane Highway; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Five-Lane Highway Elevated (NetInfo); NExtHighway5L; Five-Lane Highway Elevated; Five-Lane Highway Elevated; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Five-Lane Highway Bridge (NetInfo); NExtHighway5L; Five-Lane Highway Bridge; Five-Lane Highway Bridge; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Five-Lane Highway Tunnel (NetInfo); NExtHighwayTunnel5LTunnel; Five-Lane Highway Tunnel; Five-Lane Highway Tunnel; Highway Tunnel; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Five-Lane Highway Slope (NetInfo); NExtHighway5L; Five-Lane Highway Slope; Five-Lane Highway Slope; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Large Highway (NetInfo); NExtHighway6L; Large Highway; Six-Lane Highway; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Large Highway Elevated (NetInfo); NExtHighway6L; Large Highway Elevated; Large Highway Elevated; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Large Highway Bridge (NetInfo); NExtHighway6L; Large Highway Bridge; Large Highway Bridge; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Large Highway Tunnel (NetInfo); NExtHighwayTunnel6LTunnel; Large Highway Tunnel; Large Highway Tunnel; Highway Tunnel; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Large Highway Slope (NetInfo); NExtHighway6L; Large Highway Slope; Large Highway Slope; Highway; 0.15; Highways; name; 0.15; 0.15
 NetInfo; Small Busway (NetInfo); Small Road; Small Busway; [BETA] Busway; Small Road; 0.25; Small Roads; name; 0.25; 0.25
 NetInfo; Small Busway Elevated (NetInfo); Small Road; Small Busway Elevated; Small Busway Elevated; Small Road; 0.25; Small Roads; name; 0.25; 0.25
 NetInfo; Small Busway Bridge (NetInfo); Small Road; Small Busway Bridge; Small Busway Bridge; Small Road; 0.25; Small Roads; name; 0.25; 0.25
@@ -113,38 +115,40 @@ NetInfo; Small Busway OneWay Tunnel (NetInfo); Small Road Tunnel; Small Busway O
 NetInfo; Small Busway OneWay Slope (NetInfo); Small Road; Small Busway OneWay Slope; Small Busway OneWay Slope; Small Road; 0.25; Small Roads; name; 0.25; 0.25
 NetInfo; Small Busway OneWay Decoration Grass (NetInfo); Small Road; Small Busway OneWay Decoration Grass; [BETA] OneWay Busway with Grass; Small Road; 0.25; Small Roads; name; 0.25; 0.25
 NetInfo; Small Busway OneWay Decoration Trees (NetInfo); Small Road; Small Busway OneWay Decoration Trees; [BETA] OneWay Busway with Trees; Small Road; 0.25; Small Roads; name; 0.25; 0.25
-NetInfo; Large Road With Bus Lanes (NetInfo); Large Road; Large Road With Bus Lanes; [BETA] Large Road With Bus Lanes; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Road Elevated With Bus Lanes (NetInfo); Large Road; Large Road Elevated With Bus Lanes; Large Road Elevated With Bus Lanes; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Road Bridge With Bus Lanes (NetInfo); Large Road; Large Road Bridge With Bus Lanes; Large Road Bridge With Bus Lanes; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Road Tunnel With Bus Lanes (NetInfo); Large Road Tunnel; Large Road Tunnel With Bus Lanes; Large Road Tunnel With Bus Lanes; Large Road Tunnel; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Road Slope With Bus Lanes (NetInfo); Large Road; Large Road Slope With Bus Lanes; Large Road Slope With Bus Lanes; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Road Decoration Grass With Bus Lanes (NetInfo); Large Road; Large Road Decoration Grass With Bus Lanes; [BETA] Large Road Decoration Grass With Bus Lanes; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Road Decoration Trees With Bus Lanes (NetInfo); Large Road; Large Road Decoration Trees With Bus Lanes; [BETA] Large Road Decoration Grass With Bus Lanes; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Zonable Pedestrian Gravel Tiny (NetInfo); NExt Zonable Pedestrian Gravel Tiny; Zonable Pedestrian Gravel Tiny; Zonable Pedestrian Gravel Tiny Road; Tiny Road; 0.25; Tiny Roads; name; 0.5; 0.5
-NetInfo; Zonable Pedestrian Gravel Tiny Elevated (NetInfo); NExt Zonable Pedestrian Gravel Tiny Elevated; Zonable Pedestrian Gravel Tiny Elevated; Zonable Pedestrian Gravel Tiny Elevated; Tiny Road; 0.25; Tiny Roads; name; 0.5; 0.5
-NetInfo; Zonable Pedestrian Boardwalk Tiny (NetInfo); NExt Zonable Pedestrian Boardwalk Tiny; Zonable Pedestrian Boardwalk Tiny; Zonable Pedestrian Boardwalk Tiny Road; Tiny Road; 0.25; Tiny Roads; name; 0.5; 0.5
-NetInfo; Zonable Pedestrian Boardwalk Tiny Elevated (NetInfo); NExt Zonable Pedestrian Boardwalk Tiny Elevated; Zonable Pedestrian Boardwalk Tiny Elevated; Zonable Pedestrian Boardwalk Tiny Elevated; Tiny Road; 0.25; Tiny Roads; name; 0.5; 0.5
-NetInfo; Zonable Pedestrian Gravel (NetInfo); NExt Zonable Pedestrian Gravel; Zonable Pedestrian Gravel; Zonable Pedestrian Gravel Road; Tiny Road; 0.25; Tiny Roads; name; 0.5; 0.5
-NetInfo; Zonable Pedestrian Gravel Elevated (NetInfo); NExt Zonable Pedestrian Gravel Elevated; Zonable Pedestrian Gravel Elevated; Zonable Pedestrian Gravel Elevated; Tiny Road; 0.25; Tiny Roads; name; 0.5; 0.5
-NetInfo; Zonable Pedestrian Pavement Tiny (NetInfo); NExt Zonable Pedestrian Pavement Tiny; Zonable Pedestrian Pavement Tiny; Zonable Pedestrian Paved Tiny Road; Tiny Road; 0.25; Tiny Roads; name; 0.5; 0.5
-NetInfo; Zonable Pedestrian Pavement Tiny Elevated (NetInfo); NExt Zonable Pedestrian Pavement Tiny Elevated; Zonable Pedestrian Pavement Tiny Elevated; Zonable Pedestrian Pavement Tiny Elevated; Tiny Road; 0.25; Tiny Roads; name; 0.5; 0.5
-NetInfo; Zonable Pedestrian Pavement (NetInfo); NExt Zonable Pedestrian Pavement; Zonable Pedestrian Pavement; Zonable Pedestrian Paved Road; Tiny Road; 0.25; Tiny Roads; name; 0.5; 0.5
-NetInfo; Zonable Pedestrian Elevated (NetInfo); NExt Zonable Pedestrian Elevated; Zonable Pedestrian Elevated; Zonable Pedestrian Elevated; Tiny Road; 0.25; Tiny Roads; name; 0.5; 0.5
-NetInfo; Zonable Pedestrian Stone Tiny Road (NetInfo); NExt Zonable Pedestrian Stone Tiny Road; Zonable Pedestrian Stone Tiny Road; Zonable Pedestrian Stone Tiny Road; Tiny Road; 0.25; Tiny Roads; name; 0.5; 0.5
-NetInfo; Zonable Pedestrian Stone Tiny Road Elevated (NetInfo); NExt Zonable Pedestrian Stone Tiny Road Elevated; Zonable Pedestrian Stone Tiny Road Elevated; Zonable Pedestrian Stone Tiny Road Elevated; Tiny Road; 0.25; Tiny Roads; name; 0.5; 0.5
-NetInfo; Zonable Pedestrian Stone Tiny Road Bridge (NetInfo); NExt Zonable Pedestrian Stone Tiny Road Bridge; Zonable Pedestrian Stone Tiny Road Bridge; Zonable Pedestrian Stone Tiny Road Bridge; Tiny Road; 0.25; Tiny Roads; name; 0.5; 0.5
-NetInfo; Zonable Promenade (NetInfo); NExtPedRoadStone16m; Zonable Promenade; Zonable Promenade; Tiny Road; 0.25; Tiny Roads; name; 0.5; 0.5
-NetInfo; Zonable Promenade Elevated (NetInfo); NExtPedRoadStone16m; Zonable Promenade Elevated; Zonable Promenade Elevated; Tiny Road; 0.25; Tiny Roads; name; 0.5; 0.5
+NetInfo; Large Road With Bus Lanes (NetInfo); Large Road; Large Road With Bus Lanes; [BETA] Large Road With Bus Lanes; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Road Elevated With Bus Lanes (NetInfo); Large Road; Large Road Elevated With Bus Lanes; Large Road Elevated With Bus Lanes; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Road Bridge With Bus Lanes (NetInfo); Large Road; Large Road Bridge With Bus Lanes; Large Road Bridge With Bus Lanes; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Road Tunnel With Bus Lanes (NetInfo); Large Road Tunnel; Large Road Tunnel With Bus Lanes; Large Road Tunnel With Bus Lanes; Large Road Tunnel; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Road Slope With Bus Lanes (NetInfo); Large Road; Large Road Slope With Bus Lanes; Large Road Slope With Bus Lanes; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Road Decoration Grass With Bus Lanes (NetInfo); Large Road; Large Road Decoration Grass With Bus Lanes; [BETA] Large Road Decoration Grass With Bus Lanes; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Road Decoration Trees With Bus Lanes (NetInfo); Large Road; Large Road Decoration Trees With Bus Lanes; [BETA] Large Road Decoration Grass With Bus Lanes; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Zonable Pedestrian Gravel Tiny (NetInfo); NExt Zonable Pedestrian Gravel Tiny; Zonable Pedestrian Gravel Tiny; Zonable Pedestrian Gravel Tiny Road; Tiny Road; 0.35; Tiny Roads; name; 0.35; 0.35
+NetInfo; Zonable Pedestrian Gravel Tiny Elevated (NetInfo); NExt Zonable Pedestrian Gravel Tiny Elevated; Zonable Pedestrian Gravel Tiny Elevated; Zonable Pedestrian Gravel Tiny Elevated; Tiny Road; 0.35; Tiny Roads; name; 0.35; 0.35
+NetInfo; Zonable Pedestrian Boardwalk Tiny (NetInfo); NExt Zonable Pedestrian Boardwalk Tiny; Zonable Pedestrian Boardwalk Tiny; Zonable Pedestrian Boardwalk Tiny Road; Tiny Road; 0.35; Tiny Roads; name; 0.35; 0.35
+NetInfo; Zonable Pedestrian Boardwalk Tiny Elevated (NetInfo); NExt Zonable Pedestrian Boardwalk Tiny Elevated; Zonable Pedestrian Boardwalk Tiny Elevated; Zonable Pedestrian Boardwalk Tiny Elevated; Tiny Road; 0.35; Tiny Roads; name; 0.35; 0.35
+NetInfo; Zonable Pedestrian Gravel (NetInfo); NExt Zonable Pedestrian Gravel; Zonable Pedestrian Gravel; Zonable Pedestrian Gravel Road; Tiny Road; 0.35; Tiny Roads; name; 0.35; 0.35
+NetInfo; Zonable Pedestrian Gravel Elevated (NetInfo); NExt Zonable Pedestrian Gravel Elevated; Zonable Pedestrian Gravel Elevated; Zonable Pedestrian Gravel Elevated; Tiny Road; 0.35; Tiny Roads; name; 0.35; 0.35
+NetInfo; Zonable Pedestrian Pavement Tiny (NetInfo); NExt Zonable Pedestrian Pavement Tiny; Zonable Pedestrian Pavement Tiny; Zonable Pedestrian Paved Tiny Road; Tiny Road; 0.35; Tiny Roads; name; 0.35; 0.35
+NetInfo; Zonable Pedestrian Pavement Tiny Elevated (NetInfo); NExt Zonable Pedestrian Pavement Tiny Elevated; Zonable Pedestrian Pavement Tiny Elevated; Zonable Pedestrian Pavement Tiny Elevated; Tiny Road; 0.35; Tiny Roads; name; 0.35; 0.35
+NetInfo; Zonable Pedestrian Pavement (NetInfo); NExt Zonable Pedestrian Pavement; Zonable Pedestrian Pavement; Zonable Pedestrian Paved Road; Tiny Road; 0.35; Tiny Roads; name; 0.35; 0.35
+NetInfo; Zonable Pedestrian Elevated (NetInfo); NExt Zonable Pedestrian Elevated; Zonable Pedestrian Elevated; Zonable Pedestrian Elevated; Tiny Road; 0.35; Tiny Roads; name; 0.35; 0.35
+NetInfo; Zonable Pedestrian Stone Tiny Road (NetInfo); NExt Zonable Pedestrian Stone Tiny Road; Zonable Pedestrian Stone Tiny Road; Zonable Pedestrian Stone Tiny Road; Tiny Road; 0.35; Tiny Roads; name; 0.35; 0.35
+NetInfo; Zonable Pedestrian Stone Tiny Road Elevated (NetInfo); NExt Zonable Pedestrian Stone Tiny Road Elevated; Zonable Pedestrian Stone Tiny Road Elevated; Zonable Pedestrian Stone Tiny Road Elevated; Tiny Road; 0.35; Tiny Roads; name; 0.35; 0.35
+NetInfo; Zonable Pedestrian Stone Tiny Road Bridge (NetInfo); NExt Zonable Pedestrian Stone Tiny Road Bridge; Zonable Pedestrian Stone Tiny Road Bridge; Zonable Pedestrian Stone Tiny Road Bridge; Tiny Road; 0.35; Tiny Roads; name; 0.35; 0.35
+NetInfo; Zonable Promenade (NetInfo); NExtPedRoadStone16m; Zonable Promenade; Zonable Promenade; Tiny Road; 0.35; Tiny Roads; name; 0.35; 0.35
+NetInfo; Zonable Promenade Elevated (NetInfo); NExtPedRoadStone16m; Zonable Promenade Elevated; Zonable Promenade Elevated; Tiny Road; 0.35; Tiny Roads; name; 0.35; 0.35
+
 NetCollection; Water (NetCollection); Water; Ignore
-Prefabs; NetInfo[]
+Prefabs; NetInfo[]; 1
 NetInfo; Water Pipe (NetInfo); Water Pipe; Water Pipe; Water Pipe; Water Pipe; Ignore; 2; Other; part; 2; 2
+
 NetCollection; Public Transport (NetCollection); Public Transport
-Prefabs; NetInfo[]
+Prefabs; NetInfo[]; 41
 NetInfo; Public Transport Line (NetInfo); Public Transport; Public Transport Line; Public Transport Line; Public Transport; Ignore; 0.25; Other
-NetInfo; Train Track (NetInfo); Train Track; Train Track; Train Tracks; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Train Station Track (NetInfo); Train Track; Train Station Track; Train Station Track; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Metro Track (NetInfo); Metro Track; Metro Track; Metro Tunnel; Metro Track Tunnel; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Metro Station Track (NetInfo); Metro Track; Metro Station Track; Metro Station Track; Metro Track Tunnel; 0.45; Railroads; name; 0.1; 0.1
+NetInfo; Train Track (NetInfo); Train Track; Train Track; Train Tracks; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Train Station Track (NetInfo); Train Track; Train Station Track; Train Station Track; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Metro Track (NetInfo); Metro Track; Metro Track; Metro Tunnel; Metro Track Tunnel; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Metro Station Track (NetInfo); Metro Track; Metro Station Track; Metro Station Track; Metro Track Tunnel; 0.1; Railroads; name; 0.1; 0.1
 NetInfo; Pedestrian Connection (NetInfo); Transport Connection; Pedestrian Connection; Pedestrian Connection; Transport Connection; Ignore; 2; Other
 NetInfo; Bus Line (NetInfo); Bus Line; Bus Line; Bus Line; Bus Line; Ignore; 0.25; Other
 NetInfo; Metro Line (NetInfo); Metro Line; Metro Line; Metro Line; Metro Line; Ignore; 0.25; Other
@@ -160,29 +164,30 @@ NetInfo; Ship Connection Path (NetInfo); Ship Path; Ship Connection Path; Ship C
 NetInfo; Ship Line (NetInfo); Ship Line; Ship Line; Ship Line; Ship Line; Ignore; 0.25; Other
 NetInfo; Ship Dockway (NetInfo); Ship Dock; Ship Dockway; Ship Dockway; Ship Dock; Ignore; 2; Other
 NetInfo; Cargo Connection (NetInfo); Transport Connection; Cargo Connection; Cargo Connection; Transport Connection; Ignore; 1; Other
-NetInfo; Train Cargo Track (NetInfo); Train Track; Train Cargo Track; Train Cargo Track; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Train Track Bridge (NetInfo); Train Track; Train Track Bridge; Train Track Bridge; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Train Track Elevated (NetInfo); Train Track; Train Track Elevated; Train Track Elevated; Train Track; 0.45; Railroads; name; 0.1; 0.1
+NetInfo; Train Cargo Track (NetInfo); Train Track; Train Cargo Track; Train Cargo Track; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Train Track Bridge (NetInfo); Train Track; Train Track Bridge; Train Track Bridge; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Train Track Elevated (NetInfo); Train Track; Train Track Elevated; Train Track Elevated; Train Track; 0.1; Railroads; name; 0.1; 0.1
 NetInfo; Harbor Road (NetInfo); Small Road; Harbor Road; Leveled Road; Small Road; 0.25; Small Roads; name; 0.25; 0.25
 NetInfo; Ship Dock (NetInfo); Ship Dock; Ship Dock; Ship Dock; Ship Dock; Ignore; 2; Other
 NetInfo; Pedestrian Connection Surface (NetInfo); Transport Connection; Pedestrian Connection Surface; Pedestrian Connection Surface; Transport Connection; Ignore; 2; Other
-NetInfo; Train Connection Track (NetInfo); Train Track; Train Connection Track; Train Connection Track; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Train Connection Track Elevated (NetInfo); Train Track; Train Connection Track Elevated; Train Connection Track Elevated; Train Track; 0.45; Railroads; name; 0.1; 0.1
+NetInfo; Train Connection Track (NetInfo); Train Track; Train Connection Track; Train Connection Track; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Train Connection Track Elevated (NetInfo); Train Track; Train Connection Track Elevated; Train Connection Track Elevated; Train Track; 0.1; Railroads; name; 0.1; 0.1
 NetInfo; Pedestrian Connection Inside (NetInfo); Transport Connection; Pedestrian Connection Inside; Pedestrian Connection Inside; Transport Connection; Ignore; 2; Other
 NetInfo; Pedestrian Connection Underground (NetInfo); Transport Connection; Pedestrian Connection Underground; Pedestrian Connection Underground; Transport Connection; Ignore; 2; Other
-NetInfo; Train Track Slope (NetInfo); Train Track; Train Track Slope; Train Track Slope; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Train Track Tunnel (NetInfo); Train Track Tunnel; Train Track Tunnel; Train Track Tunnel; Train Track Tunnel; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Train Cargo Track Elevated (NetInfo); Train Track; Train Cargo Track Elevated; Train Cargo Track Elevated; Train Track; 0.45; Railroads; name; 0.1; 0.1
+NetInfo; Train Track Slope (NetInfo); Train Track; Train Track Slope; Train Track Slope; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Train Track Tunnel (NetInfo); Train Track Tunnel; Train Track Tunnel; Train Track Tunnel; Train Track Tunnel; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Train Cargo Track Elevated (NetInfo); Train Track; Train Cargo Track Elevated; Train Cargo Track Elevated; Train Track; 0.1; Railroads; name; 0.1; 0.1
 NetInfo; Bus Depot Road (NetInfo); Small Road; Bus Depot Road; Bus Depot Road; Small Road; 0.25; Small Roads; name; 0.25; 0.25
 NetInfo; Bus Station Stop (NetInfo); Bus Stop; Bus Station Stop; Bus Station Stop; Bus Stop; Ignore; 1; Other
 NetInfo; Bus Station Way (NetInfo); Bus Stop; Bus Station Way; Bus Station Way; Bus Stop; Ignore; 1; Other
-NetInfo; Train Oneway Track (NetInfo); Train Track; Train Oneway Track; One-Way Train Track; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Train Oneway Track Bridge (NetInfo); Train Track; Train Oneway Track Bridge; Train Oneway Track Bridge; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Train Oneway Track Elevated (NetInfo); Train Track; Train Oneway Track Elevated; Train Oneway Track Elevated; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Train Oneway Track Slope (NetInfo); Train Track; Train Oneway Track Slope; Train Oneway Track Slope; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Train Oneway Track Tunnel (NetInfo); Train Track Tunnel; Train Oneway Track Tunnel; Train Oneway Track Tunnel; Train Track Tunnel; 0.45; Railroads; name; 0.1; 0.1
+NetInfo; Train Oneway Track (NetInfo); Train Track; Train Oneway Track; One-Way Train Track; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Train Oneway Track Bridge (NetInfo); Train Track; Train Oneway Track Bridge; Train Oneway Track Bridge; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Train Oneway Track Elevated (NetInfo); Train Track; Train Oneway Track Elevated; Train Oneway Track Elevated; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Train Oneway Track Slope (NetInfo); Train Track; Train Oneway Track Slope; Train Oneway Track Slope; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Train Oneway Track Tunnel (NetInfo); Train Track Tunnel; Train Oneway Track Tunnel; Train Oneway Track Tunnel; Train Track Tunnel; 0.1; Railroads; name; 0.1; 0.1
+
 NetCollection; Landscaping (NetCollection); Landscaping
-Prefabs; NetInfo[]
+Prefabs; NetInfo[]; 9
 NetInfo; Canal (NetInfo); Landscaping Canal; Canal; Shallow canal; Canal; 0.5; Waterworks; name; 0.5; 0.5
 NetInfo; Canal2 (NetInfo); Landscaping Canal; Canal2; Medium canal; Canal; 0.5; Waterworks; name; 0.5; 0.5
 NetInfo; Canal3 (NetInfo); Landscaping Canal; Canal3; Deep canal; Canal; 0.5; Waterworks; name; 0.5; 0.5
@@ -192,161 +197,168 @@ NetInfo; Castle Wall 1 (NetInfo); Beautification Item; Castle Wall 1; Castle Wal
 NetInfo; Castle Wall 2 (NetInfo); Beautification Item; Castle Wall 2; Castle Wall Ruins 2; Castle Wall; 0.5; Other; name; 0.5; 0.5
 NetInfo; Castle Wall 3 (NetInfo); Beautification Item; Castle Wall 3; Castle Wall Ruins 3; Castle Wall; 0.5; Other; name; 0.5; 0.5
 NetInfo; Trench Ruins 01 (NetInfo); Beautification Item; Trench Ruins 01; Trench Ruins; Trench; 0.5; Other; name; 0.5; 0.5
+
 NetCollection; Electricity (NetCollection); Electricity; Ignore
-Prefabs; NetInfo[]
+Prefabs; NetInfo[]; 2
 NetInfo; Power Line (NetInfo); Electricity Wire; Power Line; Power Line; Electricity Wire; Ignore; 2; Other; part; 2; 2
 NetInfo; Dam (NetInfo); Electricity Dam; Dam; Hydro Power Plant; Electricity Dam; Ignore; 0.001; Other; part; 0.001; 0.001
+
 NetCollection; Road (NetCollection); Road
-Prefabs; NetInfo[]
+Prefabs; NetInfo[]; 48
 NetInfo; Basic Road (NetInfo); Small Road; Basic Road; Two-Lane Road; Small Road; 0.25; Small Roads; name; 0.25; 0.25
-NetInfo; Large Road (NetInfo); Large Road; Large Road; Six-Lane Road; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Gravel Road (NetInfo); Gravel Road; Gravel Road; Two-Lane Gravel Road; Gravel Road; 1; Tiny Roads; name; 0.25; 0.25
-NetInfo; Medium Road (NetInfo); Medium Road; Medium Road; Four-Lane Road with Median; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Highway (NetInfo); Highway; Highway; Three-Lane Highway; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Highway Elevated (NetInfo); Highway; Highway Elevated; Highway Elevated; Highway; 0.55; Highways; name; 0.15; 0.15
+NetInfo; Large Road (NetInfo); Large Road; Large Road; Six-Lane Road; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Gravel Road (NetInfo); Gravel Road; Gravel Road; Two-Lane Gravel Road; Gravel Road; 0.35; Tiny Roads; name; 0.35; 0.35
+NetInfo; Medium Road (NetInfo); Medium Road; Medium Road; Four-Lane Road with Median; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Highway (NetInfo); Highway; Highway; Three-Lane Highway; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Highway Elevated (NetInfo); Highway; Highway Elevated; Highway Elevated; Highway; 0.15; Highways; name; 0.15; 0.15
 NetInfo; Basic Road Bridge (NetInfo); Small Road; Basic Road Bridge; Basic Road Bridge; Small Road; 0.25; Small Roads; name; 0.25; 0.25
 NetInfo; Basic Road Decoration Trees (NetInfo); Small Road; Basic Road Decoration Trees; Two-Lane Road with Trees; Small Road; 0.25; Small Roads; name; 0.25; 0.25
-NetInfo; HighwayRamp (NetInfo); Highway; HighwayRamp; Highway Ramp; Highway Ramp; 0.65; Highways; name; 0.2; 0.2
-NetInfo; Highway Barrier (NetInfo); Highway; Highway Barrier; Three-Lane Highway with Sound Barrier; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Medium Road Bridge (NetInfo); Medium Road; Medium Road Bridge; Medium Road Bridge; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; HighwayRampElevated (NetInfo); Highway; HighwayRampElevated; HighwayRampElevated; Highway Ramp; 0.65; Highways; name; 0.2; 0.2
+NetInfo; HighwayRamp (NetInfo); Highway; HighwayRamp; Highway Ramp; Highway Ramp; 0.2; Highways; name; 0.2; 0.2
+NetInfo; Highway Barrier (NetInfo); Highway; Highway Barrier; Three-Lane Highway with Sound Barrier; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Medium Road Bridge (NetInfo); Medium Road; Medium Road Bridge; Medium Road Bridge; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; HighwayRampElevated (NetInfo); Highway; HighwayRampElevated; HighwayRampElevated; Highway Ramp; 0.2; Highways; name; 0.2; 0.2
 NetInfo; Basic Road Elevated (NetInfo); Small Road; Basic Road Elevated; Basic Road Elevated; Small Road; 0.25; Small Roads; name; 0.25; 0.25
-NetInfo; Highway Bridge (NetInfo); Highway; Highway Bridge; Highway Bridge; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Large Road Elevated (NetInfo); Large Road; Large Road Elevated; Large Road Elevated; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Medium Road Elevated (NetInfo); Medium Road; Medium Road Elevated; Medium Road Elevated; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Highway Bridge (NetInfo); Highway; Highway Bridge; Highway Bridge; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Large Road Elevated (NetInfo); Large Road; Large Road Elevated; Large Road Elevated; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Medium Road Elevated (NetInfo); Medium Road; Medium Road Elevated; Medium Road Elevated; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
 NetInfo; Oneway Road (NetInfo); Small Road; Oneway Road; Two-Lane One-Way Road; Small Road; 0.25; Small Roads; name; 0.25; 0.25
 NetInfo; Oneway Road Elevated (NetInfo); Small Road; Oneway Road Elevated; Oneway Road Elevated; Small Road; 0.25; Small Roads; name; 0.25; 0.25
-NetInfo; Medium Road Decoration Trees (NetInfo); Medium Road; Medium Road Decoration Trees; Four-Lane Road with Decorative Trees; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Medium Road Decoration Grass (NetInfo); Medium Road; Medium Road Decoration Grass; Four-Lane Road with Decorative Grass; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Medium Road Decoration Trees (NetInfo); Medium Road; Medium Road Decoration Trees; Four-Lane Road with Decorative Trees; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Medium Road Decoration Grass (NetInfo); Medium Road; Medium Road Decoration Grass; Four-Lane Road with Decorative Grass; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
 NetInfo; Basic Road Decoration Grass (NetInfo); Small Road; Basic Road Decoration Grass; Two-Lane Road with Grass; Small Road; 0.25; Small Roads; name; 0.25; 0.25
-NetInfo; Large Road Decoration Grass (NetInfo); Large Road; Large Road Decoration Grass; Six-Lane Road with Decorative Grass; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Road Decoration Grass (NetInfo); Large Road; Large Road Decoration Grass; Six-Lane Road with Decorative Grass; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
 NetInfo; Oneway Road Decoration Grass (NetInfo); Small Road; Oneway Road Decoration Grass; Two-Lane One-Way Road with Grass; Small Road; 0.25; Small Roads; name; 0.25; 0.25
 NetInfo; Oneway Road Decoration Trees (NetInfo); Small Road; Oneway Road Decoration Trees; Two-Lane One-Way Road with Trees; Small Road; 0.25; Small Roads; name; 0.25; 0.25
-NetInfo; Large Road Decoration Trees (NetInfo); Large Road; Large Road Decoration Trees; Six-Lane Road with Decorative Trees; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Road Bridge (NetInfo); Large Road; Large Road Bridge; Large Road Bridge; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Road Decoration Trees (NetInfo); Large Road; Large Road Decoration Trees; Six-Lane Road with Decorative Trees; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Road Bridge (NetInfo); Large Road; Large Road Bridge; Large Road Bridge; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
 NetInfo; Oneway Road Bridge (NetInfo); Small Road; Oneway Road Bridge; Oneway Road Bridge; Small Road; 0.25; Small Roads; name; 0.25; 0.25
-NetInfo; Large Oneway (NetInfo); Large Road; Large Oneway; Six-Lane One-Way Road; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Oneway Bridge (NetInfo); Large Road; Large Oneway Bridge; Large Oneway Bridge; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Oneway Decoration Grass (NetInfo); Large Road; Large Oneway Decoration Grass; Six-Lane One-Way Road with Decorative Grass; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Oneway Decoration Trees (NetInfo); Large Road; Large Oneway Decoration Trees; Six-Lane One-Way Road with Decorative Trees; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Oneway Elevated (NetInfo); Large Road; Large Oneway Elevated; Large Oneway Elevated; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Oneway (NetInfo); Large Road; Large Oneway; Six-Lane One-Way Road; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Oneway Bridge (NetInfo); Large Road; Large Oneway Bridge; Large Oneway Bridge; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Oneway Decoration Grass (NetInfo); Large Road; Large Oneway Decoration Grass; Six-Lane One-Way Road with Decorative Grass; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Oneway Decoration Trees (NetInfo); Large Road; Large Oneway Decoration Trees; Six-Lane One-Way Road with Decorative Trees; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Oneway Elevated (NetInfo); Large Road; Large Oneway Elevated; Large Oneway Elevated; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
 NetInfo; Basic Road Tunnel (NetInfo); Small Road Tunnel; Basic Road Tunnel; Basic Road Tunnel; Small Road Tunnel; 0.25; Small Roads; name; 0.25; 0.25
 NetInfo; Basic Road Slope (NetInfo); Small Road; Basic Road Slope; Basic Road Slope; Small Road; 0.25; Small Roads; name; 0.25; 0.25
-NetInfo; Medium Road Slope (NetInfo); Medium Road; Medium Road Slope; Medium Road Slope; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Medium Road Tunnel (NetInfo); Medium Road Tunnel; Medium Road Tunnel; Medium Road Tunnel; Medium Road Tunnel; 0.55; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Medium Road Slope (NetInfo); Medium Road; Medium Road Slope; Medium Road Slope; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Medium Road Tunnel (NetInfo); Medium Road Tunnel; Medium Road Tunnel; Medium Road Tunnel; Medium Road Tunnel; 0.15; Medium & Large Roads; name; 0.15; 0.15
 NetInfo; Oneway Road Slope (NetInfo); Small Road; Oneway Road Slope; Oneway Road Slope; Small Road; 0.25; Small Roads; name; 0.25; 0.25
 NetInfo; Oneway Road Tunnel (NetInfo); Small Road Tunnel; Oneway Road Tunnel; Oneway Road Tunnel; Small Road Tunnel; 0.25; Small Roads; name; 0.25; 0.25
-NetInfo; Large Road Slope (NetInfo); Large Road; Large Road Slope; Large Road Slope; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Road Tunnel (NetInfo); Large Road Tunnel; Large Road Tunnel; Large Road Tunnel; Large Road Tunnel; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Oneway Road Slope (NetInfo); Large Road; Large Oneway Road Slope; Large Oneway Road Slope; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Oneway Road Tunnel (NetInfo); Large Road Tunnel; Large Oneway Road Tunnel; Large Oneway Road Tunnel; Large Road Tunnel; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Highway Slope (NetInfo); Highway; Highway Slope; Highway Slope; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Highway Tunnel (NetInfo); Highway Tunnel; Highway Tunnel; Highway Tunnel; Highway Tunnel; 0.55; Highways; name; 0.15; 0.15
-NetInfo; HighwayRamp Slope (NetInfo); Highway; HighwayRamp Slope; HighwayRamp Slope; Highway Ramp; 0.65; Highways; name; 0.2; 0.2
-NetInfo; HighwayRamp Tunnel (NetInfo); Highway Tunnel; HighwayRamp Tunnel; HighwayRamp Tunnel; Highway Ramp Tunnel; 0.65; Highways; name; 0.2; 0.2
-NetInfo; Gravel Road Bridge (NetInfo); Gravel Road; Gravel Road Bridge; Gravel Road Bridge; Gravel Road; 1; Tiny Roads; name; 0.25; 0.25
-NetInfo; Gravel Road Elevated (NetInfo); Gravel Road; Gravel Road Elevated; Gravel Road Elevated; Gravel Road; 1; Tiny Roads; name; 0.25; 0.25
+NetInfo; Large Road Slope (NetInfo); Large Road; Large Road Slope; Large Road Slope; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Road Tunnel (NetInfo); Large Road Tunnel; Large Road Tunnel; Large Road Tunnel; Large Road Tunnel; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Oneway Road Slope (NetInfo); Large Road; Large Oneway Road Slope; Large Oneway Road Slope; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Oneway Road Tunnel (NetInfo); Large Road Tunnel; Large Oneway Road Tunnel; Large Oneway Road Tunnel; Large Road Tunnel; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Highway Slope (NetInfo); Highway; Highway Slope; Highway Slope; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Highway Tunnel (NetInfo); Highway Tunnel; Highway Tunnel; Highway Tunnel; Highway Tunnel; 0.15; Highways; name; 0.15; 0.15
+NetInfo; HighwayRamp Slope (NetInfo); Highway; HighwayRamp Slope; HighwayRamp Slope; Highway Ramp; 0.2; Highways; name; 0.2; 0.2
+NetInfo; HighwayRamp Tunnel (NetInfo); Highway Tunnel; HighwayRamp Tunnel; HighwayRamp Tunnel; Highway Ramp Tunnel; 0.2; Highways; name; 0.2; 0.2
+NetInfo; Gravel Road Bridge (NetInfo); Gravel Road; Gravel Road Bridge; Gravel Road Bridge; Gravel Road; 0.35; Tiny Roads; name; 0.35; 0.35
+NetInfo; Gravel Road Elevated (NetInfo); Gravel Road; Gravel Road Elevated; Gravel Road Elevated; Gravel Road; 0.35; Tiny Roads; name; 0.35; 0.35
+
 NetCollection; Beautification (NetCollection); Beautification
-Prefabs; NetInfo[]
+Prefabs; NetInfo[]; 5
 NetInfo; Pedestrian Gravel (NetInfo); Pedestrian Path; Pedestrian Gravel; Gravel Path; Pedestrian Path; 0.5; Paths; name; 0.5; 0.5
 NetInfo; Pedestrian Pavement (NetInfo); Pedestrian Path; Pedestrian Pavement; Pavement Path; Pedestrian Path; 0.5; Paths; name; 0.5; 0.5
 NetInfo; Pedestrian Elevated (NetInfo); Pedestrian Bridge; Pedestrian Elevated; Pedestrian Elevated; Pedestrian Bridge; 0.5; Paths; name; 0.5; 0.5
 NetInfo; Pedestrian Slope (NetInfo); Pedestrian Bridge; Pedestrian Slope; Pedestrian Slope; Pedestrian Bridge; 0.5; Paths; name; 0.5; 0.5
 NetInfo; Pedestrian Tunnel (NetInfo); Pedestrian Tunnel; Pedestrian Tunnel; Pedestrian Tunnel; Pedestrian Tunnel; 0.5; Paths; name; 0.5; 0.5
+
 NetCollection; Expansion 1 (NetCollection); Expansion 1
-Prefabs; NetInfo[]
+Prefabs; NetInfo[]; 23
 NetInfo; Basic Road Bicycle (NetInfo); Small Road; Basic Road Bicycle; Two-Lane Road with Bicycle Lanes; Small Road; 0.25; Small Roads; name; 0.25; 0.25
-NetInfo; Pedestrian Pavement Bicycle (NetInfo); Pedestrian Path; Pedestrian Pavement Bicycle; Bicycle Path; Bicycle Path; 1; Paths; name; 0.25; 0.25
-NetInfo; Pedestrian Elevated Bicycle (NetInfo); Pedestrian Bridge; Pedestrian Elevated Bicycle; Pedestrian Elevated Bicycle; Bicycle Path; 1; Paths; name; 0.25; 0.25
-NetInfo; Medium Road Bicycle (NetInfo); Medium Road; Medium Road Bicycle; Four-Lane Road with Bicycle Lanes; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Road Bicycle (NetInfo); Large Road; Large Road Bicycle; Six-Lane Road with Bicycle Lanes; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Road Bus (NetInfo); Large Road; Large Road Bus; Six-Lane Road with Bus Lanes; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Medium Road Bus (NetInfo); Medium Road; Medium Road Bus; Four-Lane Road with Bus Lanes; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Pedestrian Slope Bicycle (NetInfo); Pedestrian Bridge; Pedestrian Slope Bicycle; Pedestrian Slope Bicycle; Bicycle Path; 1; Paths; name; 0.25; 0.25
-NetInfo; Pedestrian Tunnel Bicycle (NetInfo); Pedestrian Tunnel; Pedestrian Tunnel Bicycle; Pedestrian Tunnel Bicycle; Bicycle Tunnel; 1; Paths; name; 0.25; 0.25
-NetInfo; Medium Road Bridge Bus (NetInfo); Medium Road; Medium Road Bridge Bus; Medium Road Bridge Bus; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Medium Road Elevated Bus (NetInfo); Medium Road; Medium Road Elevated Bus; Medium Road Elevated Bus; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Medium Road Slope Bus (NetInfo); Medium Road; Medium Road Slope Bus; Medium Road Slope Bus; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Medium Road Tunnel Bus (NetInfo); Medium Road Tunnel; Medium Road Tunnel Bus; Medium Road Tunnel Bus; Medium Road Tunnel; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Road Bridge Bus (NetInfo); Large Road; Large Road Bridge Bus; Large Road Bridge Bus; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Road Elevated Bus (NetInfo); Large Road; Large Road Elevated Bus; Large Road Elevated Bus; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Road Slope Bus (NetInfo); Large Road; Large Road Slope Bus; Large Road Slope Bus; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Road Tunnel Bus (NetInfo); Large Road Tunnel; Large Road Tunnel Bus; Large Road Tunnel Bus; Large Road Tunnel; 0.55; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Pedestrian Pavement Bicycle (NetInfo); Pedestrian Path; Pedestrian Pavement Bicycle; Bicycle Path; Bicycle Path; 0.25; Paths; name; 0.25; 0.25
+NetInfo; Pedestrian Elevated Bicycle (NetInfo); Pedestrian Bridge; Pedestrian Elevated Bicycle; Pedestrian Elevated Bicycle; Bicycle Path; 0.25; Paths; name; 0.25; 0.25
+NetInfo; Medium Road Bicycle (NetInfo); Medium Road; Medium Road Bicycle; Four-Lane Road with Bicycle Lanes; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Road Bicycle (NetInfo); Large Road; Large Road Bicycle; Six-Lane Road with Bicycle Lanes; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Road Bus (NetInfo); Large Road; Large Road Bus; Six-Lane Road with Bus Lanes; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Medium Road Bus (NetInfo); Medium Road; Medium Road Bus; Four-Lane Road with Bus Lanes; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Pedestrian Slope Bicycle (NetInfo); Pedestrian Bridge; Pedestrian Slope Bicycle; Pedestrian Slope Bicycle; Bicycle Path; 0.25; Paths; name; 0.25; 0.25
+NetInfo; Pedestrian Tunnel Bicycle (NetInfo); Pedestrian Tunnel; Pedestrian Tunnel Bicycle; Pedestrian Tunnel Bicycle; Bicycle Tunnel; 0.25; Paths; name; 0.25; 0.25
+NetInfo; Medium Road Bridge Bus (NetInfo); Medium Road; Medium Road Bridge Bus; Medium Road Bridge Bus; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Medium Road Elevated Bus (NetInfo); Medium Road; Medium Road Elevated Bus; Medium Road Elevated Bus; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Medium Road Slope Bus (NetInfo); Medium Road; Medium Road Slope Bus; Medium Road Slope Bus; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Medium Road Tunnel Bus (NetInfo); Medium Road Tunnel; Medium Road Tunnel Bus; Medium Road Tunnel Bus; Medium Road Tunnel; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Road Bridge Bus (NetInfo); Large Road; Large Road Bridge Bus; Large Road Bridge Bus; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Road Elevated Bus (NetInfo); Large Road; Large Road Elevated Bus; Large Road Elevated Bus; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Road Slope Bus (NetInfo); Large Road; Large Road Slope Bus; Large Road Slope Bus; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Road Tunnel Bus (NetInfo); Large Road Tunnel; Large Road Tunnel Bus; Large Road Tunnel Bus; Large Road Tunnel; 0.15; Medium & Large Roads; name; 0.15; 0.15
 NetInfo; Basic Road Elevated Bike (NetInfo); Small Road; Basic Road Elevated Bike; Basic Road Elevated Bike; Small Road; 0.25; Small Roads; name; 0.25; 0.25
 NetInfo; Basic Road Bridge Bike (NetInfo); Small Road; Basic Road Bridge Bike; Basic Road Bridge Bike; Small Road; 0.25; Small Roads; name; 0.25; 0.25
-NetInfo; Medium Road Bridge Bike (NetInfo); Medium Road; Medium Road Bridge Bike; Medium Road Bridge Bike; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Medium Road Elevated Bike (NetInfo); Medium Road; Medium Road Elevated Bike; Medium Road Elevated Bike; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Road Bridge Bike (NetInfo); Large Road; Large Road Bridge Bike; Large Road Bridge Bike; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Large Road Elevated Bike (NetInfo); Large Road; Large Road Elevated Bike; Large Road Elevated Bike; Large Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Medium Road Bridge Bike (NetInfo); Medium Road; Medium Road Bridge Bike; Medium Road Bridge Bike; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Medium Road Elevated Bike (NetInfo); Medium Road; Medium Road Elevated Bike; Medium Road Elevated Bike; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Road Bridge Bike (NetInfo); Large Road; Large Road Bridge Bike; Large Road Bridge Bike; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Large Road Elevated Bike (NetInfo); Large Road; Large Road Elevated Bike; Large Road Elevated Bike; Large Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+
 NetCollection; Expansion 2 (NetCollection); Expansion 2
-Prefabs; NetInfo[]
-NetInfo; Basic Road Tram (NetInfo); Small Road; Basic Road Tram; Two-Lane Road with Tram Tracks; Tram Track; 0.55; Railroads; name; 0.15; 0.15
+Prefabs; NetInfo[]; 28
+NetInfo; Basic Road Tram (NetInfo); Small Road; Basic Road Tram; Two-Lane Road with Tram Tracks; Tram Track; 0.15; Railroads; name; 0.15; 0.15
 NetInfo; Tram Line (NetInfo); Tram Line; Tram Line; Tram Line; Tram Line; Ignore; 0.25; Other; part; 0.15; 0.15
-NetInfo; Basic Road Elevated Tram (NetInfo); Small Road; Basic Road Elevated Tram; Basic Road Elevated Tram; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Basic Road Bridge Tram (NetInfo); Small Road; Basic Road Bridge Tram; Basic Road Bridge Tram; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Basic Road Slope Tram (NetInfo); Small Road; Basic Road Slope Tram; Basic Road Slope Tram; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Basic Road Tunnel Tram (NetInfo); Small Road Tunnel; Basic Road Tunnel Tram; Basic Road Tunnel Tram; Tram Track Tunnel; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Medium Road Tram (NetInfo); Medium Road; Medium Road Tram; Four-Lane Road with Tram Tracks; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Tram Depot Road (NetInfo); Small Road; Tram Depot Road; Tram Depot Road; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Medium Road Elevated Tram (NetInfo); Medium Road; Medium Road Elevated Tram; Medium Road Elevated Tram; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Medium Road Bridge Tram (NetInfo); Medium Road; Medium Road Bridge Tram; Medium Road Bridge Tram; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Medium Road Slope Tram (NetInfo); Medium Road; Medium Road Slope Tram; Medium Road Slope Tram; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Medium Road Tunnel Tram (NetInfo); Medium Road Tunnel; Medium Road Tunnel Tram; Medium Road Tunnel Tram; Tram Track Tunnel; 0.55; Railroads; name; 0.15; 0.15
+NetInfo; Basic Road Elevated Tram (NetInfo); Small Road; Basic Road Elevated Tram; Basic Road Elevated Tram; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Basic Road Bridge Tram (NetInfo); Small Road; Basic Road Bridge Tram; Basic Road Bridge Tram; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Basic Road Slope Tram (NetInfo); Small Road; Basic Road Slope Tram; Basic Road Slope Tram; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Basic Road Tunnel Tram (NetInfo); Small Road Tunnel; Basic Road Tunnel Tram; Basic Road Tunnel Tram; Tram Track Tunnel; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Medium Road Tram (NetInfo); Medium Road; Medium Road Tram; Four-Lane Road with Tram Tracks; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Tram Depot Road (NetInfo); Small Road; Tram Depot Road; Tram Depot Road; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Medium Road Elevated Tram (NetInfo); Medium Road; Medium Road Elevated Tram; Medium Road Elevated Tram; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Medium Road Bridge Tram (NetInfo); Medium Road; Medium Road Bridge Tram; Medium Road Bridge Tram; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Medium Road Slope Tram (NetInfo); Medium Road; Medium Road Slope Tram; Medium Road Slope Tram; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Medium Road Tunnel Tram (NetInfo); Medium Road Tunnel; Medium Road Tunnel Tram; Medium Road Tunnel Tram; Tram Track Tunnel; 0.15; Railroads; name; 0.15; 0.15
 NetInfo; Heating Pipe (NetInfo); Heating Pipe; Heating Pipe; Water Pipe with Heating Pipes; Pipe; 2; Other; name; 2; 2
-NetInfo; Oneway Road Tram (NetInfo); Small Road; Oneway Road Tram; Two-Lane One-Way Road with Tram Tracks; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Oneway Road Bridge Tram (NetInfo); Small Road; Oneway Road Bridge Tram; Oneway Road Bridge Tram; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Oneway Road Elevated Tram (NetInfo); Small Road; Oneway Road Elevated Tram; Oneway Road Elevated Tram; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Oneway Road Slope Tram (NetInfo); Small Road; Oneway Road Slope Tram; Oneway Road Slope Tram; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Oneway Road Tunnel Tram (NetInfo); Small Road Tunnel; Oneway Road Tunnel Tram; Oneway Road Tunnel Tram; Tram Track Tunnel; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Tram Track (NetInfo); Small Road; Tram Track; Tram Track; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Tram Track Bridge (NetInfo); Small Road; Tram Track Bridge; Tram Track Bridge; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Tram Track Elevated (NetInfo); Small Road; Tram Track Elevated; Tram Track Elevated; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Tram Track Slope (NetInfo); Small Road; Tram Track Slope; Tram Track Slope; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Tram Track Tunnel (NetInfo); Small Road Tunnel; Tram Track Tunnel; Tram Track Tunnel; Tram Track Tunnel; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Oneway Tram Track (NetInfo); Small Road; Oneway Tram Track; One-Way Tram Track; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Oneway Tram Track Bridge (NetInfo); Small Road; Oneway Tram Track Bridge; Oneway Tram Track Bridge; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Oneway Tram Track Elevated (NetInfo); Small Road; Oneway Tram Track Elevated; Oneway Tram Track Elevated; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Oneway Tram Track Slope (NetInfo); Small Road; Oneway Tram Track Slope; Oneway Tram Track Slope; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Oneway Tram Track Tunnel (NetInfo); Small Road Tunnel; Oneway Tram Track Tunnel; Oneway Tram Track Tunnel; Tram Track Tunnel; 0.55; Railroads; name; 0.15; 0.15
+NetInfo; Oneway Road Tram (NetInfo); Small Road; Oneway Road Tram; Two-Lane One-Way Road with Tram Tracks; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Oneway Road Bridge Tram (NetInfo); Small Road; Oneway Road Bridge Tram; Oneway Road Bridge Tram; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Oneway Road Elevated Tram (NetInfo); Small Road; Oneway Road Elevated Tram; Oneway Road Elevated Tram; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Oneway Road Slope Tram (NetInfo); Small Road; Oneway Road Slope Tram; Oneway Road Slope Tram; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Oneway Road Tunnel Tram (NetInfo); Small Road Tunnel; Oneway Road Tunnel Tram; Oneway Road Tunnel Tram; Tram Track Tunnel; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Tram Track (NetInfo); Small Road; Tram Track; Tram Track; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Tram Track Bridge (NetInfo); Small Road; Tram Track Bridge; Tram Track Bridge; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Tram Track Elevated (NetInfo); Small Road; Tram Track Elevated; Tram Track Elevated; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Tram Track Slope (NetInfo); Small Road; Tram Track Slope; Tram Track Slope; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Tram Track Tunnel (NetInfo); Small Road Tunnel; Tram Track Tunnel; Tram Track Tunnel; Tram Track Tunnel; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Oneway Tram Track (NetInfo); Small Road; Oneway Tram Track; One-Way Tram Track; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Oneway Tram Track Bridge (NetInfo); Small Road; Oneway Tram Track Bridge; Oneway Tram Track Bridge; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Oneway Tram Track Elevated (NetInfo); Small Road; Oneway Tram Track Elevated; Oneway Tram Track Elevated; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Oneway Tram Track Slope (NetInfo); Small Road; Oneway Tram Track Slope; Oneway Tram Track Slope; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Oneway Tram Track Tunnel (NetInfo); Small Road Tunnel; Oneway Tram Track Tunnel; Oneway Tram Track Tunnel; Tram Track Tunnel; 0.15; Railroads; name; 0.15; 0.15
+
 NetCollection; Expansion 3 (NetCollection); Expansion 3
-Prefabs; NetInfo[]
+Prefabs; NetInfo[]; 2
 NetInfo; Radio Mast Support Cables (NetInfo); Radio; Radio Mast Support Cables; Radio Mast Support Cables; Radio; Ignore; 5; Other
 NetInfo; Evacuation Bus Line (NetInfo); Bus Line; Evacuation Bus Line; Evacuation Bus Line; Bus Line; Ignore; 0.25; Other
+
 NetCollection; Expansion 4 (NetCollection); Expansion 4
-Prefabs; NetInfo[]
+Prefabs; NetInfo[]; 57
 NetInfo; Canal Wide (NetInfo); Landscaping Canal; Canal Wide; Wide shallow canal; Canal; 0.5; Waterworks; name; 0.5; 0.5
 NetInfo; Canal Wide2 (NetInfo); Landscaping Canal; Canal Wide2; Wide medium canal; Canal; 0.5; Waterworks; name; 0.5; 0.5
 NetInfo; Canal Wide3 (NetInfo); Landscaping Canal; Canal Wide3; Wide deep canal; Canal; 0.5; Waterworks; name; 0.5; 0.5
-NetInfo; Two Lane Highway Twoway (NetInfo); Highway; Two Lane Highway Twoway; Two-Way Highway; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Two Lane Highway Twoway Barrier (NetInfo); Highway; Two Lane Highway Twoway Barrier; Two-Way Highway with Sound Barriers; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Two Lane Highway Twoway Bridge (NetInfo); Highway; Two Lane Highway Twoway Bridge; Two Lane Highway Twoway Bridge; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Two Lane Highway Twoway Elevated (NetInfo); Highway; Two Lane Highway Twoway Elevated; Two Lane Highway Twoway Elevated; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Two Lane Highway Twoway Slope (NetInfo); Highway; Two Lane Highway Twoway Slope; Two Lane Highway Twoway Slope; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Two Lane Highway Twoway Tunnel (NetInfo); Highway Tunnel; Two Lane Highway Twoway Tunnel; Two Lane Highway Twoway Tunnel; Highway Tunnel; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Four Lane Highway (NetInfo); Highway; Four Lane Highway; Four-Lane Highway; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Four Lane Highway Barrier (NetInfo); Highway; Four Lane Highway Barrier; Four-Lane Highway with Sound Barriers; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Four Lane Highway Bridge (NetInfo); Highway; Four Lane Highway Bridge; Four Lane Highway Bridge; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Four Lane Highway Elevated (NetInfo); Highway; Four Lane Highway Elevated; Four Lane Highway Elevated; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Four Lane Highway Slope (NetInfo); Highway; Four Lane Highway Slope; Four Lane Highway Slope; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Four Lane Highway Tunnel (NetInfo); Highway Tunnel; Four Lane Highway Tunnel; Four Lane Highway Tunnel; Highway Tunnel; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Avenue Large With Grass (NetInfo); Medium Road; Avenue Large With Grass; Large Avenue with Grass; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Avenue Large With Grass Bridge (NetInfo); Medium Road; Avenue Large With Grass Bridge; Avenue Large With Grass Bridge; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Avenue Large With Grass Elevated (NetInfo); Medium Road; Avenue Large With Grass Elevated; Avenue Large With Grass Elevated; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Avenue Large With Grass Slope (NetInfo); Medium Road; Avenue Large With Grass Slope; Avenue Large With Grass Slope; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Avenue Large With Grass Tunnel (NetInfo); Medium Road Tunnel; Avenue Large With Grass Tunnel; Avenue Large With Grass Tunnel; Medium Road Tunnel; 0.55; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Two Lane Highway Twoway (NetInfo); Highway; Two Lane Highway Twoway; Two-Way Highway; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Two Lane Highway Twoway Barrier (NetInfo); Highway; Two Lane Highway Twoway Barrier; Two-Way Highway with Sound Barriers; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Two Lane Highway Twoway Bridge (NetInfo); Highway; Two Lane Highway Twoway Bridge; Two Lane Highway Twoway Bridge; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Two Lane Highway Twoway Elevated (NetInfo); Highway; Two Lane Highway Twoway Elevated; Two Lane Highway Twoway Elevated; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Two Lane Highway Twoway Slope (NetInfo); Highway; Two Lane Highway Twoway Slope; Two Lane Highway Twoway Slope; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Two Lane Highway Twoway Tunnel (NetInfo); Highway Tunnel; Two Lane Highway Twoway Tunnel; Two Lane Highway Twoway Tunnel; Highway Tunnel; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Four Lane Highway (NetInfo); Highway; Four Lane Highway; Four-Lane Highway; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Four Lane Highway Barrier (NetInfo); Highway; Four Lane Highway Barrier; Four-Lane Highway with Sound Barriers; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Four Lane Highway Bridge (NetInfo); Highway; Four Lane Highway Bridge; Four Lane Highway Bridge; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Four Lane Highway Elevated (NetInfo); Highway; Four Lane Highway Elevated; Four Lane Highway Elevated; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Four Lane Highway Slope (NetInfo); Highway; Four Lane Highway Slope; Four Lane Highway Slope; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Four Lane Highway Tunnel (NetInfo); Highway Tunnel; Four Lane Highway Tunnel; Four Lane Highway Tunnel; Highway Tunnel; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Avenue Large With Grass (NetInfo); Medium Road; Avenue Large With Grass; Large Avenue with Grass; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Avenue Large With Grass Bridge (NetInfo); Medium Road; Avenue Large With Grass Bridge; Avenue Large With Grass Bridge; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Avenue Large With Grass Elevated (NetInfo); Medium Road; Avenue Large With Grass Elevated; Avenue Large With Grass Elevated; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Avenue Large With Grass Slope (NetInfo); Medium Road; Avenue Large With Grass Slope; Avenue Large With Grass Slope; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Avenue Large With Grass Tunnel (NetInfo); Medium Road Tunnel; Avenue Large With Grass Tunnel; Avenue Large With Grass Tunnel; Medium Road Tunnel; 0.15; Medium & Large Roads; name; 0.15; 0.15
 NetInfo; Ferry Line (NetInfo); Ferry Line; Ferry Line; Ferry Line; Ferry Line; Ignore; 0.25; Other
-NetInfo; Avenue Large With Buslanes Grass (NetInfo); Medium Road; Avenue Large With Buslanes Grass; Large Avenue with Bus Lanes; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Avenue Large With Buslanes Grass Bridge (NetInfo); Medium Road; Avenue Large With Buslanes Grass Bridge; Avenue Large With Buslanes Grass Bridge; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Avenue Large With Buslanes Grass Elevated (NetInfo); Medium Road; Avenue Large With Buslanes Grass Elevated; Avenue Large With Buslanes Grass Elevated; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Avenue Large With Buslanes Grass Slope (NetInfo); Medium Road; Avenue Large With Buslanes Grass Slope; Avenue Large With Buslanes Grass Slope; Medium Road; 0.55; Medium & Large Roads; name; 0.15; 0.15
-NetInfo; Avenue Large With Buslanes Grass Tunnel (NetInfo); Medium Road Tunnel; Avenue Large With Buslanes Grass Tunnel; Avenue Large With Buslanes Grass Tunnel; Medium Road Tunnel; 0.55; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Avenue Large With Buslanes Grass (NetInfo); Medium Road; Avenue Large With Buslanes Grass; Large Avenue with Bus Lanes; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Avenue Large With Buslanes Grass Bridge (NetInfo); Medium Road; Avenue Large With Buslanes Grass Bridge; Avenue Large With Buslanes Grass Bridge; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Avenue Large With Buslanes Grass Elevated (NetInfo); Medium Road; Avenue Large With Buslanes Grass Elevated; Avenue Large With Buslanes Grass Elevated; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Avenue Large With Buslanes Grass Slope (NetInfo); Medium Road; Avenue Large With Buslanes Grass Slope; Avenue Large With Buslanes Grass Slope; Medium Road; 0.15; Medium & Large Roads; name; 0.15; 0.15
+NetInfo; Avenue Large With Buslanes Grass Tunnel (NetInfo); Medium Road Tunnel; Avenue Large With Buslanes Grass Tunnel; Avenue Large With Buslanes Grass Tunnel; Medium Road Tunnel; 0.15; Medium & Large Roads; name; 0.15; 0.15
 NetInfo; Ferry Path (NetInfo); Ferry Path; Ferry Path; Ferry Pathway; Ferry Path; Ignore; 2; Other
-NetInfo; Two Lane Highway (NetInfo); Highway; Two Lane Highway; Two-Lane Highway; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Two Lane Highway Barrier (NetInfo); Highway; Two Lane Highway Barrier; One-Way Highway with Sound Barriers; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Two Lane Highway Bridge (NetInfo); Highway; Two Lane Highway Bridge; Two Lane Highway Bridge; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Two Lane Highway Elevated (NetInfo); Highway; Two Lane Highway Elevated; Two Lane Highway Elevated; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Two Lane Highway Slope (NetInfo); Highway; Two Lane Highway Slope; Two Lane Highway Slope; Highway; 0.55; Highways; name; 0.15; 0.15
-NetInfo; Two Lane Highway Tunnel (NetInfo); Highway Tunnel; Two Lane Highway Tunnel; Two Lane Highway Tunnel; Highway Tunnel; 0.55; Highways; name; 0.15; 0.15
+NetInfo; Two Lane Highway (NetInfo); Highway; Two Lane Highway; Two-Lane Highway; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Two Lane Highway Barrier (NetInfo); Highway; Two Lane Highway Barrier; One-Way Highway with Sound Barriers; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Two Lane Highway Bridge (NetInfo); Highway; Two Lane Highway Bridge; Two Lane Highway Bridge; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Two Lane Highway Elevated (NetInfo); Highway; Two Lane Highway Elevated; Two Lane Highway Elevated; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Two Lane Highway Slope (NetInfo); Highway; Two Lane Highway Slope; Two Lane Highway Slope; Highway; 0.15; Highways; name; 0.15; 0.15
+NetInfo; Two Lane Highway Tunnel (NetInfo); Highway Tunnel; Two Lane Highway Tunnel; Two Lane Highway Tunnel; Highway Tunnel; 0.15; Highways; name; 0.15; 0.15
 NetInfo; Ferry Dock (NetInfo); Ferry Path; Ferry Dock; Ferry Dock; Ferry Path; Ignore; 2; Other
 NetInfo; Asymmetrical Three Lane Road (NetInfo); Small Road; Asymmetrical Three Lane Road; Asymmetrical Three-Lane Road; Small Road; 0.25; Small Roads; name; 0.25; 0.25
 NetInfo; Asymmetrical Three Lane Road Bridge (NetInfo); Small Road; Asymmetrical Three Lane Road Bridge; Asymmetrical Three Lane Road Bridge; Small Road; 0.25; Small Roads; name; 0.25; 0.25
@@ -357,75 +369,76 @@ NetInfo; Ferry Dockway (NetInfo); Ferry Path; Ferry Dockway; Ferry Dockway; Ferr
 NetInfo; CableCar Path (NetInfo); CableCar Path; CableCar Path; Cable Car Cables; Cable Car Path; 1; Misc Transit; name; 1; 1
 NetInfo; CableCar Stop (NetInfo); CableCar Path; CableCar Stop; CableCar Stop; Cable Car Path; 1; Misc Transit; name; 1; 1
 NetInfo; CableCar Line (NetInfo); CableCar Line; CableCar Line; CableCar Line; CableCar Line; Ignore; 0.25; Other
-NetInfo; Monorail Track (NetInfo); Monorail Track; Monorail Track; Monorail Tracks; Monorail Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Medium Road Monorail (NetInfo); Medium Road; Medium Road Monorail; Monorail Tracks on Four-Lane Road; Monorail Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Monorail Station Track (NetInfo); Monorail Track; Monorail Station Track; Monorail Station Track; Monorail Track; 0.45; Railroads; name; 0.1; 0.1
+NetInfo; Monorail Track (NetInfo); Monorail Track; Monorail Track; Monorail Tracks; Monorail Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Medium Road Monorail (NetInfo); Medium Road; Medium Road Monorail; Monorail Tracks on Four-Lane Road; Monorail Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Monorail Station Track (NetInfo); Monorail Track; Monorail Station Track; Monorail Station Track; Monorail Track; 0.1; Railroads; name; 0.1; 0.1
 NetInfo; Monorail Line (NetInfo); Monorail Line; Monorail Line; Monorail Line; Monorail Line; Ignore; 0.25; Other
-NetInfo; Monorail Oneway Track (NetInfo); Monorail Track; Monorail Oneway Track; One-Way Monorail Track; Monorail Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Medium Road Monorail Station (NetInfo); Medium Road; Medium Road Monorail Station; Medium Road Monorail Station; Monorail Track; 0.45; Railroads; name; 0.1; 0.1
+NetInfo; Monorail Oneway Track (NetInfo); Monorail Track; Monorail Oneway Track; One-Way Monorail Track; Monorail Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Medium Road Monorail Station (NetInfo); Medium Road; Medium Road Monorail Station; Medium Road Monorail Station; Monorail Track; 0.1; Railroads; name; 0.1; 0.1
 NetInfo; Blimp Line (NetInfo); Blimp Line; Blimp Line; Blimp Line; Blimp Line; Ignore; 0.25; Other
 NetInfo; Blimp Stop (NetInfo); Blimp Path; Blimp Stop; Blimp Stop; Blimp Path; 2; Misc Transit; name; 2; 2
 NetInfo; Blimp Path (NetInfo); Blimp Path; Blimp Path; Blimp Pathway; Blimp Path; 2; Misc Transit; name; 2; 2
-NetInfo; Medium Road Monorail Elevated (NetInfo); Medium Road; Medium Road Monorail Elevated; Medium Road Monorail Elevated; Monorail Track; 0.45; Railroads; name; 0.1; 0.1
+NetInfo; Medium Road Monorail Elevated (NetInfo); Medium Road; Medium Road Monorail Elevated; Medium Road Monorail Elevated; Monorail Track; 0.1; Railroads; name; 0.1; 0.1
 NetInfo; Blimp Depot Path (NetInfo); Blimp Path; Blimp Depot Path; Blimp Depot Path; Blimp Path; 2; Misc Transit; name; 2; 2
-NetInfo; Small Road Monorail (NetInfo); Small Road; Small Road Monorail; Monorail Tracks on Two-Lane Road; Monorail Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Small Road Monorail Bridge (NetInfo); Small Road; Small Road Monorail Bridge; Small Road Monorail Bridge; Monorail Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Small Road Monorail Elevated (NetInfo); Small Road; Small Road Monorail Elevated; Small Road Monorail Elevated; Monorail Track; 0.45; Railroads; name; 0.1; 0.1
-NetCollection; (uncollected)
-NetInfo; Tram Station Track (NetInfo); Small Road; Tram Station Track; Tram Station Track; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Steel Metro Station Track Tunnel (NetInfo); Steel Metro Station Track Tunnel; Steel Metro Station Track Tunnel; Steel Metro Station Track Tunnel; Metro Track Tunnel; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Steel Metro Station Track Sunken (NetInfo); Steel Metro Station Track Sunken; Steel Metro Station Track Sunken; Steel Metro Station Track Sunken; Metro Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Steel Metro Station Track Elevated (NetInfo); Steel Metro Station Track Elevated; Steel Metro Station Track Elevated; Steel Metro Station Track Elevated; Metro Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Steel Metro Station Track Ground (NetInfo); Steel Metro Station Track Ground; Steel Metro Station Track Ground; Steel Metro Station Track Ground; Metro Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Steel Metro Track Elevated NoBar (NetInfo); Steel Metro Track Elevated NoBar; Steel Metro Track Elevated NoBar; Steel Metro Track Elevated NoBar; Metro Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Steel Metro Track Bridge NoBar (NetInfo); Steel Metro Track Bridge NoBar; Steel Metro Track Bridge NoBar; Steel Metro Track Bridge NoBar; Metro Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Steel Metro Track Ground NoBar (NetInfo); Steel Metro Track Ground NoBar; Steel Metro Track Ground NoBar; Steel Metro Track Ground NoBar; Metro Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Steel Metro Track Elevated (NetInfo); Steel Metro Track Elevated; Steel Metro Track Elevated; Steel Metro Track Elevated; Metro Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Steel Metro Track Bridge (NetInfo); Steel Metro Track Bridge; Steel Metro Track Bridge; Steel Metro Track Bridge; Metro Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Steel Metro Track Ground (NetInfo); Steel Metro Track Ground; Steel Metro Track Ground; Steel Metro Track Ground; Metro Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Metro Station Track Sunken (NetInfo); Metro Station Track Sunken; Metro Station Track Sunken; Metro Station Track Sunken; Metro Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Metro Station Track Tunnel (NetInfo); Metro Station Track Tunnel; Metro Station Track Tunnel; Metro Station Track Tunnel; Metro Track Tunnel; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Metro Station Track Elevated (NetInfo); Metro Station Track Elevated; Metro Station Track Elevated; Metro Station Track Elevated; Metro Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Metro Station Track Ground (NetInfo); Metro Station Track Ground; Metro Station Track Ground; Metro Station Track Ground; Metro Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Metro Track Elevated NoBar (NetInfo); Metro Track Elevated NoBar; Metro Track Elevated NoBar; Metro Track Elevated NoBar; Metro Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Metro Track Bridge NoBar (NetInfo); Metro Track Bridge NoBar; Metro Track Bridge NoBar; Metro Track Bridge NoBar; Metro Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Metro Track Ground NoBar (NetInfo); Metro Track Ground NoBar; Metro Track Ground NoBar; Metro Track Ground NoBar; Metro Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Metro Track Slope (NetInfo); Metro Track Slope; Metro Track Slope; Metro Track Slope; Metro Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Metro Track Elevated (NetInfo); Metro Track Elevated; Metro Track Elevated; Metro Track Elevated; Metro Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Metro Track Tunnel (NetInfo); Metro Track Tunnel; Metro Track Tunnel; Metro Track Tunnel; Metro Track Tunnel; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Metro Track Bridge (NetInfo); Metro Track Bridge; Metro Track Bridge; Metro Track Bridge; Metro Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Metro Track Ground (NetInfo); Metro Track Ground; Metro Track Ground; Metro Tunnel; Metro Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Station Track Tunnel (NetInfo); ; Station Track Tunnel; Station Track Tunnel; Train Track Tunnel; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Train Station Track (CNP) (NetInfo); Train Track; Train Station Track (CNP); Train Station Track (CNP); Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Train Station Track (NP) (NetInfo); Train Track; Train Station Track (NP); Train Station Track (NP); Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Train Station Track (C) (NetInfo); Train Track; Train Station Track (C); Train Station Track (C); Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Station Track Sunken (NP) (NetInfo); Train Track; Station Track Sunken (NP); Station Track Sunken (NP); Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Station Track Sunken (NetInfo); Train Track; Station Track Sunken; Station Track Sunken; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Station Track Elevated Narrow (CNP) (NetInfo); Train Track; Station Track Elevated Narrow (CNP); Station Track Elevated Narrow (CNP); Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Station Track Elevated Narrow (NP) (NetInfo); Train Track; Station Track Elevated Narrow (NP); Station Track Elevated Narrow (NP); Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Station Track Elevated Narrow (C) (NetInfo); Train Track; Station Track Elevated Narrow (C); Station Track Elevated Narrow (C); Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Station Track Elevated Narrow (NetInfo); Train Track; Station Track Elevated Narrow; Station Track Elevated Narrow; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Station Track Elevated (CNP) (NetInfo); Train Track; Station Track Elevated (CNP); Station Track Elevated (CNP); Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Station Track Elevated (NP) (NetInfo); Train Track; Station Track Elevated (NP); Station Track Elevated (NP); Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Station Track Elevated (C) (NetInfo); Train Track; Station Track Elevated (C); Station Track Elevated (C); Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Station Track Eleva (NetInfo); Train Track; Station Track Eleva; Station Track Eleva; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; RoadTramTracks (NetInfo); Train Track; RoadTramTracks; RoadTramTracks; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; IlluminNoCable (NetInfo); Train Track; IlluminNoCable; IlluminNoCable; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Illuminated Tracks (NetInfo); Train Track; Illuminated Tracks; Illuminated Tracks; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; TramTracksNoCable (NetInfo); Train Track; TramTracksNoCable; TramTracksNoCable; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Tram Tracks (NetInfo); Train Track; Tram Tracks; Tram Tracks; Tram Track; 0.55; Railroads; name; 0.15; 0.15
-NetInfo; Abandonned Track 2 (NetInfo); Train Track; Abandonned Track 2; Abandonned Track 2; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Abandonned Track (NetInfo); Train Track; Abandonned Track; Abandonned Track; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; NoConcr TrainSlope (NetInfo); Train Track; NoConcr TrainSlope; NoConcr TrainSlope; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; NoConcr TrainElevat (NetInfo); Train Track; NoConcr TrainElevat; NoConcr TrainElevat; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; NoConcr TrainBridge (NetInfo); Train Track; NoConcr TrainBridge; NoConcr TrainBridge; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; NoCableConcreteTrac (NetInfo); Train Track; NoCableConcreteTrac; NoCableConcreteTrac; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; NoCable TrainSlope (NetInfo); Train Track; NoCable TrainSlope; NoCable TrainSlope; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; NoCable TrainElevat (NetInfo); Train Track; NoCable TrainElevat; NoCable TrainElevat; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; NoCable TrainBridge (NetInfo); Train Track; NoCable TrainBridge; NoCable TrainBridge; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; NoCable Train Track (NetInfo); Train Track; NoCable Train Track; NoCable Train Track; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; ConcreteTrain Track (NetInfo); Train Track; ConcreteTrain Track; ConcreteTrain Track; Train Track; 0.45; Railroads; name; 0.1; 0.1
-NetInfo; Pedestrian Elevated Bicycle (NetInfo); Pedestrian Bridge; Pedestrian Elevated Bicycle; Pedestrian Elevated Bicycle; Bicycle Path; 1; Paths; name; 0.25; 0.25
-NetInfo; Pedestrian Pavement Bicycle (NetInfo); Pedestrian Path; Pedestrian Pavement Bicycle; Bicycle Path; Bicycle Path; 1; Paths; name; 0.25; 0.25
-NetInfo; Pedestrian Slope Bicycle (NetInfo); Pedestrian Bridge; Pedestrian Slope Bicycle; Pedestrian Slope Bicycle; Bicycle Path; 1; Paths; name; 0.25; 0.25
-NetInfo; Pedestrian Tunnel Bicycle (NetInfo); Pedestrian Tunnel; Pedestrian Tunnel Bicycle; Pedestrian Tunnel Bicycle; Bicycle Tunnel; 1; Paths; name; 0.25; 0.25
+NetInfo; Small Road Monorail (NetInfo); Small Road; Small Road Monorail; Monorail Tracks on Two-Lane Road; Monorail Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Small Road Monorail Bridge (NetInfo); Small Road; Small Road Monorail Bridge; Small Road Monorail Bridge; Monorail Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Small Road Monorail Elevated (NetInfo); Small Road; Small Road Monorail Elevated; Small Road Monorail Elevated; Monorail Track; 0.1; Railroads; name; 0.1; 0.1
+
+(uncollected)
+NetInfo; Tram Station Track (NetInfo); Small Road; Tram Station Track; Tram Station Track; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Steel Metro Station Track Tunnel (NetInfo); Steel Metro Station Track Tunnel; Steel Metro Station Track Tunnel; Steel Metro Station Track Tunnel; Metro Track Tunnel; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Steel Metro Station Track Sunken (NetInfo); Steel Metro Station Track Sunken; Steel Metro Station Track Sunken; Steel Metro Station Track Sunken; Metro Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Steel Metro Station Track Elevated (NetInfo); Steel Metro Station Track Elevated; Steel Metro Station Track Elevated; Steel Metro Station Track Elevated; Metro Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Steel Metro Station Track Ground (NetInfo); Steel Metro Station Track Ground; Steel Metro Station Track Ground; Steel Metro Station Track Ground; Metro Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Steel Metro Track Elevated NoBar (NetInfo); Steel Metro Track Elevated NoBar; Steel Metro Track Elevated NoBar; Steel Metro Track Elevated NoBar; Metro Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Steel Metro Track Bridge NoBar (NetInfo); Steel Metro Track Bridge NoBar; Steel Metro Track Bridge NoBar; Steel Metro Track Bridge NoBar; Metro Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Steel Metro Track Ground NoBar (NetInfo); Steel Metro Track Ground NoBar; Steel Metro Track Ground NoBar; Steel Metro Track Ground NoBar; Metro Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Steel Metro Track Elevated (NetInfo); Steel Metro Track Elevated; Steel Metro Track Elevated; Steel Metro Track Elevated; Metro Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Steel Metro Track Bridge (NetInfo); Steel Metro Track Bridge; Steel Metro Track Bridge; Steel Metro Track Bridge; Metro Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Steel Metro Track Ground (NetInfo); Steel Metro Track Ground; Steel Metro Track Ground; Steel Metro Track Ground; Metro Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Metro Station Track Sunken (NetInfo); Metro Station Track Sunken; Metro Station Track Sunken; Metro Station Track Sunken; Metro Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Metro Station Track Tunnel (NetInfo); Metro Station Track Tunnel; Metro Station Track Tunnel; Metro Station Track Tunnel; Metro Track Tunnel; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Metro Station Track Elevated (NetInfo); Metro Station Track Elevated; Metro Station Track Elevated; Metro Station Track Elevated; Metro Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Metro Station Track Ground (NetInfo); Metro Station Track Ground; Metro Station Track Ground; Metro Station Track Ground; Metro Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Metro Track Elevated NoBar (NetInfo); Metro Track Elevated NoBar; Metro Track Elevated NoBar; Metro Track Elevated NoBar; Metro Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Metro Track Bridge NoBar (NetInfo); Metro Track Bridge NoBar; Metro Track Bridge NoBar; Metro Track Bridge NoBar; Metro Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Metro Track Ground NoBar (NetInfo); Metro Track Ground NoBar; Metro Track Ground NoBar; Metro Track Ground NoBar; Metro Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Metro Track Slope (NetInfo); Metro Track Slope; Metro Track Slope; Metro Track Slope; Metro Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Metro Track Elevated (NetInfo); Metro Track Elevated; Metro Track Elevated; Metro Track Elevated; Metro Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Metro Track Tunnel (NetInfo); Metro Track Tunnel; Metro Track Tunnel; Metro Track Tunnel; Metro Track Tunnel; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Metro Track Bridge (NetInfo); Metro Track Bridge; Metro Track Bridge; Metro Track Bridge; Metro Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Metro Track Ground (NetInfo); Metro Track Ground; Metro Track Ground; Metro Tunnel; Metro Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Station Track Tunnel (NetInfo); ; Station Track Tunnel; Station Track Tunnel; Train Track Tunnel; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Train Station Track (CNP) (NetInfo); Train Track; Train Station Track (CNP); Train Station Track (CNP); Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Train Station Track (NP) (NetInfo); Train Track; Train Station Track (NP); Train Station Track (NP); Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Train Station Track (C) (NetInfo); Train Track; Train Station Track (C); Train Station Track (C); Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Station Track Sunken (NP) (NetInfo); Train Track; Station Track Sunken (NP); Station Track Sunken (NP); Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Station Track Sunken (NetInfo); Train Track; Station Track Sunken; Station Track Sunken; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Station Track Elevated Narrow (CNP) (NetInfo); Train Track; Station Track Elevated Narrow (CNP); Station Track Elevated Narrow (CNP); Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Station Track Elevated Narrow (NP) (NetInfo); Train Track; Station Track Elevated Narrow (NP); Station Track Elevated Narrow (NP); Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Station Track Elevated Narrow (C) (NetInfo); Train Track; Station Track Elevated Narrow (C); Station Track Elevated Narrow (C); Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Station Track Elevated Narrow (NetInfo); Train Track; Station Track Elevated Narrow; Station Track Elevated Narrow; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Station Track Elevated (CNP) (NetInfo); Train Track; Station Track Elevated (CNP); Station Track Elevated (CNP); Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Station Track Elevated (NP) (NetInfo); Train Track; Station Track Elevated (NP); Station Track Elevated (NP); Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Station Track Elevated (C) (NetInfo); Train Track; Station Track Elevated (C); Station Track Elevated (C); Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Station Track Eleva (NetInfo); Train Track; Station Track Eleva; Station Track Eleva; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; RoadTramTracks (NetInfo); Train Track; RoadTramTracks; RoadTramTracks; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; IlluminNoCable (NetInfo); Train Track; IlluminNoCable; IlluminNoCable; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Illuminated Tracks (NetInfo); Train Track; Illuminated Tracks; Illuminated Tracks; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; TramTracksNoCable (NetInfo); Train Track; TramTracksNoCable; TramTracksNoCable; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Tram Tracks (NetInfo); Train Track; Tram Tracks; Tram Tracks; Tram Track; 0.15; Railroads; name; 0.15; 0.15
+NetInfo; Abandonned Track 2 (NetInfo); Train Track; Abandonned Track 2; Abandonned Track 2; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Abandonned Track (NetInfo); Train Track; Abandonned Track; Abandonned Track; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; NoConcr TrainSlope (NetInfo); Train Track; NoConcr TrainSlope; NoConcr TrainSlope; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; NoConcr TrainElevat (NetInfo); Train Track; NoConcr TrainElevat; NoConcr TrainElevat; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; NoConcr TrainBridge (NetInfo); Train Track; NoConcr TrainBridge; NoConcr TrainBridge; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; NoCableConcreteTrac (NetInfo); Train Track; NoCableConcreteTrac; NoCableConcreteTrac; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; NoCable TrainSlope (NetInfo); Train Track; NoCable TrainSlope; NoCable TrainSlope; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; NoCable TrainElevat (NetInfo); Train Track; NoCable TrainElevat; NoCable TrainElevat; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; NoCable TrainBridge (NetInfo); Train Track; NoCable TrainBridge; NoCable TrainBridge; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; NoCable Train Track (NetInfo); Train Track; NoCable Train Track; NoCable Train Track; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; ConcreteTrain Track (NetInfo); Train Track; ConcreteTrain Track; ConcreteTrain Track; Train Track; 0.1; Railroads; name; 0.1; 0.1
+NetInfo; Pedestrian Elevated Bicycle (NetInfo); Pedestrian Bridge; Pedestrian Elevated Bicycle; Pedestrian Elevated Bicycle; Bicycle Path; 0.25; Paths; name; 0.25; 0.25
+NetInfo; Pedestrian Pavement Bicycle (NetInfo); Pedestrian Path; Pedestrian Pavement Bicycle; Bicycle Path; Bicycle Path; 0.25; Paths; name; 0.25; 0.25
+NetInfo; Pedestrian Slope Bicycle (NetInfo); Pedestrian Bridge; Pedestrian Slope Bicycle; Pedestrian Slope Bicycle; Bicycle Path; 0.25; Paths; name; 0.25; 0.25
+NetInfo; Pedestrian Tunnel Bicycle (NetInfo); Pedestrian Tunnel; Pedestrian Tunnel Bicycle; Pedestrian Tunnel Bicycle; Bicycle Tunnel; 0.25; Paths; name; 0.25; 0.25

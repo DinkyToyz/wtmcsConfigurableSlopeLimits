@@ -1,6 +1,6 @@
 Allows slope limits to be configured separately for different network types.
 
-Compatible with [url=http://steamcommunity.com/sharedfiles/filedetails/?id=812125426]Network Extensions 2[/url], and [url=http://steamcommunity.com/sharedfiles/filedetails/?id=478820060]Network Extensions Project[/url], but may lag behind when that mod updates with new or changed road types.
+Compatible with [url=http://steamcommunity.com/sharedfiles/filedetails/?id=816260433]Metro Overhaul Mod[/url], [url=http://steamcommunity.com/sharedfiles/filedetails/?id=812125426]Network Extensions 2[/url], and [url=http://steamcommunity.com/sharedfiles/filedetails/?id=478820060]Network Extensions Project[/url], but may lag behind when those mods updates with new or changed road or track types.
 
 [h1]Usage[/h1]
 
@@ -19,11 +19,11 @@ When reporting severe errors, please upload [url=http://steamcommunity.com/share
 
 The mod logs to [url=http://steamcommunity.com/sharedfiles/filedetails/?id=463645931]the games normal output log[/url], and can also log to a separate log file, wtmcsConfigurableSlopeLimits.log, stored in the same directory as the settings.
 
-Create the file wtmcsConfigurableSlopeLimits.debug in the same directory in order to enable debug log stuff (wich might slow things down quite a bit) and logging to file. To log more stuff, also create the file wtmcsConfigurableSlopeLimits.debug.dev.
+Create the file wtmcsConfigurableSlopeLimits.debug in the same directory in order to enable debug log stuff (which might slow things down quite a bit) and logging to file. To log more stuff, also create the file wtmcsConfigurableSlopeLimits.debug.dev.
 
 [h1]Whatever[/h1]
 
 I made this for myself, and use it. Hopefully it works for others as well, but I make no promises.
 I also make no promises about updating or fixing things fast, as that depends on how busy I am with work and other stuff.
 
-[url=https://github.com/DinkyToyz/wtmcsConfigurableSlopeLimits]Source code[/url] is realesed with MIT license.
+[url=https://github.com/DinkyToyz/wtmcsConfigurableSlopeLimits]Source code[/url] is released with MIT license.
