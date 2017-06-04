@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
@@ -73,9 +74,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// The nets that should be ignored.
         /// </summary>
-        private readonly Regex ignoreNetsRex = new Regex("(?:(?:^NExt)|(?:^(?:Bus Stop|Radio)$)|(?:(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam|Cables))|(?:(?<!CableCar)(?: Cables))|(?:(?<!Pedestrian|Bicycle|Cable ?Car|Blimp) Path)$))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
-
-        ////private readonly Regex ignoreNetsRex = new Regex("(?:(?:^NExt)|(?:^(?:Bus Stop|Radio)$)|(?:(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam|Cables))|(?:(?<!Pedestrian|Bicycle) Path)$))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        private readonly Regex ignoreNetsRex = new Regex("(?:(?:^NExt)|(?:^(?:Bus Stop|Radio)$)|(?:(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam|Cables))|(?:(?<!CableCar)(?: (?:Cables)))|(?:(?<!Pedestrian|Bicycle|Cable ?Car|Blimp) Path)$))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches large road class name.
@@ -90,12 +89,12 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// Matches metro track object name.
         /// </summary>
-        private readonly Regex metroTrackObjectNameRex = new Regex("(?:^| )Metro(?: Station)? Track(?: |$)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        private readonly Regex metroTrackObjectNameRex = new Regex("(?:^| )Metro(?: (?:Station))? Track(?: |$)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches monorail track/road object name.
         /// </summary>
-        private readonly Regex monorailTrackRoadObjectNameRex = new Regex("(?:(^| )Road(?: .*?)? Monorail( |$)|(?:^| )Monorail(?: Station|Oneway)? (?:Track|Road)( |$))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        private readonly Regex monorailTrackRoadObjectNameRex = new Regex("(?:(^| )Road(?: .*?)? Monorail( |$)|(?:^| )Monorail(?: (?:Station|Oneway))? (?:Track|Road)( |$))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches Network Extensions double tunnel class name left-over.
@@ -143,9 +142,14 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         private readonly Regex smallRoadClassNameRex = new Regex("Small.*?(?:Road|Avenue)(?:TL)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
+        /// Matches train track object name.
+        /// </summary>
+        private readonly Regex trainTrackObjectNameRex = new Regex("(?:(?:^| )Train(?: (?:Station|Cargo|Connection|Oneway))?|^Station) Track(?: |$)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+
+        /// <summary>
         /// Matches tram track/road object name.
         /// </summary>
-        private readonly Regex tramTrackRoadObjectNameRex = new Regex("(?:(^| )Road(?: .*?)? Tram( |$)|(?:^| )Tram(?: Depot|Oneway|Station)? (?:Track|Road)(?: |$))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        private readonly Regex tramTrackRoadObjectNameRex = new Regex("(?:(^| )Road(?: .*?)? Tram( |$)|(?:^| )Tram(?: (?:Depot|Oneway|Station))? (?:Tracks?|Road)(?: |$))|^\\S*?TramTracks?\\S*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches trench names.
@@ -250,26 +254,26 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 // The generics.
                 GenericList = new List<Generic>
                 {
-                    new Generic("Highway Ramp", "ramp", SteamHelper.DLC.None, 500),
-                    new Generic("Highway Ramp Tunnel", "ramp", SteamHelper.DLC.None, 501, true),
-                    new Generic("Highway", "high", SteamHelper.DLC.None, 600),
-                    new Generic("Highway Tunnel", "high", SteamHelper.DLC.None, 601, true),
-                    new Generic("Large Road", "large", SteamHelper.DLC.None, 400),
-                    new Generic("Large Road Tunnel", "large", SteamHelper.DLC.None, 401, true),
-                    new Generic("Medium Road", "medium", SteamHelper.DLC.None, 300),
-                    new Generic("Medium Road Tunnel", "medium", SteamHelper.DLC.None, 301, true),
-                    new Generic("Small Road", "small", SteamHelper.DLC.None, 200),
-                    new Generic("Small Road Tunnel", "small", SteamHelper.DLC.None, 201, true),
-                    new Generic("Gravel Road", "gravel", SteamHelper.DLC.None, 100),
-                    new Generic("Gravel Road Tunnel", "gravel", SteamHelper.DLC.None, 101, true),
-                    new Generic("Train Track", "track", SteamHelper.DLC.None, 1200),
-                    new Generic("Train Track Tunnel", "track", SteamHelper.DLC.None, 1201, true),
-                    new Generic("Metro Track", "track", SteamHelper.DLC.None, 1000),
-                    new Generic("Metro Track Tunnel", "track", SteamHelper.DLC.None, 1001),
-                    new Generic("Monorail Track", "track", SteamHelper.DLC.InMotionDLC, 1300),
-                    new Generic("Pedestrian Path", "pedestrian", SteamHelper.DLC.None, 700),
-                    new Generic("Pedestrian Bridge", "pedestrian", SteamHelper.DLC.None, 701, true),
-                    new Generic("Pedestrian Tunnel", "pedestrian", SteamHelper.DLC.None, 702, true),
+                    new Generic("Highway Ramp", "ramp", 500),
+                    new Generic("Highway Ramp Tunnel", "ramp", 501, true),
+                    new Generic("Highway", "high", 600),
+                    new Generic("Highway Tunnel", "high", 601, true),
+                    new Generic("Large Road", "large", 400),
+                    new Generic("Large Road Tunnel", "large", 401, true),
+                    new Generic("Medium Road", "medium", 300),
+                    new Generic("Medium Road Tunnel", "medium", 301, true),
+                    new Generic("Small Road", "small", 200),
+                    new Generic("Small Road Tunnel", "small", 201, true),
+                    new Generic("Gravel Road", "gravel", 100),
+                    new Generic("Gravel Road Tunnel", "gravel", 101, true),
+                    new Generic("Train Track", "track", 1200),
+                    new Generic("Train Track Tunnel", "track", 1201, true),
+                    new Generic("Metro Track", "track", "MetroOverhaul", 1000),
+                    new Generic("Metro Track Tunnel", "track", 1001),
+                    new Generic("Monorail Track", "track", 1300),
+                    new Generic("Pedestrian Path", "pedestrian", 700),
+                    new Generic("Pedestrian Bridge", "pedestrian", 701, true),
+                    new Generic("Pedestrian Tunnel", "pedestrian", 702, true),
                     new Generic("Bicycle Path", "bicycle", SteamHelper.DLC.AfterDarkDLC, 800),
                     new Generic("Bicycle Tunnel", "bicycle", SteamHelper.DLC.AfterDarkDLC, 801, true),
                     new Generic("Airplane Runway", "runway", SteamHelper.DLC.None, 1200),
@@ -325,23 +329,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         {
             get
             {
-                return NetNameMap.GenericList.Where(g => Settings.IsDLCOwned(g.DLC)).Select(g => g.Name);
-            }
-        }
-
-        /// <summary>
-        /// Gets the mapped name for the specified net information.
-        /// </summary>
-        /// <value>
-        /// The mapped names.
-        /// </value>
-        /// <param name="netInfo">The net information.</param>
-        /// <returns>The mapped name.</returns>
-        public string this[NetInfo netInfo]
-        {
-            get
-            {
-                return this.NetName(netInfo);
+                return NetNameMap.GenericList.Where(g => g.DependencyFullFilled).Select(g => g.Name);
             }
         }
 
@@ -559,136 +547,18 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 }
             }
 
-            return new Generic(null, null, null, null, false, NetNameMap.GetGroup(name));
-        }
-
-        /// <summary>
-        /// Check if net should be ignored.
-        /// </summary>
-        /// <param name="name">The net name.</param>
-        /// <returns>True if net should be ignored.</returns>
-        public bool IgnoreNet(string name)
-        {
-            return String.IsNullOrEmpty(name) ? true : this.ignoreNetsRex.IsMatch(name);
-        }
-
-        /// <summary>
-        /// Check if net should be ignored.
-        /// </summary>
-        /// <param name="netInfo">The net information.</param>
-        /// <returns>
-        /// True if net should be ignored.
-        /// </returns>
-        public bool IgnoreNet(NetInfo netInfo)
-        {
-            return this.IgnoreNet(this.NetName(netInfo));
-        }
-
-        /// <summary>
-        /// Check if net collection should be ignored.
-        /// </summary>
-        /// <param name="netCollection">The net collection.</param>
-        /// <returns>
-        /// True if net should be ignored.
-        /// </returns>
-        public bool IgnoreNetCollection(NetCollection netCollection)
-        {
-            return (netCollection == null || String.IsNullOrEmpty(netCollection.name)) ? true : this.ignoreNetCollectionsRex.IsMatch(netCollection.name);
-        }
-
-        /// <summary>
-        /// Get text showing whether net collection should be ignored.
-        /// </summary>
-        /// <param name="netCollection">The net collection.</param>
-        /// <returns>
-        /// The text "Ignore" if net collection should be ignored, otherwise null.
-        /// </returns>
-        public string IgnoreNetCollectionText(NetCollection netCollection)
-        {
-            return (netCollection == null || String.IsNullOrEmpty(netCollection.name)) ? (string)null : this.ignoreNetCollectionsRex.IsMatch(netCollection.name) ? "Ignore" : (string)null;
-        }
-
-        /// <summary>
-        /// Get text showing whether net should be ignored.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns>The text "Ignore" if net should be ignored, otherwise null.</returns>
-        public string IgnoreNetText(string name)
-        {
-            return String.IsNullOrEmpty(name) ? (string)null : this.ignoreNetsRex.IsMatch(name) ? "Ignore" : (string)null;
-        }
-
-        /// <summary>
-        /// Get text showing whether net should be ignored.
-        /// </summary>
-        /// <param name="collectionName">Name of the collection.</param>
-        /// <param name="netName">Name of the net.</param>
-        /// <returns>The text "Ignore" if net should be ignored (with exclamation case if warning specified), otherwise null.</returns>
-        public string IgnoreNetText(string collectionName, string netName)
-        {
-            if (String.IsNullOrEmpty(netName) || !this.ignoreNetsRex.IsMatch(netName))
-            {
-                return null;
-            }
-
-            if (this.WarnAboutIgnoredNet(collectionName, netName))
-            {
-                return "Ignore!";
-            }
-
-            return "Ignore";
-        }
-
-        /// <summary>
-        /// Gets he order index for the net group.
-        /// </summary>
-        /// <param name="name">The group name.</param>
-        /// <returns>The order index.</returns>
-        public int NetGroupOrder(string name)
-        {
-            int order;
-            return NetNameMap.NetGroupList.TryGetValue(name, out order) ? order : 999999;
-        }
-
-        /// <summary>
-        /// Check if warning should be issued for ignored net.
-        /// </summary>
-        /// <param name="collectionName">Name of the collection.</param>
-        /// <param name="netName">Name of the net.</param>
-        /// <returns>True if warning should be issued.</returns>
-        public bool WarnAboutIgnoredNet(string collectionName, string netName)
-        {
-            return String.IsNullOrEmpty(collectionName) ? false : String.IsNullOrEmpty(netName) ? false : this.warnIgnoreNetCollectionsNetsRex.IsMatch(collectionName + ";" + netName);
-        }
-
-        /// <summary>
-        /// Gets the order.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns>The order.</returns>
-        private int GetOrder(string name)
-        {
-            int order;
-
-            if (NetNameMap.DisplayOrders.TryGetValue(name, out order))
-            {
-                return order;
-            }
-
-            if (name.SafeSubstring(name.Length - 7) == " Tunnel" && NetNameMap.DisplayOrders.TryGetValue(name.Substring(0, name.Length - 7), out order))
-            {
-                return order;
-            }
-
-            return -1;
+            return new Generic(null, NetNameMap.GetGroup(name));
         }
 
         /// <summary>
         /// Get the nets name.
         /// </summary>
+        /// <param name="netCollection">The net collection.</param>
         /// <param name="netInfo">The net information.</param>
-        /// <returns>The name.</returns>
-        private string NetName(NetInfo netInfo)
+        /// <returns>
+        /// The name.
+        /// </returns>
+        public string GetNetName(NetCollection netCollection, NetInfo netInfo)
         {
             string className = netInfo.m_class.name;
             string objectName = netInfo.name;
@@ -717,7 +587,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     // Order from Network Extensions chaos.
                     className = this.nextDoubleTunnelClasNameRestRex.Replace(className, "$1");
                 }
-                else if (objectName.Contains("Tunnel") || localizedTitle.Contains("Tunnel"))
+                else if (objectName.Contains("Tunnel") /* || localizedTitle.Contains("Tunnel") */)
                 {
                     tunnel = true;
                 }
@@ -765,11 +635,20 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 }
                 else if (this.metroTrackObjectNameRex.IsMatch(objectName))
                 {
+                    if (netCollection != null && netCollection.name == "Public Transport")
+                    {
+                        tunnel = true;
+                    }
+
                     name = "Metro Track";
                 }
                 else if (this.monorailTrackRoadObjectNameRex.IsMatch(objectName))
                 {
                     name = "Monorail Track";
+                }
+                else if (this.trainTrackObjectNameRex.IsMatch(objectName))
+                {
+                    name = "Train Track";
                 }
                 else if (className == "Highway")
                 {
@@ -849,7 +728,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 else if (this.nextHighwayClassNameRex.IsMatch(className))
                 {
                     // Network Extensions highways.
-                    if ((objectName.Contains("Small") && objectName.Contains("Rural")) || netInfo.GetLocalizedTitle().Contains("National"))
+                    if ((objectName.Contains("Small") && objectName.Contains("Rural")) || localizedTitle.Contains("National"))
                     {
                         // Rural Highway (National Road).
                         name = "Rural Highway";
@@ -870,7 +749,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 else if (objectName.Contains("Rural Highway"))
                 {
                     // Order from Network Extensions chaos.
-                    if (className.SafeSubstring(className.Length - 2, 2) == "2L" || netInfo.GetLocalizedTitle().Contains("Two-Lane Highway"))
+                    if (className.SafeSubstring(className.Length - 2, 2) == "2L" || localizedTitle.Contains("Two-Lane Highway"))
                     {
                         name = "Highway";
                     }
@@ -906,10 +785,293 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             if (Log.LogToFile && Log.LogALot)
             {
-                Log.Debug(typeof(NetNameMap), "NetName", netInfo.m_class.name, objectName, netInfo.GetLocalizedTitle(), tunnel, className, name);
+                Log.Debug(typeof(NetNameMap), "NetName", netInfo.m_class.name, objectName, localizedTitle, tunnel, className, name);
             }
 
             return name;
+        }
+
+        /// <summary>
+        /// Check if net should be ignored.
+        /// </summary>
+        /// <param name="name">The net name.</param>
+        /// <returns>True if net should be ignored.</returns>
+        public bool IgnoreNet(string name)
+        {
+            return String.IsNullOrEmpty(name) ? true : this.ignoreNetsRex.IsMatch(name);
+        }
+
+        /// <summary>
+        /// Check if net should be ignored.
+        /// </summary>
+        /// <param name="netCollection">The net collection.</param>
+        /// <param name="netInfo">The net information.</param>
+        /// <returns>
+        /// True if net should be ignored.
+        /// </returns>
+        public bool IgnoreNet(NetCollection netCollection, NetInfo netInfo)
+        {
+            return this.IgnoreNetCollection(netCollection) || this.IgnoreNet(this.GetNetName(netCollection, netInfo));
+        }
+
+        /// <summary>
+        /// Check if net collection should be ignored.
+        /// </summary>
+        /// <param name="netCollection">The net collection.</param>
+        /// <returns>
+        /// True if net should be ignored.
+        /// </returns>
+        public bool IgnoreNetCollection(NetCollection netCollection)
+        {
+            return (netCollection == null) ? false : String.IsNullOrEmpty(netCollection.name) ? true : this.ignoreNetCollectionsRex.IsMatch(netCollection.name);
+        }
+
+        /// <summary>
+        /// Get text showing whether net collection should be ignored.
+        /// </summary>
+        /// <param name="netCollection">The net collection.</param>
+        /// <returns>
+        /// The text "Ignore" if net collection should be ignored, otherwise null.
+        /// </returns>
+        public string IgnoreNetCollectionText(NetCollection netCollection)
+        {
+            return (netCollection == null || String.IsNullOrEmpty(netCollection.name)) ? (string)null : this.ignoreNetCollectionsRex.IsMatch(netCollection.name) ? "Ignore" : (string)null;
+        }
+
+        /// <summary>
+        /// Get text showing whether net should be ignored.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>The text "Ignore" if net should be ignored, otherwise null.</returns>
+        public string IgnoreNetText(string name)
+        {
+            return String.IsNullOrEmpty(name) ? (string)null : this.ignoreNetsRex.IsMatch(name) ? "Ignore" : (string)null;
+        }
+
+        /// <summary>
+        /// Get text showing whether net should be ignored.
+        /// </summary>
+        /// <param name="collectionName">Name of the collection.</param>
+        /// <param name="netName">Name of the net.</param>
+        /// <param name="defaultText">The default text.</param>
+        /// <returns>
+        /// The text "Ignore" if net should be ignored (with exclamation case if warning specified), otherwise null.
+        /// </returns>
+        public string IgnoreNetText(string collectionName, string netName, string defaultText = null)
+        {
+            if (String.IsNullOrEmpty(netName) || !this.ignoreNetsRex.IsMatch(netName))
+            {
+                return defaultText;
+            }
+
+            if (this.WarnAboutIgnoredNet(collectionName, netName))
+            {
+                return "Ignore!";
+            }
+
+            return "Ignore";
+        }
+
+        /// <summary>
+        /// Gets he order index for the net group.
+        /// </summary>
+        /// <param name="name">The group name.</param>
+        /// <returns>The order index.</returns>
+        public int NetGroupOrder(string name)
+        {
+            int order;
+            return NetNameMap.NetGroupList.TryGetValue(name, out order) ? order : 999999;
+        }
+
+        /// <summary>
+        /// Check if warning should be issued for ignored net.
+        /// </summary>
+        /// <param name="collectionName">Name of the collection.</param>
+        /// <param name="netName">Name of the net.</param>
+        /// <returns>True if warning should be issued.</returns>
+        public bool WarnAboutIgnoredNet(string collectionName, string netName)
+        {
+            return String.IsNullOrEmpty(collectionName) ? false : String.IsNullOrEmpty(netName) ? false : this.warnIgnoreNetCollectionsNetsRex.IsMatch(collectionName + ";" + netName);
+        }
+
+        /// <summary>
+        /// Gets the order.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>The order.</returns>
+        private int GetOrder(string name)
+        {
+            int order;
+
+            if (NetNameMap.DisplayOrders.TryGetValue(name, out order))
+            {
+                return order;
+            }
+
+            if (name.SafeSubstring(name.Length - 7) == " Tunnel" && NetNameMap.DisplayOrders.TryGetValue(name.Substring(0, name.Length - 7), out order))
+            {
+                return order;
+            }
+
+            return -1;
+        }
+
+        /// <summary>
+        /// Net element dependency information.
+        /// </summary>
+        public struct Dependency
+        {
+            /// <summary>
+            /// The dependency DLC.
+            /// </summary>
+            public readonly SteamHelper.DLC DLC;
+
+            /// <summary>
+            /// The name of the dependency mod game object.
+            /// </summary>
+            public readonly string ModName;
+
+            /// <summary>
+            /// The dependency type.
+            /// </summary>
+            public readonly DependencyType Type;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Dependency"/> struct.
+            /// </summary>
+            /// <param name="type">The type.</param>
+            /// <param name="dependencyIdentifier">The dependency identifier.</param>
+            /// <exception cref="System.ArgumentException"></exception>
+            public Dependency(DependencyType type, string dependencyIdentifier)
+            {
+                this.Type = type;
+                this.DLC = SteamHelper.DLC.None;
+
+                switch (type)
+                {
+                    case DependencyType.Mod:
+                        this.ModName = dependencyIdentifier;
+                        break;
+
+                    default:
+                        throw new ArgumentException();
+                }
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Dependency" /> struct.
+            /// </summary>
+            /// <param name="modName">Name of the mod.</param>
+            /// <exception cref="System.ArgumentException"></exception>
+            public Dependency(string modName)
+            {
+                this.Type = DependencyType.Mod;
+                this.DLC = SteamHelper.DLC.None;
+                this.ModName = modName;
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Dependency"/> struct.
+            /// </summary>
+            /// <param name="dlc">The DLC.</param>
+            public Dependency(SteamHelper.DLC dlc)
+            {
+                this.Type = DependencyType.DLC;
+                this.DLC = dlc;
+                this.ModName = null;
+            }
+
+            /// <summary>
+            /// TYpe of dependencies.
+            /// </summary>
+            public enum DependencyType
+            {
+                /// <summary>
+                /// Dependent on specific DLC.
+                /// </summary>
+                DLC,
+
+                /// <summary>
+                /// Dependent on mod that is identifiable by game object existance.
+                /// </summary>
+                Mod
+            }
+
+            /// <summary>
+            /// Gets a value indicating whether this dependency is fullfilled.
+            /// </summary>
+            /// <value>
+            ///   <c>true</c> if fullfilled; otherwise, <c>false</c>.
+            /// </value>
+            public bool FullFilled
+            {
+                get
+                {
+                    switch (this.Type)
+                    {
+                        case DependencyType.DLC:
+                            return Settings.IsDLCOwned(this.DLC);
+
+                        case DependencyType.Mod:
+                            return ModLoaded(this.ModName);
+
+                        default:
+                            return false;
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Returns a <see cref="System.String" /> that represents this instance.
+            /// </summary>
+            /// <returns>
+            /// A <see cref="System.String" /> that represents this instance.
+            /// </returns>
+            public override string ToString()
+            {
+                switch (this.Type)
+                {
+                    case DependencyType.DLC:
+                        return "DLC: " + this.DLC.ToString();
+
+                    case DependencyType.Mod:
+                        return "Mod: " + this.ModName;
+
+                    default:
+                        return this.Type.ToString();
+                }
+            }
+
+            /// <summary>
+            /// Checks if a mod is loaded.
+            /// </summary>
+            /// <param name="modName">Name of the mod.</param>
+            /// <returns>True if the mod is loaded.</returns>
+            private static bool ModLoaded(string modName)
+            {
+                foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    foreach (Type type in assembly.GetTypes())
+                    {
+                        if (type.Namespace == modName)
+                        {
+                            Log.Debug(typeof(Dependency), "ModLoaded", "Namespace", modName, assembly.FullName, assembly.Location, type.FullName);
+
+                            return true;
+                        }
+                    }
+                }
+
+                UnityEngine.GameObject gameObject = UnityEngine.GameObject.Find(modName);
+                if (gameObject != null)
+                {
+                    Log.Debug(typeof(Dependency), "ModLoaded", "GameObject", modName, gameObject);
+
+                    return true;
+                }
+
+                return false;
+            }
         }
 
         /// <summary>
@@ -917,41 +1079,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         public struct Generic
         {
-            /// <summary>
-            /// The expansion DLC.
-            /// </summary>
-            public SteamHelper.DLC? DLC;
-
-            /// <summary>
-            /// The group.
-            /// </summary>
-            public string Group;
-
-            /// <summary>
-            /// The generic is a variant and not a main type.
-            /// </summary>
-            public bool IsVariant;
-
-            /// <summary>
-            /// The lower case name.
-            /// </summary>
-            public string LowerCaseName;
-
-            /// <summary>
-            /// The name.
-            /// </summary>
-            public string Name;
-
-            /// <summary>
-            /// The order.
-            /// </summary>
-            public int Order;
-
-            /// <summary>
-            /// The part.
-            /// </summary>
-            public string Part;
-
             /// <summary>
             /// The maximum limit value.
             /// </summary>
@@ -962,44 +1089,171 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// </summary>
             /// <param name="name">The name.</param>
             /// <param name="part">The part.</param>
+            /// <param name="dependency">The dependency.</param>
+            /// <param name="order">The sort order.</param>
+            /// <param name="isVariant">If set to <c>true</c>, set as variant.</param>
+            /// <param name="group">The group.</param>
+            public Generic(string name, string part, Dependency? dependency, int? order, bool isVariant = false, string group = null)
+            {
+                this.Name = name;
+                this.Part = part;
+                this.Dependency = dependency;
+                this.IsVariant = isVariant;
+
+                this.maxLimitValue = null;
+                this.LowerCaseName = null;
+                this.Order = 0;
+                this.Group = null;
+
+                this.Initialize(order, group);
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Generic" /> struct.
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <param name="part">The part.</param>
             /// <param name="dlc">The DLC.</param>
             /// <param name="order">The sort order.</param>
             /// <param name="isVariant">If set to <c>true</c>, set as variant.</param>
             /// <param name="group">The group.</param>
-            public Generic(string name, string part, SteamHelper.DLC? dlc, int? order, bool isVariant = false, string group = null)
+            public Generic(string name, string part, SteamHelper.DLC dlc, int? order, bool isVariant = false, string group = null)
             {
                 this.Name = name;
                 this.Part = part;
-                this.DLC = dlc;
-                this.LowerCaseName = (name == null) ? null : name.ToLowerInvariant();
+                this.Dependency = new NetNameMap.Dependency(dlc);
                 this.IsVariant = isVariant;
 
-                this.Group = String.IsNullOrEmpty(group) ? NetNameMap.GetGroup(name) : group;
+                this.maxLimitValue = null;
+                this.LowerCaseName = null;
+                this.Order = 0;
+                this.Group = null;
 
-                if (order != null && order.HasValue)
-                {
-                    this.Order = order.Value;
-                }
-                else if (String.IsNullOrEmpty(group) || !NetNameMap.NetGroupList.TryGetValue(group, out this.Order))
-                {
-                    this.Order = -1;
-                }
-
-                if (this.Order < 0)
-                {
-                    this.Order += 10000;
-                }
-
-                float limit;
-                if (!String.IsNullOrEmpty(Part) && MaxLimits.TryGetValue(this.Part, out limit))
-                {
-                    this.maxLimitValue = limit;
-                }
-                else
-                {
-                    this.maxLimitValue = null;
-                }
+                this.Initialize(order, group);
             }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Generic" /> struct.
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <param name="group">The group.</param>
+            public Generic(string name, string group = null)
+            {
+                this.Name = name;
+
+                this.Part = null;
+                this.Dependency = null;
+                this.IsVariant = false;
+                this.maxLimitValue = null;
+                this.LowerCaseName = null;
+                this.Order = 0;
+                this.Group = null;
+
+                this.Initialize(null, group);
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Generic" /> struct.
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <param name="part">The part.</param>
+            /// <param name="modName">The dependency identifier.</param>
+            /// <param name="order">The sort order.</param>
+            /// <param name="isVariant">If set to <c>true</c>, set as variant.</param>
+            /// <param name="group">The group.</param>
+            public Generic(string name, string part, string modName, int? order, bool isVariant = false, string group = null)
+            {
+                this.Name = name;
+                this.Part = part;
+                this.Dependency = new NetNameMap.Dependency(modName);
+                this.IsVariant = isVariant;
+
+                this.maxLimitValue = null;
+                this.LowerCaseName = null;
+                this.Order = 0;
+                this.Group = null;
+
+                this.Initialize(order, group);
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Generic" /> struct.
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <param name="part">The part.</param>
+            /// <param name="dependencyType">Type of the dependency.</param>
+            /// <param name="dependencyIdentifier">The dependency identifier.</param>
+            /// <param name="order">The sort order.</param>
+            /// <param name="isVariant">If set to <c>true</c>, set as variant.</param>
+            /// <param name="group">The group.</param>
+            public Generic(string name, string part, Dependency.DependencyType dependencyType, string dependencyIdentifier, int? order, bool isVariant = false, string group = null)
+            {
+                this.Name = name;
+                this.Part = part;
+                this.Dependency = new NetNameMap.Dependency(dependencyType, dependencyIdentifier);
+                this.IsVariant = isVariant;
+
+                this.maxLimitValue = null;
+                this.LowerCaseName = null;
+                this.Order = 0;
+                this.Group = null;
+
+                this.Initialize(order, group);
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Generic" /> struct.
+            /// </summary>
+            /// <param name="name">The name.</param>
+            /// <param name="part">The part.</param>
+            /// <param name="order">The sort order.</param>
+            /// <param name="isVariant">If set to <c>true</c>, set as variant.</param>
+            /// <param name="group">The group.</param>
+            public Generic(string name, string part, int? order, bool isVariant = false, string group = null)
+            {
+                this.Name = name;
+                this.Part = part;
+                this.Dependency = null;
+                this.IsVariant = isVariant;
+
+                this.maxLimitValue = null;
+                this.LowerCaseName = null;
+                this.Order = 0;
+                this.Group = null;
+
+                this.Initialize(order, group);
+            }
+
+            /// <summary>
+            /// The dependency.
+            /// </summary>
+            public Dependency? Dependency { get; private set; }
+
+            /// <summary>
+            /// Gets a value indicating whether the dependency is fullfilled.
+            /// </summary>
+            /// <value>
+            ///   <c>true</c> if dependency fullfilled; otherwise, <c>false</c>.
+            /// </value>
+            public bool DependencyFullFilled
+            {
+                get => this.Dependency == null || !this.Dependency.HasValue || this.Dependency.Value.FullFilled;
+            }
+
+            /// <summary>
+            /// The group.
+            /// </summary>
+            public string Group { get; private set; }
+
+            /// <summary>
+            /// The generic is a variant and not a main type.
+            /// </summary>
+            public bool IsVariant { get; private set; }
+
+            /// <summary>
+            /// The lower case name.
+            /// </summary>
+            public string LowerCaseName { get; private set; }
 
             /// <summary>
             /// The maximum limit.
@@ -1011,6 +1265,21 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     return (this.maxLimitValue != null && this.maxLimitValue.HasValue) ? Math.Max(this.maxLimitValue.Value, Global.Settings.MaximumLimit) : Global.Settings.MaximumLimit;
                 }
             }
+
+            /// <summary>
+            /// The name.
+            /// </summary>
+            public string Name { get; private set; }
+
+            /// <summary>
+            /// The order.
+            /// </summary>
+            public int Order { get; private set; }
+
+            /// <summary>
+            /// The part.
+            /// </summary>
+            public string Part { get; private set; }
 
             /// <summary>
             /// Copies this instance.
@@ -1058,7 +1327,47 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// </returns>
             public Generic Copy(string name, int order, string netName)
             {
-                return new Generic(name, this.Part, this.DLC, order, this.IsVariant, NetNameMap.GetGroup(netName, this.Group));
+                return new Generic(name, this.Part, this.Dependency, order, this.IsVariant, NetNameMap.GetGroup(netName, this.Group));
+            }
+
+            /// <summary>
+            /// Initializes this instance.
+            /// </summary>
+            /// <param name="order">The sort order.</param>
+            /// <param name="group">The group.</param>
+            public void Initialize(int? order, string group = null)
+            {
+                this.LowerCaseName = (this.Name == null) ? null : this.Name.ToLowerInvariant();
+                this.Group = String.IsNullOrEmpty(group) ? NetNameMap.GetGroup(this.Name) : group;
+
+                int orderValue;
+                if (order != null && order.HasValue)
+                {
+                    this.Order = order.Value;
+                }
+                else if (String.IsNullOrEmpty(group) || !NetNameMap.NetGroupList.TryGetValue(group, out orderValue))
+                {
+                    this.Order = -1;
+                }
+                else
+                {
+                    this.Order = orderValue;
+                }
+
+                if (this.Order < 0)
+                {
+                    this.Order += 10000;
+                }
+
+                float limit;
+                if (!String.IsNullOrEmpty(Part) && MaxLimits.TryGetValue(this.Part, out limit))
+                {
+                    this.maxLimitValue = limit;
+                }
+                else
+                {
+                    this.maxLimitValue = null;
+                }
             }
         }
     }

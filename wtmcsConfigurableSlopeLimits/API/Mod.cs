@@ -1,8 +1,8 @@
 ﻿using ICities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -239,10 +239,22 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             /// <param name="generic">The generic.</param>
             public SlopeLimitSlider(string name, NetNameMap.Generic generic)
             {
-                float limit;
-
                 this.Name = name;
-                this.CurLimit = Global.Settings.SlopeLimits.TryGetValue(name, out limit) ? limit : 0.25f;
+
+                float limit;
+                if (Global.Settings.SlopeLimits.TryGetValue(name, out limit))
+                {
+                    this.CurLimit = limit;
+                }
+                else if (Global.Settings.TryGetFallBackLimit(name, out limit))
+                {
+                    this.CurLimit = limit;
+                }
+                else
+                {
+                    this.CurLimit = 0.25f;
+                }
+
                 this.OrgLimit = Global.Settings.SlopeLimitsOriginal.TryGetValue(name, out limit) ? limit : this.CurLimit;
                 this.MinLimit = Global.Settings.MinimumLimit;
                 this.MaxLimit = Math.Max(Math.Max(generic.MaxLimit, this.OrgLimit), this.CurLimit);

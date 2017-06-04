@@ -14,7 +14,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// The settings version.
         /// </summary>
-        public readonly int Version = 2;
+        public readonly int Version = 3;
 
         /// <summary>
         /// The maximum slope limit.
@@ -79,9 +79,14 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 {
                     slopeLimits = settings.GetSlopeLimits();
 
-                    foreach (string limit in slopeLimits.Keys.Where(l => Global.NetNames.IgnoreNet(l)).ToList())
+                    if (slopeLimits != null)
                     {
-                        slopeLimits.Remove(limit);
+                        Log.Debug(this, "Constructor", "Load limits", slopeLimits.Count);
+
+                        foreach (string limit in slopeLimits.Keys.Where(l => Global.NetNames.IgnoreNet(l)).ToList())
+                        {
+                            slopeLimits.Remove(limit);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -94,7 +99,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     Dictionary<string, float> orgLimits = settings.GetOriginalSlopeLimits();
                     if (orgLimits != null)
                     {
-                        Log.Debug(this, "Constructor", "Load original limits");
+                        Log.Debug(this, "Constructor", "Load original limits", orgLimits.Count);
                         this.SlopeLimitsOriginal = orgLimits;
                     }
                 }
@@ -282,13 +287,13 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                             Settings sets = new Settings(cfg);
 
-                            foreach (string name in sets.SlopeLimits.Keys)
+                            foreach (KeyValuePair<string, float> limit in sets.SlopeLimits)
                             {
-                                Log.Info(null, null, "CfgLimit", name, sets.SlopeLimits[name]);
+                                Log.Info(typeof(Settings), "Load", "CfgLimit", limit.Key, limit.Value);
                             }
-                            foreach (string name in sets.SlopeLimitsGeneric.Keys)
+                            foreach (KeyValuePair<string, float> limit in sets.SlopeLimitsGeneric)
                             {
-                                Log.Info(null, null, "GenLimit", name, sets.SlopeLimitsGeneric[name]);
+                                Log.Info(typeof(Settings), "Load", "GenLimit", limit.Key, limit.Value);
                             }
 
                             Log.Debug(typeof(Settings), "Load", "End");
@@ -304,48 +309,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
             Log.Debug(typeof(Settings), "Load", "End");
             return new Settings();
-        }
-
-        /// <summary>
-        /// Gets the fall back limit.
-        /// </summary>
-        /// <param name="name">The mapped net name.</param>
-        /// <returns>The fall back limit.</returns>
-        public float GetFallBackLimit(string name)
-        {
-            float limit;
-            if (this.SlopeLimits.TryGetValue(name, out limit))
-            {
-                return limit;
-            }
-
-            string tuff = "";
-
-            if (name.SafeSubstring(name.Length - 7) == " Tunnel")
-            {
-                name = name.Substring(0, name.Length - 7);
-                tuff = " Tunnel";
-
-                if (this.SlopeLimits.TryGetValue(name, out limit))
-                {
-                    return limit;
-                }
-            }
-
-            string fallBack = NetNameMap.GetFallbackName(name);
-            if (fallBack != null)
-            {
-                if (this.SlopeLimits.TryGetValue(fallBack + tuff, out limit))
-                {
-                    return limit;
-                }
-                else if (this.SlopeLimits.TryGetValue(fallBack, out limit))
-                {
-                    return limit;
-                }
-            }
-
-            return float.NaN;
         }
 
         /// <summary>
@@ -499,6 +462,55 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 Log.Error(this, "SetLimit", ex, name, limit);
             }
+        }
+
+        /// <summary>
+        /// Gets the fall back limit.
+        /// </summary>
+        /// <param name="name">The mapped net name.</param>
+        /// <param name="limit">The limit.</param>
+        /// <returns>
+        /// True on success.
+        /// </returns>
+        public bool TryGetFallBackLimit(string name, out float limit)
+        {
+            if (this.SlopeLimits.TryGetValue(name, out limit))
+            {
+                return true;
+            }
+
+            string tuff = "";
+
+            if (name.SafeRightString(7) == " Tunnel")
+            {
+                name = name.Substring(0, name.Length - 7);
+                tuff = " Tunnel";
+
+                if (this.SlopeLimits.TryGetValue(name, out limit))
+                {
+                    return true;
+                }
+            }
+            else if (this.SlopeLimits.TryGetValue(name + " Tunnel", out limit))
+            {
+                return true;
+            }
+
+            string fallBack = NetNameMap.GetFallbackName(name);
+            if (fallBack != null)
+            {
+                if (this.SlopeLimits.TryGetValue(fallBack + tuff, out limit))
+                {
+                    return true;
+                }
+                else if (this.SlopeLimits.TryGetValue(fallBack, out limit))
+                {
+                    return true;
+                }
+            }
+
+            limit = float.NaN;
+            return false;
         }
 
         /// <summary>
@@ -661,25 +673,96 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
 
             /// <summary>
-            /// Gets the slope limits dictionary.
+            /// Gets the original slope limits dictionary.
             /// </summary>
-            /// <returns>
-            /// The slope limits dictionary.
-            /// </returns>
+            /// <value>
+            /// The original slope limits dictionary.
+            /// </value>
             public Dictionary<string, float> GetOriginalSlopeLimits()
             {
-                return this.GetLimitsDictionary(this.OriginalSlopeLimits, "GetOriginalSlopeLimits");
+                try
+                {
+                    Dictionary<string, float> dict = this.OriginalSlopeLimits.ToDictionary(l => l.Name, l => l.Limit);
+
+                    if (this.Version < 3)
+                    {
+                        float limit;
+                        if (dict.TryGetValue("Metro Track", out limit))
+                        {
+                            Log.Info(this, "GetOriginalSlopeLimits", "Copy", "Metro Track", "Metro Track Tunnel", limit);
+                            dict["Metro Track Tunnel"] = limit;
+                        }
+                    }
+
+                    return dict;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(this, "GetOriginalSlopeLimits", ex);
+                    return new Dictionary<string, float>();
+                }
             }
 
             /// <summary>
             /// Gets the slope limits dictionary.
             /// </summary>
-            /// <returns>
+            /// <value>
             /// The slope limits dictionary.
-            /// </returns>
+            /// </value>
             public Dictionary<string, float> GetSlopeLimits()
             {
-                return this.GetLimitsDictionary(this.SlopeLimits, "GetSlopeLimits", true);
+                try
+                {
+                    Dictionary<string, float> dict = new Dictionary<string, float>();
+
+                    foreach (SlopeLimit limit in this.SlopeLimits)
+                    {
+                        bool remove = false;
+                        string newName = null;
+
+                        if (float.IsNaN(limit.Limit) || float.IsInfinity(limit.Limit))
+                        {
+                            remove = true;
+                        }
+                        else if (this.Version < 3)
+                        {
+                            if (limit.Name == "Metro Track Tunnel")
+                            {
+                                remove = true;
+                            }
+                            else if (limit.Name == "Metro Track")
+                            {
+                                newName = "Metro Track Tunnel";
+                            }
+                            else if (this.Version < 2 && limit.Name == "Bicycle")
+                            {
+                                remove = true;
+                            }
+                        }
+
+                        if (remove)
+                        {
+                            Log.Info(this, "GetSlopeLimits", "Cut", limit.Name, limit.Limit);
+                        }
+                        else if (newName != null)
+                        {
+                            Log.Info(this, "GetSlopeLimits", "Add", limit.Name, limit.Limit, newName);
+                            dict[newName] = limit.Limit;
+                        }
+                        else
+                        {
+                            Log.Debug(this, "GetSlopeLimits", "Add", limit.Name, limit.Limit);
+                            dict[limit.Name] = limit.Limit;
+                        }
+                    }
+
+                    return dict;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(this, "GetSlopeLimits", ex);
+                    return new Dictionary<string, float>();
+                }
             }
 
             /// <summary>
@@ -758,43 +841,6 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             public void SetSlopeLimits(Dictionary<string, float> limitsDictionary)
             {
                 this.SetLimitsDictionary(this.SlopeLimits, limitsDictionary, "SetSlopeLimits");
-            }
-
-            /// <summary>
-            /// Gets the limits dictionary.
-            /// </summary>
-            /// <param name="limits">The limits.</param>
-            /// <param name="name">The name.</param>
-            /// <param name="versionCheck">if set to <c>true</c> check version.</param>
-            /// <returns>
-            /// The limits dictionary.
-            /// </returns>
-            private Dictionary<string, float> GetLimitsDictionary(List<SlopeLimit> limits, string name = null, bool versionCheck = false)
-            {
-                try
-                {
-                    Dictionary<string, float> dict = limits.ToDictionary(l => l.Name, l => l.Limit);
-
-                    List<KeyValuePair<string, float>> lims = dict.ToList();
-                    foreach (KeyValuePair<string, float> lim in lims)
-                    {
-                        Log.Debug(this, "GetLimitsDictionary", "Check", lim.Key, lim.Value, versionCheck);
-
-                        if (float.IsNaN(lim.Value) || float.IsInfinity(lim.Value) ||
-                            (versionCheck && this.Version < 2 && lim.Key == "Bicycle"))
-                        {
-                            Log.Info(this, "GetLimitsDictionary", "Remove", lim.Key, lim.Value);
-                            dict.Remove(lim.Key);
-                        }
-                    }
-
-                    return dict;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(this, String.IsNullOrEmpty(name) ? "LimitsDictionary" : name, ex);
-                    return new Dictionary<string, float>();
-                }
             }
 
             /// <summary>
