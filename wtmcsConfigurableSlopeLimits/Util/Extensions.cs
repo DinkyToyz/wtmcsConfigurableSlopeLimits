@@ -112,10 +112,20 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// Conforms the newlines to the environment.
         /// </summary>
         /// <param name="text">The text.</param>
-        /// <returns>The conforming text.</returns>
-        public static string ConformNewlines(this string text)
+        /// <param name="removeEmptyLines">if set to <c>true</c> remove empty lines.</param>
+        /// <returns>
+        /// The conforming text.
+        /// </returns>
+        public static string ConformNewlines(this string text, bool removeEmptyLines = true)
         {
-            return Regex.Replace(text, "[\r\n]+", Environment.NewLine);
+            if (removeEmptyLines)
+            {
+                return Regex.Replace(text, "[\\r\\n]+", Environment.NewLine);
+            }
+            else
+            {
+                return Regex.Replace(Regex.Replace(text, "\\r\\n", "\\r"), "[\\r\\n]", Environment.NewLine);
+            }
         }
 
         /// <summary>

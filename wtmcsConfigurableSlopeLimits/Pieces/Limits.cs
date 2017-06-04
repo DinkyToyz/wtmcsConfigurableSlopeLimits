@@ -112,7 +112,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// Dumps the nets.
         /// </summary>
         /// <exception cref="InvalidDataException">No network objects.</exception>
-        public static void DumpNetNames()
+        public static void DumpNetNames(bool appendGenerics = false)
         {
             try
             {
@@ -131,6 +131,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                     if (netData.InfoIndex == 0)
                     {
+                        netNames.Add("");
                         netData.AddCollectionToDumpList(netNames);
                     }
 
@@ -139,48 +140,52 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                 bool foundGeneric = false;
 
-                foreach (string name in Global.Settings.SlopeLimits.Keys.Union(NetNameMap.SupportedGenerics).Distinct())
+                if (appendGenerics)
                 {
-                    if (!foundGeneric)
+                    foreach (string name in Global.Settings.SlopeLimits.Keys.Union(NetNameMap.SupportedGenerics).Distinct())
                     {
-                        foundGeneric = true;
-
-                        if (foundNetInfo)
+                        if (!foundGeneric)
                         {
+                            foundGeneric = true;
+
+                            if (foundNetInfo)
+                            {
+                                netNames.Add("");
+                                netNames.Add("");
+                            }
+
+                            netNames.Add(Log.MessageString(
+                                "Generic",
+                                "name",
+                                "Name",
+                                "LowerCaseName",
+                                "Group",
+                                "DLC",
+                                "MaxLimit",
+                                "Part",
+                                "Order",
+                                "IsVariant",
+                                "SlopeLimitIgnore",
+                                "NetIgnore"));
                             netNames.Add("");
                         }
 
+                        NetNameMap.Generic generic = Global.NetNames.GetGeneric(name);
+
                         netNames.Add(Log.MessageString(
                             "Generic",
-                            "name",
-                            "Name",
-                            "LowerCaseName",
-                            "Group",
-                            "DLC",
-                            "MaxLimit",
-                            "Part",
-                            "Order",
-                            "IsVariant",
-                            "SlopeLimitIgnore",
-                            "NetIgnore"));
-                        netNames.Add("");
+                            name,
+                            generic.Name,
+                            generic.LowerCaseName,
+                            generic.Group,
+                            generic.Dependency,
+                            generic.MaxLimit,
+                            generic.Part,
+                            generic.Order,
+                            generic.IsVariant ? "IsVariant" : "",
+                            Global.Settings.SlopeLimitsIgnored.ContainsKey(name) ? "SlopeLimitIgnore" : "",
+                            Global.NetNames.IgnoreNet(name) ? "NetIgnore" : ""));
                     }
-
-                    NetNameMap.Generic generic = Global.NetNames.GetGeneric(name);
-
-                    netNames.Add(Log.MessageString(
-                        "Generic",
-                        name,
-                        generic.Name,
-                        generic.LowerCaseName,
-                        generic.Group,
-                        generic.Dependency,
-                        generic.MaxLimit,
-                        generic.Part,
-                        generic.Order,
-                        generic.IsVariant ? "IsVariant" : "",
-                        Global.Settings.SlopeLimitsIgnored.ContainsKey(name) ? "SlopeLimitIgnore" : "",
-                        Global.NetNames.IgnoreNet(name) ? "NetIgnore" : ""));
                 }
 
                 if (foundNetInfo || foundGeneric)
@@ -188,7 +193,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     netNames.Add("");
                     using (StreamWriter dumpFile = new StreamWriter(FileSystem.FilePathName(".NetNames.txt"), false))
                     {
-                        dumpFile.Write(String.Join("\n", netNames.ToArray()).ConformNewlines());
+                        dumpFile.Write(String.Join("\n", netNames.ToArray()).ConformNewlines(false));
                         dumpFile.Close();
                     }
                 }
@@ -720,12 +725,12 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 if (this.Collection == null)
                 {
-                    netNames.Add(Log.MessageString("NetCollection", "(uncollected)"));
+                    netNames.Add("(uncollected)");
                 }
                 else
                 {
                     netNames.Add(Log.MessageString("NetCollection", this.Collection, this.Collection.name, Global.NetNames.IgnoreNetCollectionText(this.Collection)));
-                    netNames.Add(Log.MessageString("Prefabs", this.Collection.m_prefabs));
+                    netNames.Add(Log.MessageString("Prefabs", this.Collection.m_prefabs, this.Collection.m_prefabs.Count()));
                 }
             }
 
