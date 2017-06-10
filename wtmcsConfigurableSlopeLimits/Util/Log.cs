@@ -57,7 +57,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             try
             {
                 AssemblyName name = Assembly.GetExecutingAssembly().GetName();
-                Output(Level.None, null, null, null, name.Name + " " + name.Version);
+                Output(Level.None, null, null, null, name.Name + " " + name.Version, AssemblyInfo.PreBuildStamps.DateTime.ToString("yyyy-MM-dd HH:mm"));
                 Output(Level.None, null, null, null, "Cities Skylines", BuildConfig.applicationVersionFull, GetDLCString());
             }
             catch
