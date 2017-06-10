@@ -58,7 +58,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 AssemblyName name = Assembly.GetExecutingAssembly().GetName();
                 Output(Level.None, null, null, null, name.Name + " " + name.Version);
-                Output(Level.None, null, null, null, "Cities Skylines", BuildConfig.applicationVersionFull, GetDLCString(), GetModString(true), GetModString(false));
+                Output(Level.None, null, null, null, "Cities Skylines", BuildConfig.applicationVersionFull, GetDLCString());
             }
             catch
             {
@@ -496,7 +496,12 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </value>
         private static string GetDLCString()
         {
-            return String.Join(", ", ((IEnumerable<SteamHelper.DLC>)Enum.GetValues(typeof(SteamHelper.DLC))).Where(dlc => SteamHelper.IsDLCOwned(dlc)).Select(dlc => dlc.ToString()).ToArray());
+            return String.Join(
+                ", ",
+                ((IEnumerable<SteamHelper.DLC>)Enum.GetValues(typeof(SteamHelper.DLC)))
+                .Where(dlc => dlc != SteamHelper.DLC.None && SteamHelper.IsDLCOwned(dlc))
+                .Select(dlc => dlc.ToString())
+                .ToArray());
         }
 
         /// <summary>
