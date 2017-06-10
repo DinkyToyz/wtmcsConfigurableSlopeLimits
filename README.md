@@ -10,7 +10,7 @@ The following is from the [steam description](http://steamcommunity.com/sharedfi
 
 Allows slope limits to be configured separately for different network types.
 
-Compatible with [Network Extensions 2](http://steamcommunity.com/sharedfiles/filedetails/?id=812125426), and [Network Extensions Project](http://steamcommunity.com/sharedfiles/filedetails/?id=478820060), but may lag behind when that mod updates with new or changed road types.
+Compatible with [Metro Overhaul Mod](http://steamcommunity.com/sharedfiles/filedetails/?id=816260433), [Network Extensions 2](http://steamcommunity.com/sharedfiles/filedetails/?id=812125426), and [Network Extensions Project](http://steamcommunity.com/sharedfiles/filedetails/?id=478820060), but may lag behind when those mods updates with new or changed road or track types.
 
 ## Usage
 
@@ -29,11 +29,11 @@ When reporting severe errors, please upload [the games complete log file](http:/
 
 The mod logs to [the games normal output log](http://steamcommunity.com/sharedfiles/filedetails/?id=463645931), and can also log to a separate log file, wtmcsConfigurableSlopeLimits.log, stored in the same directory as the settings.
 
-Create the file wtmcsConfigurableSlopeLimits.debug in the same directory in order to enable debug log stuff (wich might slow things down quite a bit) and logging to file. To log more stuff, also create the file wtmcsConfigurableSlopeLimits.debug.dev.
+Create the file wtmcsConfigurableSlopeLimits.debug in the same directory in order to enable debug log stuff (which might slow things down quite a bit) and logging to file. To log more stuff, also create the file wtmcsConfigurableSlopeLimits.debug.dev.
 
 ## Whatever
 
 I made this for myself, and use it. Hopefully it works for others as well, but I make no promises.
 I also make no promises about updating or fixing things fast, as that depends on how busy I am with work and other stuff.
 
-[Source code](https://github.com/DinkyToyz/wtmcsConfigurableSlopeLimits) is realesed with MIT license.
+[Source code](https://github.com/DinkyToyz/wtmcsConfigurableSlopeLimits) is released with MIT license.

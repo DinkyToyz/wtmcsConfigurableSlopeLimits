@@ -1,11 +1,13 @@
-﻿using System;
+﻿using ColossalFramework;
+using ColossalFramework.Plugins;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using ColossalFramework.Plugins;
 
 namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
@@ -56,6 +58,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 AssemblyName name = Assembly.GetExecutingAssembly().GetName();
                 Output(Level.None, null, null, null, name.Name + " " + name.Version);
+                Output(Level.None, null, null, null, "Cities Skylines", BuildConfig.applicationVersionFull, GetDLCString(), GetModString(true), GetModString(false));
             }
             catch
             {
@@ -221,8 +224,10 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// Combines the messages in a string.
         /// </summary>
         /// <param name="messages">The messages.</param>
-        /// <returns>The string.</returns>
-        public static string MessageString(params object[] messages)
+        /// <returns>
+        /// The string.
+        /// </returns>
+        public static string ListString(IEnumerable<object> messages)
         {
             StringBuilder msg = new StringBuilder();
             int mc = 0;
@@ -236,10 +241,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// Combines the messages in a string.
         /// </summary>
         /// <param name="messages">The messages.</param>
-        /// <returns>
-        /// The string.
-        /// </returns>
-        public static string ListString(IEnumerable<object> messages)
+        /// <returns>The string.</returns>
+        public static string MessageString(params object[] messages)
         {
             StringBuilder msg = new StringBuilder();
             int mc = 0;
@@ -483,6 +486,27 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 stringBuilder.Append(message.Trim());
                 messageCounter++;
             }
+        }
+
+        /// <summary>
+        /// Gets the DLC string.
+        /// </summary>
+        /// <value>
+        /// The DLC string.
+        /// </value>
+        private static string GetDLCString()
+        {
+            return String.Join(", ", ((IEnumerable<SteamHelper.DLC>)Enum.GetValues(typeof(SteamHelper.DLC))).Where(dlc => SteamHelper.IsDLCOwned(dlc)).Select(dlc => dlc.ToString()).ToArray());
+        }
+
+        /// <summary>
+        /// Gets the mod string.
+        /// </summary>
+        /// <param name="enabled">if set to <c>true</c> return only enabled mods, otherwise return only disabled mods.</param>
+        /// <returns>A comma separated list of mod names.</returns>
+        private static string GetModString(bool enabled)
+        {
+            return String.Join(", ", Singleton<PluginManager>.instance.GetPluginsInfo().Where(pi => pi.isEnabled).Select(pi => pi.name).ToArray());
         }
 
         /// <summary>
