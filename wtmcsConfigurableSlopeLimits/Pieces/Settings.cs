@@ -68,6 +68,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             if (settings != null)
             {
                 this.loadedVersion = settings.Version;
+                this.SaveCount = settings.SaveCount;
 
                 this.buttonPositionX = settings.ButtonPositionHorizontal;
                 this.buttonPositionY = settings.ButtonPositionVertical;
@@ -399,6 +400,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     ConfigurableSlopeLimitsSettings cfg = new ConfigurableSlopeLimitsSettings();
                     cfg.Version = this.Version;
                     cfg.SaveCount = this.SaveCount;
+                    cfg.Build = Library.Build;
                     cfg.ButtonPositionHorizontal = this.buttonPositionX;
                     cfg.ButtonPositionVertical = this.buttonPositionY;
                     cfg.SetSlopeLimits(this.SlopeLimits);
@@ -595,6 +597,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         [Serializable]
         public class ConfigurableSlopeLimitsSettings
         {
+            /// <summary>
+            /// The build info.
+            /// </summary>
+            public string Build = Library.Build;
+
             /// <summary>
             /// The horizontal button position.
             /// </summary>

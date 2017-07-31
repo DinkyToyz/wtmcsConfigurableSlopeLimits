@@ -1,4 +1,6 @@
-﻿namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
+﻿using System.Reflection;
+
+namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 {
     /// <summary>
     /// Mod info.
@@ -19,6 +21,35 @@
         /// The title.
         /// </summary>
         public const string Title = "Slope Limits (WtM)";
+
+        /// <summary>
+        /// Gets the build.
+        /// </summary>
+        /// <value>
+        /// The build.
+        /// </value>
+        public static string Build
+        {
+            get
+            {
+                try
+                {
+                    AssemblyName name = Assembly.GetExecutingAssembly().GetName();
+                    return name.Name + " " + name.Version.ToString() + " (" + AssemblyInfo.PreBuildStamps.DateTime.ToString("yyyy-MM-dd HH:mm") + ")";
+                }
+                catch
+                {
+                    try
+                    {
+                        return Name + " (" + AssemblyInfo.PreBuildStamps.DateTime.ToString("yyyy-MM-dd HH:mm") + ")";
+                    }
+                    catch
+                    {
+                        return Name;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating whether this is a debug build.
