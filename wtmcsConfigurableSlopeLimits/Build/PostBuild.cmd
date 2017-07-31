@@ -38,6 +38,6 @@ xcopy /f /y "%TARGETFILENAME%" "%MODPATH%"
 
 :NOGAME
 
-zip -u -j -9 -o -X "..\..\..\SlopeLimitsWTM.zip" "..\..\..\README.md" "..\..\Dox\PreviewImage.png" "..\..\Dox\Button.png" "%TARGETFILENAME%"
+rem zip -u -j -9 -o -X "..\..\..\SlopeLimitsWTM.zip" "..\..\..\README.md" "..\..\Dox\PreviewImage.png" "..\..\Dox\Button.png" "%TARGETFILENAME%"
 
 :END
