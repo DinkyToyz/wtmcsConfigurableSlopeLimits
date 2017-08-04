@@ -22,6 +22,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         public static Level LogLevel = Level.Warning;
 
         /// <summary>
+        /// True for logging to debug panel.
+        /// </summary>
+        public static bool LogToDebugOutputPanel = true;
+
+        /// <summary>
         /// The file buffer.
         /// </summary>
         private static List<string> fileBuffer = null;
@@ -41,18 +46,24 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         static Log()
         {
+            bool logDebug;
+
             if (Library.IsDebugBuild || FileSystem.Exists(".debug"))
             {
+                logDebug = true;
                 Log.LogLevel = Log.Level.All;
                 Log.LogToFile = true;
             }
             else
             {
+                logDebug = false;
                 Log.LogLevel = Log.Level.Warning;
                 Log.LogToFile = false;
             }
 
             Log.LogALot = Log.LogToFile && (Library.IsDebugBuild || FileSystem.Exists(".debug.dev"));
+
+            Log.LogToDebugOutputPanel = logDebug && !Log.LogALot;
 
             try
             {
@@ -354,7 +365,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                 msg.Insert(0, "] ").Insert(0, Library.Name).Insert(0, "[");
 
-                if (level != Level.None && level <= Level.Warning)
+                if (level != Level.None && level <= Level.Warning && level <= LogLevel && LogToDebugOutputPanel && !LogToFile)
                 {
                     try
                     {
