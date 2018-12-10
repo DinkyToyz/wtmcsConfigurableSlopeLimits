@@ -10,7 +10,7 @@ namespace AssemblyInfo
         /// <summary>
         /// Build-stamped ticks.
         /// </summary>
-        private static long ticks = 636374938802764680; /*:TICKS:*/
+        private static long ticks = 636800779073969774; /*:TICKS:*/
 
         /// <summary>
         /// Gets build-stamped date-time.

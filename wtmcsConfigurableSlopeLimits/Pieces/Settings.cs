@@ -14,7 +14,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// The settings version.
         /// </summary>
-        public readonly int Version = 3;
+        public readonly int Version = 4;
 
         /// <summary>
         /// The maximum slope limit.
@@ -62,6 +62,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             this.SlopeLimitsGeneric = new Dictionary<string, float>();
             this.SlopeLimitsOriginal = new Dictionary<string, float>();
             this.SlopeLimitsIgnored = new Dictionary<string, float>();
+            this.SlopeLimitsUsed = new HashSet<string>();
 
             Dictionary<string, float> slopeLimits = null;
 
@@ -80,13 +81,36 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 {
                     slopeLimits = settings.GetSlopeLimits();
 
-                    if (slopeLimits != null)
+                    if (slopeLimits != null && slopeLimits.Count > 0)
                     {
                         Log.Debug(this, "Constructor", "Load limits", slopeLimits.Count);
 
-                        foreach (string limit in slopeLimits.Keys.Where(l => Global.NetNames.IgnoreNet(l)).ToList())
+                        foreach (KeyValuePair<string, float> limit in slopeLimits.ToList())
                         {
-                            slopeLimits.Remove(limit);
+                            if (Global.NetNames.IgnoreNet(limit.Key))
+                            {
+                                Log.Debug(this, "Constructor", "Load limits", "Ignore", limit.Key, limit.Value);
+                                slopeLimits.Remove(limit.Key);
+                            }
+                            else
+                            {
+                                string newName = Global.NetNames.CheckNetName(limit.Key);
+
+                                if (!String.IsNullOrEmpty(newName) && newName != limit.Key)
+                                {
+                                    if (slopeLimits.ContainsKey(newName))
+                                    {
+                                        Log.Debug(this, "Constructor", "Load limits", "Remove", limit.Key, limit.Value, newName);
+                                    }
+                                    else
+                                    {
+                                        Log.Debug(this, "Constructor", "Load limits", "Rename", limit.Key, limit.Value, newName);
+                                        slopeLimits[newName] = limit.Value;
+                                    }
+
+                                    slopeLimits.Remove(limit.Key);
+                                }
+                            }
                         }
                     }
                 }
@@ -98,7 +122,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 try
                 {
                     Dictionary<string, float> orgLimits = settings.GetOriginalSlopeLimits();
-                    if (orgLimits != null)
+                    if (orgLimits != null && orgLimits.Count > 0)
                     {
                         Log.Debug(this, "Constructor", "Load original limits", orgLimits.Count);
                         this.SlopeLimitsOriginal = orgLimits;
@@ -107,6 +131,20 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 catch (Exception ex)
                 {
                     Log.Error(typeof(Settings), "Constructor", ex, "settings.GetOriginalSlopeLimits()");
+                }
+
+                try
+                {
+                    HashSet<string> usedLimits = settings.GetUsedSlopeLimits();
+                    if (usedLimits != null && usedLimits.Count > 0)
+                    {
+                        Log.Debug(this, "Constructor", "Load used limits", usedLimits.Count, String.Join(", ", usedLimits.ToArray()));
+                        this.SlopeLimitsUsed = usedLimits;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(typeof(Settings), "Constructor", ex, "settings.GetUsedSlopeLimits()");
                 }
             }
 
@@ -240,22 +278,15 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
-        /// Check if expansion (DLC) is owned.
+        /// Gets the used slope limits.
         /// </summary>
-        /// <param name="dlc">The DLC.</param>
-        /// <returns>
-        /// True if expansion is owned.
-        /// </returns>
-        public static bool IsDLCOwned(SteamHelper.DLC? dlc)
+        /// <value>
+        /// The used slope limits.
+        /// </value>
+        public HashSet<string> SlopeLimitsUsed
         {
-            if (dlc == null || !dlc.HasValue)
-            {
-                return false;
-            }
-            else
-            {
-                return SteamHelper.IsDLCOwned(dlc.Value);
-            }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -407,6 +438,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     cfg.SetGenericSlopeLimits(this.SlopeLimitsGeneric);
                     cfg.SetOriginalSlopeLimits(this.SlopeLimitsOriginal);
                     cfg.SetIgnoredtSlopeLimits(this.SlopeLimitsIgnored);
+                    cfg.SetUsedSlopeLimits(this.SlopeLimitsUsed);
                     cfg.MinimumLimit = this.MinimumLimit;
                     cfg.MaximumLimit = this.MaximumLimit;
 
@@ -464,6 +496,18 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 Log.Error(this, "SetLimit", ex, name, limit);
             }
+        }
+
+        /// <summary>
+        /// Checks if a slopes limit is used.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <returns>True if used.</returns>
+        public bool SlopeLimitIsUsed(string name)
+        {
+            //if (Log.LogToFile && Log.LogALot) Log.Debug(this, "SlopeLimitIsUsed", name, this.SlopeLimitsUsed.Contains(name), this.SlopeLimitsUsed.Count, String.Join(",", this.SlopeLimitsUsed.ToArray()));
+
+            return this.SlopeLimitsUsed.Count == 0 || this.SlopeLimitsUsed.Contains(name);
         }
 
         /// <summary>
@@ -668,6 +712,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             public List<SlopeLimit> SlopeLimits = new List<SlopeLimit>();
 
             /// <summary>
+            /// The used net information names.
+            /// </summary>
+            public List<String> UsedSlopeLimits = new List<String>();
+
+            /// <summary>
             /// The settings version.
             /// </summary>
             public int Version = 0;
@@ -773,6 +822,25 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
 
             /// <summary>
+            /// Gets the used slope limits set.
+            /// </summary>
+            /// <value>
+            /// The used slope limits set.
+            /// </value>
+            public HashSet<string> GetUsedSlopeLimits()
+            {
+                try
+                {
+                    return new HashSet<String>(this.UsedSlopeLimits);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(this, " GetUsedSlopeLimits", ex);
+                    return new HashSet<String>();
+                }
+            }
+
+            /// <summary>
             /// Sets the display names.
             /// </summary>
             /// <param name="displayNames">The display names.</param>
@@ -848,6 +916,27 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             public void SetSlopeLimits(Dictionary<string, float> limitsDictionary)
             {
                 this.SetLimitsDictionary(this.SlopeLimits, limitsDictionary, "SetSlopeLimits");
+            }
+
+            /// <summary>
+            /// Sets the used slope limits.
+            /// </summary>
+            /// <param name="limitNames">The used slope limit names.</param>
+            /// <param name="name">The name.</param>
+            public void SetUsedSlopeLimits(HashSet<string> limitNames, string name = null)
+            {
+                try
+                {
+                    if (limitNames != null)
+                    {
+                        this.UsedSlopeLimits.Clear();
+                        this.UsedSlopeLimits.AddRange(limitNames.ToList());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(this, String.IsNullOrEmpty(name) ? "SetUsedSlopeLimits" : name, ex);
+                }
             }
 
             /// <summary>

@@ -62,6 +62,29 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         private readonly Regex castleWallNameRex = new Regex("^Castle Walls?(?: ?\\d+)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
+        /// Matches fence names.
+        /// </summary>
+        private readonly Regex fenceNameRex = new Regex("^.+? Fence(?: ?\\d+)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+
+        // Matches fixed highway names.
+        private readonly Regex fixedHighwayNames = new Regex("^(?:Rural )?Highway(?: ramp)?(?: Tunnel)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+
+        // Matches fixed miscellaneous names.
+        private readonly Regex fixedMiscNames = new Regex("^(?:Pipe|Wire|Dam|Canal|Quay|(?:Flood|Castle) Wall|Trench)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+
+        // Matches fixed road names.
+        private readonly Regex fixedPathNames = new Regex("^(?:Pedestrian|Bicycle)(?: Path|Bridge|Path Bridge|Tunnel)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+
+        // Matches fixed road names.
+        private readonly Regex fixedRoadNames = new Regex("^(?:(?:Gravel|Tiny|Small(?: Heavy)?|Medium|Large) )?Road(?: Tunnel)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+
+        // Matches fixed path names.
+        private readonly Regex fixedTrackNames = new Regex("^(?:Tram|Metro|Monorail|Train) Track(?: Tunnel)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+
+        // Matches fixed transit names.
+        private readonly Regex fixedTransitNames = new Regex("^(?:Blimp|Cable Car) Path$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+
+        /// <summary>
         /// Matches castle wall names.
         /// </summary>
         private readonly Regex floodWallNameRex = new Regex("(?:^|Landscaping )?Flood Wall(?: ?\\d+)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
@@ -74,7 +97,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// The nets that should be ignored.
         /// </summary>
-        private readonly Regex ignoreNetsRex = new Regex("(?:(?:^NExt)|(?:^(?:Bus Stop|Radio)$)|(?:(?: (?:Pipe|Transport|Connection|Line|Dock|Wire|Dam|Cables))|(?:(?<!CableCar)(?: (?:Cables)))|(?:(?<!Pedestrian|Bicycle|Cable ?Car|Blimp) Path)$))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        private readonly Regex ignoreNetsRex = new Regex("(?:(?:^Beautification Item$)|(?:^NExt)|(?:^(?:Bus Stop|Radio)$)|(?:(?:(?:^| )(?:Pipes?|Transport|Connection|Line|Dock|Wire|Dam|Cables))|(?:(?<!CableCar)(?: (?:Cables)))|(?:(?<!Pedestrian|Bicycle|Cable ?Car|Blimp) Path)$))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches large road class name.
@@ -99,12 +122,14 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// Matches Network Extensions double tunnel class name left-over.
         /// </summary>
-        private readonly Regex nextDoubleTunnelClasNameRestRex = new Regex("Tunnel(\\d+L)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        private readonly Regex nextDoubleTunnelClassNameRestRex = new Regex("Tunnel(\\d+L)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches Network Extensions highway class name.
         /// </summary>
-        private readonly Regex nextHighwayClassNameRex = new Regex("^NExt.*?Highway(?:\\d+L)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        private readonly Regex nextHighwayClassNameRex = new Regex("(?:^(?:NExt.*|Asym)Highway|Highway.*?(?:Ground|Elevated|Bridge|Tunnel|Slope)+Class$)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+
+        //private readonly Regex nextHighwayClassNameRex = new Regex("^(?:NExt.*|Asym)?Highway(?:\\d+L|L\\d+)(?:)?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches Network Extensions large road class name.
@@ -144,7 +169,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// <summary>
         /// Matches train track object name.
         /// </summary>
-        private readonly Regex trainTrackObjectNameRex = new Regex("(?:(?:^| )Train(?: (?:Station|Cargo|Connection|Oneway))?|^Station) Track(?: |$)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        private readonly Regex trainTrackObjectNameRex = new Regex("(?:(?:^|APT| )Train(?: (?:Station|Cargo|Connection|Oneway))?|^Station) Track(?: |$)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// Matches tram track/road object name.
@@ -431,6 +456,23 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         }
 
         /// <summary>
+        /// Checks the name of the net.
+        /// </summary>
+        /// <param name="netName">Name of the net.</param>
+        /// <returns>The checked or fixed net name.</returns>
+        public string CheckNetName(string netName)
+        {
+            if (this.fixedHighwayNames.IsMatch(netName) || this.fixedRoadNames.IsMatch(netName) ||
+                this.fixedPathNames.IsMatch(netName) || this.fixedTrackNames.IsMatch(netName) ||
+                this.fixedTransitNames.IsMatch(netName) || this.fixedMiscNames.IsMatch(netName))
+            {
+                return netName;
+            }
+
+            return GetNetName(null, netName, netName, netName);
+        }
+
+        /// <summary>
         /// Gets the net display name.
         /// </summary>
         /// <param name="name">The name.</param>
@@ -563,6 +605,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             string className = netInfo.m_class.name;
             string objectName = netInfo.name;
             string localizedTitle = netInfo.GetLocalizedTitle();
+            string netCollectionName = netCollection == null ? (string)null : netCollection.name;
 
             string key = className + "|" + objectName;
             string name = null;
@@ -572,6 +615,34 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             {
                 return name;
             }
+
+            name = this.GetNetName(netCollectionName, className, objectName, localizedTitle);
+
+            // Store in map and return.
+            this.map[key] = name;
+
+            if (Log.LogToFile && Log.LogALot)
+            {
+                Log.Debug(typeof(NetNameMap), "NetName", netInfo.m_class.name, objectName, localizedTitle, className, name);
+            }
+
+            return name;
+        }
+
+        /// <summary>
+        /// Get the nets name.
+        /// </summary>
+        /// <param name="netCollectionName">Name of the net collection.</param>
+        /// <param name="className">Name of the class.</param>
+        /// <param name="objectName">Name of the object.</param>
+        /// <param name="localizedTitle">The localized title.</param>
+        /// <returns>
+        /// The name.
+        /// </returns>
+        public string GetNetName(string netCollectionName, string className, string objectName, string localizedTitle)
+        {
+            string orgName = className;
+            string name = null;
 
             bool tunnel = false;
             bool bridge = false;
@@ -585,7 +656,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     tunnel = true;
 
                     // Order from Network Extensions chaos.
-                    className = this.nextDoubleTunnelClasNameRestRex.Replace(className, "$1");
+                    className = this.nextDoubleTunnelClassNameRestRex.Replace(className, "$1");
                 }
                 else if (objectName.Contains("Tunnel") /* || localizedTitle.Contains("Tunnel") */)
                 {
@@ -597,7 +668,11 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     bridge = true;
                 }
 
-                if (className == "Water Pipe" || objectName == "Water Pipe" || className == "Heating Pipe" || objectName == "Heating Pipe")
+                if (className == "Beautification Item" && this.fenceNameRex.IsMatch(objectName))
+                {
+                    name = "Fence";
+                }
+                else if (className == "Water Pipe" || objectName == "Water Pipe" || className == "Heating Pipe" || objectName == "Heating Pipe")
                 {
                     name = "Pipe";
                 }
@@ -635,7 +710,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 }
                 else if (this.metroTrackObjectNameRex.IsMatch(objectName))
                 {
-                    if (netCollection != null && netCollection.name == "Public Transport")
+                    if (netCollectionName != null && netCollectionName == "Public Transport")
                     {
                         tunnel = true;
                     }
@@ -762,7 +837,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 if (name == null)
                 {
                     // Use original name.
-                    name = netInfo.m_class.name;
+                    name = orgName;
                 }
                 else if (tunnel && !name.Contains("Tunnel"))
                 {
@@ -775,17 +850,14 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
             catch (Exception ex)
             {
-                Log.Error(typeof(NetNameMap), "NetName", ex, netInfo, key);
+                Log.Error(typeof(NetNameMap), "NetName", ex, netCollectionName, orgName, className, objectName, localizedTitle);
 
                 name = null;
             }
 
-            // Store in map and return.
-            this.map[key] = name;
-
             if (Log.LogToFile && Log.LogALot)
             {
-                Log.Debug(typeof(NetNameMap), "NetName", netInfo.m_class.name, objectName, localizedTitle, tunnel, className, name);
+                Log.Debug(typeof(NetNameMap), "NetName", netCollectionName, orgName, className, objectName, localizedTitle, name);
             }
 
             return name;
@@ -1010,7 +1082,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     switch (this.Type)
                     {
                         case DependencyType.DLC:
-                            return Settings.IsDLCOwned(this.DLC);
+                            return IsDLCOwned(this.DLC);
 
                         case DependencyType.Mod:
                             return ModLoaded(this.ModName);
@@ -1043,31 +1115,72 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
             }
 
             /// <summary>
+            /// Check if expansion (DLC) is owned.
+            /// </summary>
+            /// <param name="dlc">The DLC.</param>
+            /// <returns>
+            /// True if expansion is owned.
+            /// </returns>
+            private static bool IsDLCOwned(SteamHelper.DLC? dlc)
+            {
+                try
+                {
+                    if (dlc == null || !dlc.HasValue)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return SteamHelper.IsDLCOwned(dlc.Value);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Problem(typeof(Dependency), "IsDLCOwned", ex, "Error checking dependency with steam helper", dlc);
+                    return false;
+                }
+            }
+
+            /// <summary>
             /// Checks if a mod is loaded.
             /// </summary>
             /// <param name="modName">Name of the mod.</param>
             /// <returns>True if the mod is loaded.</returns>
             private static bool ModLoaded(string modName)
             {
-                foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+                try
                 {
-                    foreach (Type type in assembly.GetTypes())
+                    foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
                     {
-                        if (type.Namespace == modName)
+                        foreach (Type type in assembly.GetTypes())
                         {
-                            Log.Debug(typeof(Dependency), "ModLoaded", "Namespace", modName, assembly.FullName, assembly.Location, type.FullName);
+                            if (type.Namespace == modName)
+                            {
+                                Log.Debug(typeof(Dependency), "ModLoaded", "Namespace", modName, assembly.FullName, assembly.Location, type.FullName);
 
-                            return true;
+                                return true;
+                            }
                         }
                     }
                 }
-
-                UnityEngine.GameObject gameObject = UnityEngine.GameObject.Find(modName);
-                if (gameObject != null)
+                catch (Exception ex)
                 {
-                    Log.Debug(typeof(Dependency), "ModLoaded", "GameObject", modName, gameObject);
+                    Log.Problem(typeof(Dependency), "ModLoaded", ex, "Error checking dependency in assemblies", modName);
+                }
 
-                    return true;
+                try
+                {
+                    UnityEngine.GameObject gameObject = UnityEngine.GameObject.Find(modName);
+                    if (gameObject != null)
+                    {
+                        Log.Debug(typeof(Dependency), "ModLoaded", "GameObject", modName, gameObject);
+
+                        return true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Problem(typeof(Dependency), "ModLoaded", ex, "Error checking dependency in game objects", modName);
                 }
 
                 return false;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -10,6 +11,27 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
     /// </summary>
     public static class Extensions
     {
+        /// <summary>
+        /// Adds all items from range to map.
+        /// </summary>
+        /// <param name="map">The map.</param>
+        /// <param name="range">The range.</param>
+        /// <returns>Count of added items.</returns>
+        public static int AddRange(this HashSet<string> map, IEnumerable<String> range)
+        {
+            int count = 0;
+
+            foreach (String s in range)
+            {
+                if (map.Add(s))
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
         /// <summary>
         /// Get only ASCII capitals.
         /// </summary>
@@ -235,6 +257,30 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     return text.Substring(startIndex, maxLength);
                 }
             }
+        }
+
+        /// <summary>
+        /// Sets the map to the items from range.
+        /// </summary>
+        /// <param name="map">The map.</param>
+        /// <param name="range">The range.</param>
+        /// <returns>Count of added items.</returns>
+        public static int SetRange(this HashSet<string> map, IEnumerable<String> range)
+        {
+            map.Clear();
+            return map.AddRange(range);
+        }
+
+        /// <summary>
+        /// Sets the map to the items from range.
+        /// </summary>
+        /// <param name="map">The map.</param>
+        /// <param name="range">The range.</param>
+        /// <returns>Count of added items.</returns>
+        public static int SetRange(this HashSet<string> map, HashSet<string> range)
+        {
+            map.IntersectWith(range);
+            return map.AddRange(range);
         }
     }
 }

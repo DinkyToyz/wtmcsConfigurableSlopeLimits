@@ -458,6 +458,18 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
         /// </summary>
         /// <param name="sourceObject">The source object.</param>
         /// <param name="sourceBlock">The source block.</param>
+        /// <param name="exception">The exception.</param>
+        /// <param name="messages">The messages.</param>
+        public static void Problem(object sourceObject, string sourceBlock, Exception exception, params object[] messages)
+        {
+            Output(Level.Warning, sourceObject, sourceBlock, exception, messages);
+        }
+
+        /// <summary>
+        /// Outputs the specified warning message.
+        /// </summary>
+        /// <param name="sourceObject">The source object.</param>
+        /// <param name="sourceBlock">The source block.</param>
         /// <param name="messages">The messages.</param>
         public static void Warning(object sourceObject, string sourceBlock, params object[] messages)
         {

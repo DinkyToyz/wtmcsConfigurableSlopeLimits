@@ -60,14 +60,26 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     Log.BufferFileWrites = true;
                 }
 
+                bool inIgnored;
+                bool ignoredNet;
+                bool isUsed;
+                bool isAdded;
+                bool doAdd;
+
                 HashSet<string> keys = new HashSet<string>();
                 Dictionary<string, List<SlopeLimitSlider>> sliders = new Dictionary<string, List<SlopeLimitSlider>>();
 
                 foreach (string name in Global.Settings.SlopeLimits.Keys)
                 {
-                    Log.Debug(this, "OnSettingsUI", "SlopeLimitsKeys", name, Global.Settings.SlopeLimitsIgnored.ContainsKey(name), Global.NetNames.IgnoreNet(name));
+                    isAdded = keys.Contains(name);
+                    inIgnored = Global.Settings.SlopeLimitsIgnored.ContainsKey(name);
+                    ignoredNet = Global.NetNames.IgnoreNet(name);
+                    isUsed = Global.Settings.SlopeLimitIsUsed(name);
+                    doAdd = isUsed && !(isAdded || inIgnored || ignoredNet);
 
-                    if (!keys.Contains(name) && !Global.Settings.SlopeLimitsIgnored.ContainsKey(name) && !Global.NetNames.IgnoreNet(name))
+                    Log.Debug(this, "OnSettingsUI", "SlopeLimitsKeys", name, doAdd, inIgnored, ignoredNet, isUsed, isAdded);
+
+                    if (doAdd)
                     {
                         NetNameMap.Generic generic = Global.NetNames.GetGeneric(name);
                         Log.Debug(this, "OnSettingsUI", "Generic", generic.Name, generic.Group);
@@ -84,9 +96,14 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
 
                 foreach (string name in NetNameMap.SupportedGenerics)
                 {
-                    Log.Debug(this, "OnSettingsUI", "SupportedGenerics", name, Global.Settings.SlopeLimitsIgnored.ContainsKey(name), Global.NetNames.IgnoreNet(name));
+                    isAdded = keys.Contains(name);
+                    inIgnored = Global.Settings.SlopeLimitsIgnored.ContainsKey(name);
+                    ignoredNet = Global.NetNames.IgnoreNet(name);
+                    doAdd = !(isAdded || inIgnored || ignoredNet);
 
-                    if (!keys.Contains(name) && !Global.Settings.SlopeLimitsIgnored.ContainsKey(name) && !Global.NetNames.IgnoreNet(name))
+                    Log.Debug(this, "OnSettingsUI", "SupportedGenerics", name, doAdd, inIgnored, ignoredNet, isAdded);
+
+                    if (doAdd)
                     {
                         NetNameMap.Generic generic = Global.NetNames.GetGeneric(name);
 

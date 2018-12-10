@@ -242,6 +242,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                     bool missing = false;
                     bool found = false;
 
+                    HashSet<String> usedLimits = new HashSet<string>();
                     Global.Settings.SlopeLimitsOriginal.Clear();
                     Global.Settings.SlopeLimitsIgnored.Clear();
 
@@ -280,6 +281,8 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                                 continue;
                             }
 
+                            usedLimits.Add(netName);
+
                             if (!Global.Settings.SlopeLimits.ContainsKey(netName))
                             {
                                 float fallBack;
@@ -307,8 +310,16 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                         }
                     }
 
-                    if (Global.Settings.SlopeLimitsOriginal.Count > 0)
+                    if (Global.Settings.SlopeLimitsOriginal.Count > 0 && usedLimits.Count > 0)
                     {
+                        if (!usedLimits.SetEquals(Global.Settings.SlopeLimitsUsed))
+                        {
+                            Log.Debug(this, "Initialize", "Used", usedLimits.Count, String.Join(",", usedLimits.ToArray()));
+
+                            Global.Settings.SlopeLimitsUsed.SetRange(usedLimits);
+                            found = true;
+                        }
+
                         if (missing || found)
                         {
                             if (missing)
