@@ -803,7 +803,7 @@ namespace WhatThe.Mods.CitiesSkylines.ConfigurableSlopeLimits
                 info.Add(this.Info.GetLocalizedTitle());
                 info.Add(netName);
 
-                info.Add(Global.NetNames.IgnoreNetText((this.Collection == null) ? (string)null : this.Collection.name, netName));
+                info.Add(Global.NetNames.IgnoreNetText((this.Collection == null) ? (string)null : this.Collection.name, netName, ""));
 
                 info.Add(this.Info.m_maxSlope);
                 info.Add(NetNameMap.GetGroup(netName) ?? "-");
